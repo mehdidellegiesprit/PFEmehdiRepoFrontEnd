@@ -60,19 +60,30 @@ export class BankStatementTableDisplayComponent
   onPageChange(event: PageEvent): void {
     const startIndex = event.pageIndex * event.pageSize;
     const endIndex = startIndex + event.pageSize;
-
-    if (this.dataSource) {
-      this.currentPageData = this.dataSource.data.slice(startIndex, endIndex);
-    }
+    this.currentPageData = this.dataSource.data.slice(startIndex, endIndex);
   }
 
   Filterchange(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+    this.applyFilter(filterValue);
+  }
 
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
+  applyFilter(filterValue: string) {
+    filterValue = filterValue.trim().toLowerCase();
+    this.currentPageData = this.dataSource.data.filter((item) => {
+      for (const key in item) {
+        if (
+          item[key as keyof DonneeExtrait]
+            .toString()
+            .toLowerCase()
+            .includes(filterValue)
+        ) {
+          return true;
+        }
+      }
+      return false;
+    });
+    this.totalItemsCount = this.currentPageData.length;
   }
 
   public onFileInputChange(event: any): void {
@@ -98,32 +109,30 @@ export class BankStatementTableDisplayComponent
         (response: ReleveBancaire[]) => {
           this.releves = response;
           this.accordionDataSources = [];
-          let totalItems = 0;
 
           for (const releve of response) {
             const donneeExtraits: DonneeExtrait[] = [];
+
             for (const extrait of releve.extraits) {
               for (const donneeExtrait of extrait.donneeExtraits) {
                 donneeExtraits.push(donneeExtrait);
-                totalItems++;
               }
             }
+
             const accordionDataSource = new MatTableDataSource<DonneeExtrait>(
               donneeExtraits
             );
+            accordionDataSource.paginator = this.paginator;
+            accordionDataSource.sort = this.sort;
             this.accordionDataSources.push(accordionDataSource);
           }
 
           if (this.accordionDataSources.length > 0) {
             this.dataSource = this.accordionDataSources[0];
-            this.dataSource.paginator = this.paginator;
-            this.dataSource.sort = this.sort;
             this.currentPageData = this.dataSource.data.slice(0, this.pageSize);
+            this.totalItemsCount = this.dataSource.filteredData.length;
           }
 
-          this.totalItemsCount = totalItems;
-
-          // Set the initial current page index
           this.currentPageIndex = 0;
         },
         (errorResponse: HttpErrorResponse) => {
@@ -136,9 +145,7 @@ export class BankStatementTableDisplayComponent
     );
   }
 
-  ngOnInit(): void {
-    this.getReleveBancaire();
-  }
+  ngOnInit(): void {}
 
   ngOnDestroy(): void {
     this.subscription.forEach((sub) => sub.unsubscribe());
