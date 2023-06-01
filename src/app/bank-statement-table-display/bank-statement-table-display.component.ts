@@ -12,7 +12,7 @@ import { BankStatementViewerService } from '../service/bank-statement-viewer.ser
 import { HttpErrorResponse } from '@angular/common/http';
 import { NotificationType } from '../enum/notification-type.enum';
 import { ReleveBancaire } from '../model/ReleveBancaire';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { DonneeExtrait } from '../model/DonneeExtrait';
@@ -27,6 +27,16 @@ export class BankStatementTableDisplayComponent
 {
   accordionDataSources: MatTableDataSource<DonneeExtrait>[] = [];
   @Input() releves: ReleveBancaire[] = [];
+  dataSource: MatTableDataSource<DonneeExtrait>;
+  currentPageData: DonneeExtrait[] = [];
+  currentPageIndex = 0;
+  pageSize = 5;
+  totalItemsCount = 0;
+
+  @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
+  @ViewChild(MatSort, { static: false }) sort!: MatSort;
+
+  private subscription: Subscription[] = [];
 
   displayedColumns: string[] = [
     'dateDonneeExtrait',
@@ -35,21 +45,25 @@ export class BankStatementTableDisplayComponent
     'debit',
     'credit',
   ];
-  dataSource: MatTableDataSource<DonneeExtrait> =
-    new MatTableDataSource<DonneeExtrait>([]);
-
-  @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
-  @ViewChild(MatSort, { static: false }) sort!: MatSort;
-
-  private subscription: Subscription[] = [];
 
   constructor(
     private notificationService: NotificationService,
     private bankStatementViewerService: BankStatementViewerService
-  ) {}
+  ) {
+    this.dataSource = new MatTableDataSource<DonneeExtrait>([]);
+  }
 
   ngAfterViewInit() {
     this.getReleveBancaire();
+  }
+
+  onPageChange(event: PageEvent): void {
+    const startIndex = event.pageIndex * event.pageSize;
+    const endIndex = startIndex + event.pageSize;
+
+    if (this.dataSource) {
+      this.currentPageData = this.dataSource.data.slice(startIndex, endIndex);
+    }
   }
 
   Filterchange(event: Event) {
@@ -84,12 +98,14 @@ export class BankStatementTableDisplayComponent
         (response: ReleveBancaire[]) => {
           this.releves = response;
           this.accordionDataSources = [];
+          let totalItems = 0;
 
           for (const releve of response) {
             const donneeExtraits: DonneeExtrait[] = [];
             for (const extrait of releve.extraits) {
               for (const donneeExtrait of extrait.donneeExtraits) {
                 donneeExtraits.push(donneeExtrait);
+                totalItems++;
               }
             }
             const accordionDataSource = new MatTableDataSource<DonneeExtrait>(
@@ -102,7 +118,13 @@ export class BankStatementTableDisplayComponent
             this.dataSource = this.accordionDataSources[0];
             this.dataSource.paginator = this.paginator;
             this.dataSource.sort = this.sort;
+            this.currentPageData = this.dataSource.data.slice(0, this.pageSize);
           }
+
+          this.totalItemsCount = totalItems;
+
+          // Set the initial current page index
+          this.currentPageIndex = 0;
         },
         (errorResponse: HttpErrorResponse) => {
           this.notificationService.notify(
