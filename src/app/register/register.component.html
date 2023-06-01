@@ -1,0 +1,187 @@
+<div class="container" style="margin-top: 100px">
+  <div class="d-flex justify-content-center h-50">
+    <div class="user_card mt-3">
+      <div class="d-flex justify-content-center mt-3">
+        <div style="margin-top: 20px; margin-bottom: -90px">
+          <h3>User Management Portal</h3>
+        </div>
+      </div>
+      <div class="d-flex justify-content-center form_container">
+        <form
+          #registerForm="ngForm"
+          (ngSubmit)="onRegister(registerForm.value)"
+        >
+          <div class="input-group mb-3">
+            <div class="input-group-append">
+              <span class="input-group-text"><i class="fas fa-user"></i></span>
+            </div>
+            <input
+              type="text"
+              class="form-control"
+              name="firstName"
+              placeholder="First name"
+              required
+              [ngModel]="
+                isLoggedIn_outlook() ? getFamilyFirstName_outlook() : ''
+              "
+              #firstNameInput="ngModel"
+            />
+          </div>
+          <span
+            class="help-block"
+            *ngIf="firstNameInput.invalid && firstNameInput.touched"
+            style="color: red"
+            >Please enter a first name</span
+          >
+          <div class="input-group mb-3">
+            <div class="input-group-append">
+              <span class="input-group-text"><i class="fas fa-user"></i></span>
+            </div>
+            <input
+              type="text"
+              class="form-control"
+              name="lastName"
+              placeholder="Last name"
+              required
+              [ngModel]="
+                isLoggedIn_outlook() ? getFamilyLastName_outlook() : ''
+              "
+              #lastNameInput="ngModel"
+            />
+          </div>
+          <span
+            class="help-block"
+            *ngIf="lastNameInput.invalid && lastNameInput.touched"
+            style="color: red"
+            >Please enter a last name</span
+          >
+          <div class="input-group mb-3">
+            <div class="input-group-append">
+              <span class="input-group-text"
+                ><i class="fas fa-id-card"></i
+              ></span>
+            </div>
+            <input
+              type="text"
+              class="form-control"
+              name="username"
+              placeholder="Username"
+              required
+              ngModel
+              #usernameInput="ngModel"
+            />
+          </div>
+          <span
+            class="help-block"
+            *ngIf="usernameInput.invalid && usernameInput.touched"
+            style="color: red"
+            >Please enter a username</span
+          >
+          <div class="input-group mb-2">
+            <div class="input-group-append">
+              <span class="input-group-text"
+                ><i class="fas fa-envelope"></i
+              ></span>
+            </div>
+            <input
+              type="email"
+              class="form-control"
+              name="email"
+              placeholder="Email"
+              required
+              [ngModel]="isLoggedIn_outlook() ? getUsername_outlook() : ''"
+              #emailInput="ngModel"
+            />
+          </div>
+          <span
+            class="help-block"
+            *ngIf="emailInput.invalid && emailInput.touched"
+            style="color: red"
+            >Please enter an email.</span
+          >
+          <!--the new field added !-->
+
+          <div class="input-group mb-2 mt-3">
+            <div class="input-group-append">
+              <span class="input-group-text"><i class="fas fa-phone"></i></span>
+            </div>
+            <input
+              type="text"
+              class="form-control"
+              name="phoneNumber"
+              placeholder="Phone number"
+              required
+              ngModel
+              #phoneInput="ngModel"
+            />
+          </div>
+          <span
+            class="help-block"
+            *ngIf="phoneInput.invalid && phoneInput.touched"
+            style="color: red"
+            >Please enter your phone number.</span
+          >
+
+          <div class="input-group mb-2 mt-3">
+            <div class="input-group-append">
+              <span class="input-group-text"
+                ><i class="fas fa-venus-mars"></i
+              ></span>
+            </div>
+            <select
+              class="form-select"
+              aria-label="Default select example"
+              name="gender"
+              required
+              [(ngModel)]="genderSelected"
+              #genderSelect="ngModel"
+            >
+              <option selected hidden>Choose Gender</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+            </select>
+          </div>
+          <span
+            class="help-block"
+            *ngIf="genderSelected === 'Choose Gender' && genderSelect.touched"
+            style="color: red"
+            >Please enter your gender.</span
+          >
+
+          <!---->
+          <div class="d-flex justify-content-center mt-4 login_container">
+            <button
+              [disabled]="
+                registerForm.invalid ||
+                showLoading ||
+                genderSelected === 'Choose Gender'
+              "
+              type="submit"
+              name="button"
+              class="btn login_btn"
+            >
+              <i *ngIf="showLoading" class="fas fa-spinner fa-spin"></i
+              >&nbsp;&nbsp;
+              <span *ngIf="showLoading">Loading...</span>
+              <span *ngIf="!showLoading">Register</span>
+            </button>
+          </div>
+        </form>
+      </div>
+      <div class="mt-2 mb-4">
+        <div class="d-flex justify-content-center links">
+          Already have an account?
+          <a routerLink="/login" class="ml-2" style="color: #2c3e50">Log In</a>
+        </div>
+        <div class="d-flex justify-content-center mt-3">
+          <a class="btn outlook_btn" (click)="login_outlook()">
+            Sign up with &nbsp;&nbsp;<i class="fab fa-microsoft"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- google sig in !! -->
+
+<!-- google sig in !! -->

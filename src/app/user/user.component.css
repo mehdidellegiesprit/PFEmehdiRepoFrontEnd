@@ -1,0 +1,38 @@
+.checkmark {
+  font-size: 20px;
+  color: green;
+  margin-right: 5px;
+}
+.tab-content {
+  width: 60%;
+  margin: 0 auto; /* centers the container horizontally */
+}
+/* Style the input field */
+input[type="search"] {
+  padding: 5px 10px; /* add some padding */
+  border: none; /* remove the border */
+  border-radius: 5px; /* add some border-radius */
+  background-color: #f1f1f1; /* add some background-color */
+}
+
+/* Style the clear button */
+input[type="search"]::-webkit-search-cancel-button {
+  -webkit-appearance: none; /* remove the default appearance */
+  height: 16px; /* set the height */
+  width: 16px; /* set the width */
+  background-image: url("https://cdn-icons-png.flaticon.com/512/126/126484.png"); /* add the clear icon image */
+  background-repeat: no-repeat; /* prevent the image from repeating */
+  background-size: contain; /* set the image size */
+  cursor: pointer; /* set the cursor to pointer */
+}
+.pagination .page-link.active {
+  background-color: #007bff;
+  border-color: #007bff;
+  color: #fff;
+}
+.pagination .page-item.disabled .page-link {
+  color: #6c757d;
+  background-color: #fff;
+  border-color: #dee2e6;
+  cursor: not-allowed;
+}

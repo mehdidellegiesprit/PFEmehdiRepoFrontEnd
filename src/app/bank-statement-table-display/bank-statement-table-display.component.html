@@ -1,0 +1,84 @@
+<p>bank-statement-table-display works!</p>
+<ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+  <li class="nav-item">
+    <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">BP</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">CIC</a>
+  </li>
+</ul>
+
+<div class="tab-content" id="pills-tabContent">
+  <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+    <div id="accordion" *ngFor="let r of releves; let i = index">
+      <div class="card">
+        <div class="card-header" [id]="'heading' + i">
+          <h5 class="mb-0">
+            <button class="btn btn-link" data-toggle="collapse" [attr.data-target]="'#collapse' + i" aria-expanded="true" [attr.aria-controls]="'collapse' + i">
+              Societe: {{ r.nomBank }} / Rib: {{ r.iban }}
+            </button>
+          </h5>
+        </div>
+
+        <div [id]="'collapse' + i" class="collapse" [class.show]="i === 0" [attr.aria-labelledby]="'heading' + i" data-parent="#accordion">
+          <div class="card-body" *ngFor="let extrait of r.extraits">
+            <p>date extrait: {{ extrait.dateExtrait }}</p>
+            <p>date du solde crediteurDebut mois: {{ extrait.dateDuSoldeCrediteurDebutMois }}</p>
+            <p>credit solde crediteurDebut mois: {{ extrait.creditDuSoldeCrediteurDebutMois }}</p>
+            <p>totalMouvement Debit: {{ extrait.totalMouvementsDebit }}</p>
+            <p>totalMouvement Credit: {{ extrait.totalMouvementsCredit }}</p>
+            <p>date du solde crediteur Fin mois: {{ extrait.dateDuSoldeCrediteurFinMois }}</p>
+            <p>credit solde crediteurFin mois: {{ extrait.creditDuSoldeCrediteurFinMois }}</p>
+            <p>tableau des operations</p>
+
+            <div class="mat-elevation-z8">
+              <div class="search-bar">
+                <mat-form-field>
+                  <mat-label>Search</mat-label>
+                  <input matInput placeholder="Search" (keyup)="Filterchange($event)" />
+                </mat-form-field>
+              </div>
+              <div>
+                <table mat-table [dataSource]="dataSource" matSort>
+                  <ng-container matColumnDef="dateDonneeExtrait">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Date Donnee Extrait</th>
+                    <td mat-cell *matCellDef="let donneeExtrait">{{ donneeExtrait.dateDonneeExtrait }}</td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="dateValeurDonneeExtrait">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Date Valeur Donnee Extrait</th>
+                    <td mat-cell *matCellDef="let donneeExtrait">{{ donneeExtrait.dateValeurDonneeExtrait }}</td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="operations">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Operations</th>
+                    <td mat-cell *matCellDef="let donneeExtrait">{{ donneeExtrait.operations }}</td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="debit">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Debit</th>
+                    <td mat-cell *matCellDef="let donneeExtrait">{{ donneeExtrait.debit }}</td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="credit">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Credit</th>
+                    <td mat-cell *matCellDef="let donneeExtrait">{{ donneeExtrait.credit }}</td>
+                  </ng-container>
+
+                  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                  <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+                </table>
+                <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons [pageSize]="5"></mat-paginator>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+    soc3
+  </div>
+</div>
+
+<input type="file" (change)="onFileInputChange($event)" />
