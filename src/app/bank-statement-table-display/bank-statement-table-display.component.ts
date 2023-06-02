@@ -15,6 +15,12 @@ export class BankStatementTableDisplayComponent implements OnInit, OnDestroy {
   @Input() releves: ReleveBancaire[] = [];
 
   private subscription: Subscription[] = [];
+  isVisible = false; // Initialize as hidden
+
+
+  onToggle():void {
+    this.isVisible = !this.isVisible;
+  }
 
   constructor(
     private notificationService: NotificationService,

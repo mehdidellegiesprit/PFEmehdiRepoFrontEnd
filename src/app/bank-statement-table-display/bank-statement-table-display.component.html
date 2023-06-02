@@ -1,5 +1,3 @@
-<p>bank-statement-table-display works!</p>
-
 <div id="accordion" *ngFor="let r of releves; let i = index">
   <div class="card">
     <div class="card-header" [id]="'heading' + i">
@@ -24,32 +22,34 @@
       data-parent="#accordion"
     >
       <div class="card-body" *ngFor="let extrait of r.extraits">
-        <p>date extrait : {{ extrait.dateExtrait }}</p>
-        <p>
-          date du solde crediteurDebut mois :{{
-            extrait.dateDuSoldeCrediteurDebutMois
-          }}
-        </p>
-        <p>
-          credit solde crediteurDebut mois :{{
-            extrait.creditDuSoldeCrediteurDebutMois
-          }}
-        </p>
-        <p>totalMouvement Debit :{{ extrait.totalMouvementsDebit }}</p>
-        <p>totalMouvement Credit:{{ extrait.totalMouvementsCredit }}</p>
-        <p>
-          date du solde crediteur Fin mois:{{
-            extrait.dateDuSoldeCrediteurFinMois
-          }}
-        </p>
-        <p>
-          credit solde crediteurFin mois:{{
-            extrait.creditDuSoldeCrediteurFinMois
-          }}
-        </p>
-        <p>tableau des operations</p>
+        <div *ngIf="isVisible">
+          <p>date extrait : {{ extrait.dateExtrait }}</p>
+          <p>
+            date du solde crediteurDebut mois :{{
+              extrait.dateDuSoldeCrediteurDebutMois
+            }}
+          </p>
+          <p>
+            credit solde crediteurDebut mois :{{
+              extrait.creditDuSoldeCrediteurDebutMois
+            }}
+          </p>
+          <p>totalMouvement Debit :{{ extrait.totalMouvementsDebit }}</p>
+          <p>totalMouvement Credit:{{ extrait.totalMouvementsCredit }}</p>
+          <p>
+            date du solde crediteur Fin mois:{{
+              extrait.dateDuSoldeCrediteurFinMois
+            }}
+          </p>
+          <p>
+            credit solde crediteurFin mois:{{
+              extrait.creditDuSoldeCrediteurFinMois
+            }}
+          </p>
+        </div>
         <app-bank-statement-table
           [data]="extrait.donneeExtraits"
+          (toggle)="onToggle()"
         ></app-bank-statement-table>
       </div>
     </div>

@@ -5,6 +5,8 @@ import {
   ViewChild,
   OnChanges,
   SimpleChanges,
+  EventEmitter,
+  Output,
 } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -17,9 +19,15 @@ import { DonneeExtrait } from '../model/DonneeExtrait';
   styleUrls: ['./bank-statement-table.component.css'],
 })
 export class BankStatementTableComponent implements OnInit, OnChanges {
+  dataSource: MatTableDataSource<DonneeExtrait>;
   @Input() data: DonneeExtrait[] = [];
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
+  @Output() toggle: EventEmitter<boolean> = new EventEmitter<boolean>();
+
+  toggleVisibility(): void {
+    this.toggle.emit(true); // or false, based on your logic
+  }
 
   displayedColumns: string[] = [
     'dateDonneeExtrait',
@@ -28,7 +36,6 @@ export class BankStatementTableComponent implements OnInit, OnChanges {
     'debit',
     'credit',
   ];
-  dataSource: MatTableDataSource<DonneeExtrait>;
 
   constructor() {
     this.dataSource = new MatTableDataSource<DonneeExtrait>(this.data);

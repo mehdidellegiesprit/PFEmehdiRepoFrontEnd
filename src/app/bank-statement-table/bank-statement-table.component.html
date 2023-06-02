@@ -1,50 +1,85 @@
-<p>bank-statement-table works!</p>
-<div class="mat-elevation-z8">
-  <div class="search-bar">
-    <mat-form-field>
-      <mat-label>Search</mat-label>
-      <input matInput (keyup)="applyFilter($event)" placeholder="Search" />
-    </mat-form-field>
-  </div>
-  <div>
-    <table mat-table [dataSource]="dataSource" matSort>
-      <!-- Column definitions -->
-      <ng-container matColumnDef="dateDonneeExtrait">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Date</th>
-        <td mat-cell *matCellDef="let element">
-          {{ element.dateDonneeExtrait }}
-        </td>
-      </ng-container>
+<p>
+  <a
+    class="btn btn-primary"
+    data-toggle="collapse"
+    href="#multiCollapseExample1"
+    role="button"
+    aria-expanded="false"
+    aria-controls="multiCollapseExample1"
+    (click)="toggleVisibility()"
+    >Toggle first element</a
+  >
+  <!-- <button class="btn btn-primary" type="button" data-toggle="collapse" data-target=".multi-collapse" aria-expanded="false" aria-controls="multiCollapseExample1 multiCollapseExample2">Toggle both elements</button> -->
+</p>
+<div class="row">
+  <div class="col">
+    <div class="collapse multi-collapse" id="multiCollapseExample1">
+      <div class="card card-body">
+        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus
+        terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer
+        labore wes anderson cred nesciunt sapiente ea proident.
+        <div class="mat-elevation-z8">
+          <div class="search-bar">
+            <mat-form-field>
+              <mat-label>Search</mat-label>
+              <input
+                matInput
+                (keyup)="applyFilter($event)"
+                placeholder="Search"
+              />
+            </mat-form-field>
+          </div>
+          <div>
+            <table mat-table [dataSource]="dataSource" matSort>
+              <!-- Column definitions -->
+              <ng-container matColumnDef="dateDonneeExtrait">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Date</th>
+                <td mat-cell *matCellDef="let element">
+                  {{ element.dateDonneeExtrait }}
+                </td>
+              </ng-container>
 
-      <ng-container matColumnDef="dateValeurDonneeExtrait">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Value Date</th>
-        <td mat-cell *matCellDef="let element">
-          {{ element.dateValeurDonneeExtrait }}
-        </td>
-      </ng-container>
+              <ng-container matColumnDef="dateValeurDonneeExtrait">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                  Value Date
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  {{ element.dateValeurDonneeExtrait }}
+                </td>
+              </ng-container>
 
-      <ng-container matColumnDef="operations">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Operations</th>
-        <td mat-cell *matCellDef="let element">{{ element.operations }}</td>
-      </ng-container>
+              <ng-container matColumnDef="operations">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                  Operations
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  {{ element.operations }}
+                </td>
+              </ng-container>
 
-      <ng-container matColumnDef="debit">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Debit</th>
-        <td mat-cell *matCellDef="let element">{{ element.debit }}</td>
-      </ng-container>
+              <ng-container matColumnDef="debit">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Debit</th>
+                <td mat-cell *matCellDef="let element">{{ element.debit }}</td>
+              </ng-container>
 
-      <ng-container matColumnDef="credit">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Credit</th>
-        <td mat-cell *matCellDef="let element">{{ element.credit }}</td>
-      </ng-container>
+              <ng-container matColumnDef="credit">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                  Credit
+                </th>
+                <td mat-cell *matCellDef="let element">{{ element.credit }}</td>
+              </ng-container>
 
-      <!-- Table content -->
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-    </table>
-    <mat-paginator
-      [pageSizeOptions]="[5, 10, 20 ]"
-      showFirstLastButtons
-    ></mat-paginator>
+              <!-- Table content -->
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+            </table>
+            <mat-paginator
+              [pageSizeOptions]="[5, 10, 20]"
+              showFirstLastButtons
+            ></mat-paginator>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
