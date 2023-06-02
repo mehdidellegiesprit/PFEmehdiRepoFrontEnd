@@ -5,6 +5,7 @@
     "outDir": "./dist/out-tsc",
     "forceConsistentCasingInFileNames": true,
     "strict": true,
+    "strictPropertyInitialization": false,
     // "noImplicitOverride": true, // Commented as it may not be compatible with your TypeScript version
     "noPropertyAccessFromIndexSignature": true,
     "noImplicitReturns": true,

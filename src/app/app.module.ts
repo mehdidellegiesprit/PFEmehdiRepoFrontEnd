@@ -26,6 +26,7 @@ import {
 import 'tslib';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { BankStatementTableComponent } from './bank-statement-table/bank-statement-table.component';
 export function MSALInstanceFactory(): IPublicClientApplication {
   return new PublicClientApplication({
     auth: {
@@ -42,6 +43,7 @@ export function MSALInstanceFactory(): IPublicClientApplication {
     RegisterComponent,
     UserComponent,
     BankStatementTableDisplayComponent,
+    BankStatementTableComponent,
   ],
   imports: [
     NotificationModule,
