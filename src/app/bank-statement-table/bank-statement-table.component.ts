@@ -26,10 +26,6 @@ export class BankStatementTableComponent implements OnInit, OnChanges {
   @ViewChild(MatSort) sort!: MatSort;
   @Output() toggle: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-  toggleVisibility(): void {
-    this.toggle.emit(true); // or false, based on your logic
-  }
-
   displayedColumns: string[] = [
     'dateDonneeExtrait',
     'dateValeurDonneeExtrait',
@@ -37,20 +33,37 @@ export class BankStatementTableComponent implements OnInit, OnChanges {
     'debit',
     'credit',
   ];
+  buttons: { collapseId: string }[];
+  activeButton: string | null = null;
 
-  constructor(private datePipe: DatePipe) {
-    this.dataSource = new MatTableDataSource<DonneeExtrait>(this.data);
+  generateButtons(): { collapseId: string }[] {
+    const button = {
+      collapseId: 'collapse-' + Math.random().toString(36).substring(7),
+    };
+    return [button];
   }
+
+  toggleVisibility(collapseId: string): void {
+    if (this.activeButton === collapseId) {
+      this.activeButton = null; // Collapse the element if it's already active
+    } else {
+      this.activeButton = collapseId; // Expand the element if it's not active
+    }
+  }
+
   formatDate(date: any): string {
     if (date) {
       return this.datePipe.transform(date, 'dd/MM/yyyy') || '';
     }
     return '';
   }
-
+  constructor(private datePipe: DatePipe) {
+    this.dataSource = new MatTableDataSource<DonneeExtrait>(this.data);
+  }
   ngOnInit(): void {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+    this.buttons = this.generateButtons(); // Generate buttons based on data length
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -58,6 +71,7 @@ export class BankStatementTableComponent implements OnInit, OnChanges {
       this.dataSource.data = this.data;
     }
   }
+
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;

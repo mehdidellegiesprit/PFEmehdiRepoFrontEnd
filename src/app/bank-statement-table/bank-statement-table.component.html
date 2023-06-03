@@ -1,127 +1,117 @@
-<p>
-  <a
-    class="btn btn-primary"
-    data-toggle="collapse"
-    href="#multiCollapseExample1"
-    role="button"
-    aria-expanded="false"
-    aria-controls="multiCollapseExample1"
-    (click)="toggleVisibility()"
-    >Toggle first element</a
-  >
-  <!-- <button class="btn btn-primary" type="button" data-toggle="collapse" data-target=".multi-collapse" aria-expanded="false" aria-controls="multiCollapseExample1 multiCollapseExample2">Toggle both elements</button> -->
-</p>
-<div class="row">
-  <div class="col">
-    <div class="collapse multi-collapse" id="multiCollapseExample1">
-      <div class="card card-body">
-        <div class="mat-elevation-z8">
-          <div class="search-bar">
-            <mat-form-field>
-              <mat-label>Search</mat-label>
-              <input
-                matInput
-                (keyup)="applyFilter($event)"
-                placeholder="Search"
-              />
-            </mat-form-field>
-          </div>
-          <table
-            mat-table
-            [dataSource]="dataSource"
-            matSort
-            class="tableau-bordure"
-          >
-            <!-- Column definitions -->
-            <ng-container matColumnDef="dateDonneeExtrait">
-              <th
-                mat-header-cell
-                *matHeaderCellDef
-                mat-sort-header
-                class="equal-width-cell"
-              >
-                Date
-              </th>
-              <td mat-cell *matCellDef="let element" class="equal-width-cell">
-                {{ formatDate(element.dateDonneeExtrait) }}
-              </td>
-            </ng-container>
+<div *ngFor="let button of buttons">
+  <p>
+    <a
+      class="btn btn-primary"
+      role="button"
+      aria-expanded="false"
+      aria-controls="multiCollapseExample1"
+      (click)="toggleVisibility(button.collapseId)"
+      >Toggle element {{ button.collapseId }}</a
+    >
+  </p>
+  <div class="row">
+    <div class="col">
+      <div
+        class="collapse multi-collapse"
+        [id]="button.collapseId"
+        [ngClass]="{ show: activeButton === button.collapseId }"
+      >
+        <!-- Table content -->
+        <table
+          mat-table
+          [dataSource]="dataSource"
+          matSort
+          class="tableau-bordure"
+        >
+          <!-- Column definitions -->
+          <ng-container matColumnDef="dateDonneeExtrait">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              mat-sort-header
+              class="equal-width-cell"
+            >
+              Date
+            </th>
+            <td mat-cell *matCellDef="let element" class="equal-width-cell">
+              {{ formatDate(element.dateDonneeExtrait) }}
+            </td>
+          </ng-container>
 
-            <ng-container matColumnDef="dateValeurDonneeExtrait">
-              <th
-                mat-header-cell
-                *matHeaderCellDef
-                mat-sort-header
-                class="equal-width-cell"
-              >
-                Date valeur
-              </th>
-              <td mat-cell *matCellDef="let element" class="equal-width-cell">
-                {{ formatDate(element.dateValeurDonneeExtrait) }}
-              </td>
-            </ng-container>
+          <ng-container matColumnDef="dateValeurDonneeExtrait">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              mat-sort-header
+              class="equal-width-cell"
+            >
+              Date valeur
+            </th>
+            <td mat-cell *matCellDef="let element" class="equal-width-cell">
+              {{ formatDate(element.dateValeurDonneeExtrait) }}
+            </td>
+          </ng-container>
 
-            <ng-container matColumnDef="operations">
-              <th
-                mat-header-cell
-                *matHeaderCellDef
-                mat-sort-header
-                class="equal-width-cell"
-              >
-                Operations
-              </th>
-              <td mat-cell *matCellDef="let element" class="equal-width-cell">
-                <!-- {{ element.operations }} -->
-                example of operationnnnn
-              </td>
-            </ng-container>
+          <ng-container matColumnDef="operations">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              mat-sort-header
+              class="equal-width-cell"
+            >
+              Operations
+            </th>
+            <td mat-cell *matCellDef="let element" class="equal-width-cell">
+              <!-- {{ element.operations }} -->
+              example of operationnnnn
+            </td>
+          </ng-container>
 
-            <ng-container matColumnDef="debit">
-              <th
-                mat-header-cell
-                *matHeaderCellDef
-                mat-sort-header
-                class="equal-width-cell"
-              >
-                Débit en euros &nbsp;<span>&euro;</span>
-              </th>
-              <td mat-cell *matCellDef="let element" class="equal-width-cell">
-                <div *ngIf="element.debit !== 0">{{ element.debit }}</div>
-                <div *ngIf="element.debit === 0">Aucun débit</div>
-              </td>
-            </ng-container>
+          <ng-container matColumnDef="debit">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              mat-sort-header
+              class="equal-width-cell"
+            >
+              Débit en euros &nbsp;<span>&euro;</span>
+            </th>
+            <td mat-cell *matCellDef="let element" class="equal-width-cell">
+              <div *ngIf="element.debit !== 0">{{ element.debit }}</div>
+              <div *ngIf="element.debit === 0">Aucun débit</div>
+            </td>
+          </ng-container>
 
-            <ng-container matColumnDef="credit">
-              <th
-                mat-header-cell
-                *matHeaderCellDef
-                mat-sort-header
-                class="equal-width-cell"
-              >
-                Credit en euros &nbsp;<span>&euro;</span>
-              </th>
-              <td mat-cell *matCellDef="let element" class="equal-width-cell">
-                <div *ngIf="element.credit !== 0">{{ element.credit }}</div>
-                <div *ngIf="element.credit === 0">Aucun credit</div>
-              </td>
-            </ng-container>
+          <ng-container matColumnDef="credit">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              mat-sort-header
+              class="equal-width-cell"
+            >
+              Credit en euros &nbsp;<span>&euro;</span>
+            </th>
+            <td mat-cell *matCellDef="let element" class="equal-width-cell">
+              <div *ngIf="element.credit !== 0">{{ element.credit }}</div>
+              <div *ngIf="element.credit === 0">Aucun credit</div>
+            </td>
+          </ng-container>
 
-            <!-- Table content -->
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr
-              mat-row
-              *matRowDef="let row; columns: displayedColumns"
-              [ngClass]="{
-                'zero-debit': row.debit === 0,
-                'non-zero-debit': row.debit !== 0
-              }"
-            ></tr>
-          </table>
-          <mat-paginator
-            [pageSizeOptions]="[5, 10, 20]"
-            showFirstLastButtons
-          ></mat-paginator>
-        </div>
+          <!-- Table content -->
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr
+            mat-row
+            *matRowDef="let row; columns: displayedColumns"
+            [ngClass]="{
+              'zero-debit': row.debit === 0,
+              'non-zero-debit': row.debit !== 0
+            }"
+          ></tr>
+        </table>
+        <mat-paginator
+          [pageSizeOptions]="[5, 10, 20]"
+          showFirstLastButtons
+        ></mat-paginator>
       </div>
     </div>
   </div>
