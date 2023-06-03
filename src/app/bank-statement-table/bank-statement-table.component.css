@@ -1,0 +1,41 @@
+.tableau-bordure {
+  table-layout: fixed;
+  border-collapse: separate;
+  border: 1px solid #ccc;
+  width: 95%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 15px;
+}
+
+.tableau-bordure th,
+.tableau-bordure td {
+  border-left: 1px solid #ccc;
+  border-right: 1px solid #ccc;
+  text-align: left;
+  padding: 8px;
+  word-wrap: break-word;
+}
+
+.equal-width-cell {
+  flex: 1;
+}
+.search-bar {
+  margin-left: 35px;
+  flex-grow: 1;
+  margin-top: 15px;
+  margin-bottom: 8px;
+}
+.tableau-bordure th {
+  font-weight: bold;
+  font-size: 16px;
+  color: #333;
+}
+.zero-debit {
+    background-color: #DFF0D8; /* Background color for rows with debit != 0 */
+}
+
+.non-zero-debit {
+    background-color: #FCE4D6; /* Background color for rows with debit = 0 */
+
+}

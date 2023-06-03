@@ -12,6 +12,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { DonneeExtrait } from '../model/DonneeExtrait';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-bank-statement-table',
@@ -37,8 +38,14 @@ export class BankStatementTableComponent implements OnInit, OnChanges {
     'credit',
   ];
 
-  constructor() {
+  constructor(private datePipe: DatePipe) {
     this.dataSource = new MatTableDataSource<DonneeExtrait>(this.data);
+  }
+  formatDate(date: any): string {
+    if (date) {
+      return this.datePipe.transform(date, 'dd/MM/yyyy') || '';
+    }
+    return '';
   }
 
   ngOnInit(): void {

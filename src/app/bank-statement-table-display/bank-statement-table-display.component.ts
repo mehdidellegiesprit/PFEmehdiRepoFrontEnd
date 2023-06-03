@@ -5,6 +5,7 @@ import { BankStatementViewerService } from '../service/bank-statement-viewer.ser
 import { HttpErrorResponse } from '@angular/common/http';
 import { NotificationType } from '../enum/notification-type.enum';
 import { ReleveBancaire } from '../model/ReleveBancaire';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-bank-statement-table-display',
@@ -22,10 +23,16 @@ export class BankStatementTableDisplayComponent implements OnInit, OnDestroy {
   }
 
   constructor(
+    private datePipe: DatePipe,
     private notificationService: NotificationService,
     private bankStatementViewerService: BankStatementViewerService
   ) {}
-
+  formatDate(date: any): string {
+    if (date) {
+      return this.datePipe.transform(date, 'dd/MM/yyyy') || '';
+    }
+    return '';
+  }
   public onFileInputChange(event: any): void {
     const file: File = event.target.files[0];
     this.subscription.push(
