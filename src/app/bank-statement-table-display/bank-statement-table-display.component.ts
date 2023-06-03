@@ -17,8 +17,7 @@ export class BankStatementTableDisplayComponent implements OnInit, OnDestroy {
   private subscription: Subscription[] = [];
   isVisible = false; // Initialize as hidden
 
-
-  onToggle():void {
+  onToggle(): void {
     this.isVisible = !this.isVisible;
   }
 

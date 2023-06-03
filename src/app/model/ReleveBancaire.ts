@@ -8,6 +8,7 @@ export class ReleveBancaire {
   iban: string;
   nameFile: string;
   dataFileContent: string;
+  open?: boolean; // Add the 'open' property
   constructor(
     id: string,
     nomBank: string,
