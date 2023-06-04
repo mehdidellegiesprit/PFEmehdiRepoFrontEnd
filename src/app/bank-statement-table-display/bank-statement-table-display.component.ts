@@ -6,6 +6,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { NotificationType } from '../enum/notification-type.enum';
 import { ReleveBancaire } from '../model/ReleveBancaire';
 import { DatePipe } from '@angular/common';
+import { format } from 'date-fns';
+import { fr } from 'date-fns/locale';
 
 @Component({
   selector: 'app-bank-statement-table-display',
@@ -46,6 +48,14 @@ export class BankStatementTableDisplayComponent implements OnInit, OnDestroy {
     }
     return '';
   }
+  convertDate(dateString: string | null): string {
+    if (dateString) {
+      const date = new Date(dateString);
+      return format(date, 'dd MMMM yyyy', { locale: fr });
+    }
+    return '';
+  }
+
   public onFileInputChange(event: any): void {
     const file: File = event.target.files[0];
     this.subscription.push(

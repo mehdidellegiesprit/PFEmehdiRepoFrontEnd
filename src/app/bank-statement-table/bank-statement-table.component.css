@@ -43,3 +43,13 @@
   margin-top: 10px;
   padding: 5px;
 }
+.custom-paginator {
+  width: 95%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 15px;
+  padding: 8px;
+}
+.myDivWidth {
+  width: 300px; /* Set the width to 300 pixels */
+}

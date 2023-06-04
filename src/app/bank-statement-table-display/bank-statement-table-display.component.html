@@ -26,7 +26,7 @@
           <div>
             <app-bank-statement-table
               [data]="extrait.donneeExtraits"
-              [formattedDateExtrait]="formatDate(extrait.dateExtrait)"
+              [formattedDateExtrait]="convertDate(extrait.dateExtrait.toString())"
               (toggle)="onToggle('myDiv' + i + '--' + j)"
             ></app-bank-statement-table>
           </div>
@@ -34,37 +34,38 @@
           <!-- we display the data without the table  -->
 
           <div [id]="'myDiv' + i + '--' + j" class="hidden-div div-border">
-            <p>date extrait : {{ formatDate(extrait.dateExtrait) }}</p>
-            <p>
-              date du solde crediteurDebut mois :{{
-                formatDate(extrait.dateDuSoldeCrediteurDebutMois)
-              }}
-            </p>
-            <p>
-              credit solde crediteurDebut mois :{{
-                extrait.creditDuSoldeCrediteurDebutMois
-              }}&nbsp;<span>&euro;</span>
-            </p>
-            <p>
-              totalMouvement Debit :{{
-                extrait.totalMouvementsDebit
-              }}&nbsp;<span>&euro;</span>
-            </p>
-            <p>
-              totalMouvement Credit:{{
-                extrait.totalMouvementsCredit
-              }}&nbsp;<span>&euro;</span>
-            </p>
-            <p>
-              date du solde crediteur Fin mois:{{
-                formatDate(extrait.dateDuSoldeCrediteurFinMois)
-              }}
-            </p>
-            <p>
-              credit solde crediteurFin mois:{{
-                extrait.creditDuSoldeCrediteurFinMois
-              }}&nbsp;<span>&euro;</span>
-            </p>
+            <h2 class="center-header">
+              <span
+                >Informations sur les soldes créditeurs et les mouvements de
+                l'extrait</span
+              >
+            </h2>
+
+            <!-- debut mon tableau  -->
+
+            <table class="custom-table">
+              <tr>
+                <th>Date d'extrait</th>
+                <th>Date solde créditeur début mois</th>
+                <th>Crédit solde créditeur début mois</th>
+                <th>Date solde créditeur fin mois</th>
+                <th>Crédit solde créditeur fin mois</th>
+                <th>Total mouvement débit</th>
+                <th>Total mouvement crédit</th>
+              </tr>
+
+              <tr>
+                <td>{{ formatDate(extrait.dateExtrait) }}</td>
+                <td>{{ formatDate(extrait.dateDuSoldeCrediteurDebutMois) }}</td>
+                <td>{{ extrait.creditDuSoldeCrediteurDebutMois }} &euro;</td>
+                <td>{{ extrait.totalMouvementsDebit }} &euro;</td>
+                <td>{{ extrait.totalMouvementsCredit }} &euro;</td>
+                <td>{{ formatDate(extrait.dateDuSoldeCrediteurFinMois) }}</td>
+                <td>{{ extrait.creditDuSoldeCrediteurFinMois }} &euro;</td>
+              </tr>
+            </table>
+
+            <!-- fin mon tableau  -->
           </div>
         </div>
       </div>
