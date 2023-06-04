@@ -26,6 +26,7 @@ export class BankStatementTableComponent implements OnInit, OnChanges {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   @Output() toggle: EventEmitter<any> = new EventEmitter<any>();
+  @Input() formattedDateExtrait: string;
 
   displayedColumns: string[] = [
     'dateDonneeExtrait',
@@ -36,7 +37,7 @@ export class BankStatementTableComponent implements OnInit, OnChanges {
   ];
   buttons: { collapseId: string }[];
   activeButton: string | null = null;
-
+  isIconUp: boolean = false;
 
   generateButtons(): { collapseId: string }[] {
     const button = {
@@ -44,14 +45,37 @@ export class BankStatementTableComponent implements OnInit, OnChanges {
     };
     return [button];
   }
+  titleButtonExtrait: string | null = 'Click to show additional details';
 
   toggleVisibility(collapseId: string): void {
+    const button = document.getElementById(
+      `idbuttonByExtrait${collapseId}`
+    ) as HTMLAnchorElement;
+    console.log('Show / Hide button:', button);
+
     if (this.activeButton === collapseId) {
       this.activeButton = null; // Collapse the element if it's already active
+      this.titleButtonExtrait = 'Click to show additional details';
     } else {
       this.activeButton = collapseId; // Expand the element if it's not active
+      this.titleButtonExtrait = 'Click to hide additional details';
     }
+
+    if (button) {
+      button.title = this.titleButtonExtrait;
+    }
+
     this.toggle.emit(!!this.activeButton);
+    this.isIconUp = !this.isIconUp;
+  }
+
+  setButtonTitle(collapseId: string, title: string): void {
+    const button = document.querySelector(
+      `button[aria-controls="${collapseId}"]`
+    );
+    if (button) {
+      button.setAttribute('title', title);
+    }
   }
 
   formatDate(date: any): string {

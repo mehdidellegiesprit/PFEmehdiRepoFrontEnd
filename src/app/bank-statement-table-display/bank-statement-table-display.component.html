@@ -12,19 +12,28 @@
           Societe: {{ r.nomBank }} / Rib: {{ r.iban }}
         </button>
       </h5>
-
     </div>
 
     <div
       [id]="'collapse' + i"
       class="collapse"
-      [class.show]="i === 0"
       [attr.aria-labelledby]="'heading' + i"
       data-parent="#accordion"
     >
       <div class="card-body" *ngFor="let extrait of r.extraits; let j = index">
         <div>
-          <div [id]="'myDiv' + i + '--' + j" class="hidden-div">
+          <!-- we call the child component that contain the table -->
+          <div>
+            <app-bank-statement-table
+              [data]="extrait.donneeExtraits"
+              [formattedDateExtrait]="formatDate(extrait.dateExtrait)"
+              (toggle)="onToggle('myDiv' + i + '--' + j)"
+            ></app-bank-statement-table>
+          </div>
+
+          <!-- we display the data without the table  -->
+
+          <div [id]="'myDiv' + i + '--' + j" class="hidden-div div-border">
             <p>date extrait : {{ formatDate(extrait.dateExtrait) }}</p>
             <p>
               date du solde crediteurDebut mois :{{
@@ -57,10 +66,6 @@
               }}&nbsp;<span>&euro;</span>
             </p>
           </div>
-          <app-bank-statement-table
-            [data]="extrait.donneeExtraits"
-            (toggle)="onToggle('myDiv' + i + '--' + j)"
-          ></app-bank-statement-table>
         </div>
       </div>
     </div>

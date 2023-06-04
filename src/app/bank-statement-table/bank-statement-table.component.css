@@ -32,10 +32,14 @@
   color: #333;
 }
 .zero-debit {
-    background-color: #DFF0D8; /* Background color for rows with debit != 0 */
+  background-color: #dff0d8; /* Background color for rows with debit != 0 */
 }
 
 .non-zero-debit {
-    background-color: #FCE4D6; /* Background color for rows with debit = 0 */
-
+  background-color: #fce4d6; /* Background color for rows with debit = 0 */
+}
+/* *****************************************just for testing brooo  *****************************************/
+.container-child {
+  margin-top: 10px;
+  padding: 5px;
 }
