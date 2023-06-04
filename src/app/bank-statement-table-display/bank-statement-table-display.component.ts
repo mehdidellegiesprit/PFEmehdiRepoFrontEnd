@@ -18,8 +18,21 @@ export class BankStatementTableDisplayComponent implements OnInit, OnDestroy {
   private subscription: Subscription[] = [];
   isVisible = false; // Initialize as hidden
 
-  onToggle(): void {
-    this.isVisible = !this.isVisible;
+  onToggle(id_div: string): void {
+    const divElement = document.getElementById(id_div);
+    console.log('onToggle', divElement);
+
+    if (divElement) {
+      const computedStyle = window.getComputedStyle(divElement);
+
+      if (computedStyle.display === 'none') {
+        // If the div is currently hidden, show it
+        divElement.style.display = 'block';
+      } else {
+        // If the div is currently visible, hide it
+        divElement.style.display = 'none';
+      }
+    }
   }
 
   constructor(

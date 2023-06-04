@@ -120,4 +120,8 @@ a:hover {
   display: flex;
   justify-content: flex-end;
 }
+.hidden-div {
+  display: none;
+}
+
 /* *****************************************just for testing brooo  *****************************************/

@@ -13,6 +13,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { DonneeExtrait } from '../model/DonneeExtrait';
 import { DatePipe } from '@angular/common';
+import { v4 as uuidv4 } from 'uuid';
 
 @Component({
   selector: 'app-bank-statement-table',
@@ -24,7 +25,7 @@ export class BankStatementTableComponent implements OnInit, OnChanges {
   @Input() data: DonneeExtrait[] = [];
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-  @Output() toggle: EventEmitter<boolean> = new EventEmitter<boolean>();
+  @Output() toggle: EventEmitter<any> = new EventEmitter<any>();
 
   displayedColumns: string[] = [
     'dateDonneeExtrait',
@@ -36,9 +37,10 @@ export class BankStatementTableComponent implements OnInit, OnChanges {
   buttons: { collapseId: string }[];
   activeButton: string | null = null;
 
+
   generateButtons(): { collapseId: string }[] {
     const button = {
-      collapseId: 'collapse-' + Math.random().toString(36).substring(7),
+      collapseId: 'collapse-' + uuidv4(),
     };
     return [button];
   }
@@ -49,6 +51,7 @@ export class BankStatementTableComponent implements OnInit, OnChanges {
     } else {
       this.activeButton = collapseId; // Expand the element if it's not active
     }
+    this.toggle.emit(!!this.activeButton);
   }
 
   formatDate(date: any): string {

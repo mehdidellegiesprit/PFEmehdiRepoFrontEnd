@@ -12,6 +12,7 @@
           Societe: {{ r.nomBank }} / Rib: {{ r.iban }}
         </button>
       </h5>
+
     </div>
 
     <div
@@ -21,44 +22,46 @@
       [attr.aria-labelledby]="'heading' + i"
       data-parent="#accordion"
     >
-      <div class="card-body" *ngFor="let extrait of r.extraits">
-        <div *ngIf="isVisible">
-          <p>date extrait : {{ formatDate(extrait.dateExtrait) }}</p>
-          <p>
-            date du solde crediteurDebut mois :{{
-              formatDate(extrait.dateDuSoldeCrediteurDebutMois)
-            }}
-          </p>
-          <p>
-            credit solde crediteurDebut mois :{{
-              extrait.creditDuSoldeCrediteurDebutMois
-            }}&nbsp;<span>&euro;</span>
-          </p>
-          <p>
-            totalMouvement Debit :{{ extrait.totalMouvementsDebit }}&nbsp;<span
-              >&euro;</span
-            >
-          </p>
-          <p>
-            totalMouvement Credit:{{ extrait.totalMouvementsCredit }}&nbsp;<span
-              >&euro;</span
-            >
-          </p>
-          <p>
-            date du solde crediteur Fin mois:{{
-              formatDate(extrait.dateDuSoldeCrediteurFinMois)
-            }}
-          </p>
-          <p>
-            credit solde crediteurFin mois:{{
-              extrait.creditDuSoldeCrediteurFinMois
-            }}&nbsp;<span>&euro;</span>
-          </p>
+      <div class="card-body" *ngFor="let extrait of r.extraits; let j = index">
+        <div>
+          <div [id]="'myDiv' + i + '--' + j" class="hidden-div">
+            <p>date extrait : {{ formatDate(extrait.dateExtrait) }}</p>
+            <p>
+              date du solde crediteurDebut mois :{{
+                formatDate(extrait.dateDuSoldeCrediteurDebutMois)
+              }}
+            </p>
+            <p>
+              credit solde crediteurDebut mois :{{
+                extrait.creditDuSoldeCrediteurDebutMois
+              }}&nbsp;<span>&euro;</span>
+            </p>
+            <p>
+              totalMouvement Debit :{{
+                extrait.totalMouvementsDebit
+              }}&nbsp;<span>&euro;</span>
+            </p>
+            <p>
+              totalMouvement Credit:{{
+                extrait.totalMouvementsCredit
+              }}&nbsp;<span>&euro;</span>
+            </p>
+            <p>
+              date du solde crediteur Fin mois:{{
+                formatDate(extrait.dateDuSoldeCrediteurFinMois)
+              }}
+            </p>
+            <p>
+              credit solde crediteurFin mois:{{
+                extrait.creditDuSoldeCrediteurFinMois
+              }}&nbsp;<span>&euro;</span>
+            </p>
+          </div>
+          <app-bank-statement-table
+            [data]="extrait.donneeExtraits"
+            (toggle)="onToggle('myDiv' + i + '--' + j)"
+          ></app-bank-statement-table>
         </div>
-        <app-bank-statement-table
-          [data]="extrait.donneeExtraits"
-          (toggle)="onToggle()"
-        ></app-bank-statement-table>
       </div>
     </div>
   </div>
