@@ -2,35 +2,40 @@
   table-layout: fixed;
   border-collapse: separate;
   border: 1px solid #ccc;
-  width: 95%;
-  margin-left: auto;
-  margin-right: auto;
-  margin-bottom: 15px;
+  background-color: white !important;
+  width: 100%;
+  margin: 20px auto 15px;
+  box-sizing: border-box;
+  vertical-align: middle;
+  text-align: center !important; /* modification ici */
 }
 
 .tableau-bordure th,
 .tableau-bordure td {
-  border-left: 1px solid #ccc;
-  border-right: 1px solid #ccc;
-  text-align: left;
-  padding: 8px;
+  border: 1px solid #3b3b3b7d;
+  text-align: center;
+  padding: 10px;
   word-wrap: break-word;
+  vertical-align: middle;
+}
+
+.tableau-bordure th {
+  font-weight: bold;
+  font-size: 16px;
+  color: #333;
 }
 
 .equal-width-cell {
   flex: 1;
 }
+
 .search-bar {
   margin-left: 35px;
   flex-grow: 1;
   margin-top: 15px;
   margin-bottom: 8px;
 }
-.tableau-bordure th {
-  font-weight: bold;
-  font-size: 16px;
-  color: #333;
-}
+
 .zero-debit {
   background-color: #dff0d8; /* Background color for rows with debit != 0 */
 }
@@ -38,18 +43,39 @@
 .non-zero-debit {
   background-color: #fce4d6; /* Background color for rows with debit = 0 */
 }
+
 /* *****************************************just for testing brooo  *****************************************/
 .container-child {
   margin-top: 10px;
   padding: 5px;
 }
-.custom-paginator {
-  width: 95%;
+.c1 {
   margin-left: auto;
   margin-right: auto;
-  margin-bottom: 15px;
-  padding: 8px;
+  margin-top: 20px;
+  /* margin-bottom: 10px; */
+  padding: 20px;
+  box-sizing: border-box;
+  width: 100%;
 }
+.custom-paginator {
+  width: 30%;
+  box-sizing: border-box;
+  float: right; /* Ajout de cette ligne */
+}
+
 .myDivWidth {
   width: 300px; /* Set the width to 300 pixels */
+}
+
+.button-pair {
+  display: flex;
+  justify-content: space-between;
+}
+
+.blockButton {
+  background-color: #d3d3d3; /* Light gray */
+}
+.center-header-cell th {
+  text-align: center;
 }

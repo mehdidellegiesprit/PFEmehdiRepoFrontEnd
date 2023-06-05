@@ -26,14 +26,19 @@
           <div>
             <app-bank-statement-table
               [data]="extrait.donneeExtraits"
-              [formattedDateExtrait]="convertDate(extrait.dateExtrait.toString())"
+              [formattedDateExtrait]="
+                convertDate(extrait.dateExtrait.toString())
+              "
               (toggle)="onToggle('myDiv' + i + '--' + j)"
             ></app-bank-statement-table>
           </div>
 
           <!-- we display the data without the table  -->
-
-          <div [id]="'myDiv' + i + '--' + j" class="hidden-div div-border">
+          <!-- cette encapsule tous le block en clickant sur le boutton extrait du 30/05/2022 -->
+          <div
+            [id]="'myDiv' + i + '--' + j"
+            class="hidden-div div-border blockButton"
+          >
             <h2 class="center-header">
               <span
                 >Informations sur les soldes créditeurs et les mouvements de
@@ -45,23 +50,31 @@
 
             <table class="custom-table">
               <tr>
-                <th>Date d'extrait</th>
-                <th>Date solde créditeur début mois</th>
-                <th>Crédit solde créditeur début mois</th>
-                <th>Date solde créditeur fin mois</th>
-                <th>Crédit solde créditeur fin mois</th>
-                <th>Total mouvement débit</th>
-                <th>Total mouvement crédit</th>
+                <th class="date-extrait">Date d'extrait</th>
+                <th class="date-debut">Date solde créditeur début mois</th>
+                <th class="credit-debut">
+                  Crédit solde créditeur début mois en &nbsp;<span>&euro;</span>
+                </th>
+                <th class="date-fin">Date solde créditeur fin mois</th>
+                <th class="credit-fin">
+                  Crédit solde créditeur fin mois en &nbsp;<span>&euro;</span>
+                </th>
+                <th class="mouvement-debit">
+                  Total mouvement débit en &nbsp;<span>&euro;</span>
+                </th>
+                <th class="mouvement-credit">
+                  Total mouvement crédit en &nbsp;<span>&euro;</span>
+                </th>
               </tr>
 
               <tr>
                 <td>{{ formatDate(extrait.dateExtrait) }}</td>
                 <td>{{ formatDate(extrait.dateDuSoldeCrediteurDebutMois) }}</td>
                 <td>{{ extrait.creditDuSoldeCrediteurDebutMois }} &euro;</td>
-                <td>{{ extrait.totalMouvementsDebit }} &euro;</td>
-                <td>{{ extrait.totalMouvementsCredit }} &euro;</td>
                 <td>{{ formatDate(extrait.dateDuSoldeCrediteurFinMois) }}</td>
                 <td>{{ extrait.creditDuSoldeCrediteurFinMois }} &euro;</td>
+                <td>{{ extrait.totalMouvementsDebit }} &euro;</td>
+                <td>{{ extrait.totalMouvementsCredit }} &euro;</td>
               </tr>
             </table>
 
