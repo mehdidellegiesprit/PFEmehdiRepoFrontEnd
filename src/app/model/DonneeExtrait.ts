@@ -4,6 +4,9 @@ export class DonneeExtrait {
   operations: string;
   debit: number;
   credit: number;
+  isExpanded?: boolean;
+  testLine?: string;
+  isSupplementary: boolean; // Nouveau champ
   constructor(
     dateDonneeExtrait: Date,
     dateValeurDonneeExtrait: Date,

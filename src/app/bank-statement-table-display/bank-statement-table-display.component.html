@@ -1,27 +1,33 @@
 <div id="accordion" *ngFor="let r of releves; let i = index">
   <div class="card">
-    <div class="card-header" [id]="'heading' + i">
-      <h5 class="mb-0">
-        <button
-          class="btn btn-link"
-          data-toggle="collapse"
-          [attr.data-target]="'#collapse' + i"
-          aria-expanded="true"
-          [attr.aria-controls]="'collapse' + i"
-        >
-          Societe: {{ r.nomBank }} / Rib: {{ r.iban }}
-        </button>
-      </h5>
+    <div>
+      <!-- Content for the first column -->
+      <div class="card-header" [id]="'heading' + i">
+        <h5 class="mb-0">
+          <button
+            class="btn btn-link"
+            data-toggle="collapse"
+            [attr.data-target]="'#collapse' + i"
+            aria-expanded="true"
+            [attr.aria-controls]="'collapse' + i"
+          >
+            Societe: {{ r.nomBank }} / Rib: {{ r.iban }}
+          </button>
+        </h5>
+      </div>
     </div>
-
-    <div
-      [id]="'collapse' + i"
-      class="collapse"
-      [attr.aria-labelledby]="'heading' + i"
-      data-parent="#accordion"
-    >
-      <div class="card-body" *ngFor="let extrait of r.extraits; let j = index">
-        <div>
+    <div>
+      <!-- Content for the second column -->
+      <div
+        [id]="'collapse' + i"
+        class="collapse"
+        [attr.aria-labelledby]="'heading' + i"
+        data-parent="#accordion"
+      >
+        <div
+          class="card-body"
+          *ngFor="let extrait of r.extraits; let j = index"
+        >
           <!-- we call the child component that contain the table -->
           <div>
             <app-bank-statement-table
@@ -69,9 +75,13 @@
 
               <tr>
                 <td>{{ formatDate(extrait.dateExtrait) }}</td>
-                <td>{{ formatDate(extrait.dateDuSoldeCrediteurDebutMois) }}</td>
+                <td>
+                  {{ formatDate(extrait.dateDuSoldeCrediteurDebutMois) }}
+                </td>
                 <td>{{ extrait.creditDuSoldeCrediteurDebutMois }} &euro;</td>
-                <td>{{ formatDate(extrait.dateDuSoldeCrediteurFinMois) }}</td>
+                <td>
+                  {{ formatDate(extrait.dateDuSoldeCrediteurFinMois) }}
+                </td>
                 <td>{{ extrait.creditDuSoldeCrediteurFinMois }} &euro;</td>
                 <td>{{ extrait.totalMouvementsDebit }} &euro;</td>
                 <td>{{ extrait.totalMouvementsCredit }} &euro;</td>

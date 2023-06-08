@@ -1,19 +1,21 @@
 .tableau-bordure {
   table-layout: fixed;
   border-collapse: separate;
-  border: 1px solid #ccc;
   background-color: white !important;
   width: 100%;
   margin: 20px auto 15px;
   box-sizing: border-box;
   vertical-align: middle;
-  text-align: center !important; /* modification ici */
+}
+
+.mat-header-cell {
+  text-align: left;
 }
 
 .tableau-bordure th,
 .tableau-bordure td {
   border: 1px solid #3b3b3b7d;
-  text-align: center;
+  text-align: left;
   padding: 10px;
   word-wrap: break-word;
   vertical-align: middle;
@@ -25,15 +27,33 @@
   color: #333;
 }
 
+.example-detail-row td,
+.example-detail-row th {
+  border: none !important;
+}
+
+.expanded-row td {
+  border: none !important;
+}
+
+.no-border td {
+  border: none !important;
+}
+
+.no-border.example-detail-row td {
+  border: 1px solid transparent !important;
+}
+
 .equal-width-cell {
-  flex: 1;
+  text-align: left;
 }
 
 .search-bar {
-  margin-left: 35px;
+  margin-left: 15px;
   flex-grow: 1;
   margin-top: 15px;
   margin-bottom: 8px;
+  text-align: left;
 }
 
 .zero-debit {
@@ -44,24 +64,35 @@
   background-color: #fce4d6; /* Background color for rows with debit = 0 */
 }
 
-/* *****************************************just for testing brooo  *****************************************/
 .container-child {
   margin-top: 10px;
   padding: 5px;
 }
+
 .c1 {
   margin-left: auto;
-  margin-right: auto;
+  margin-right: 1px;
   margin-top: 20px;
-  /* margin-bottom: 10px; */
-  padding: 20px;
+  width: 100%;
+}
+
+.c2 {
+  margin-left: auto;
+  margin-right: 1px;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  padding: 7px;
   box-sizing: border-box;
   width: 100%;
 }
+
 .custom-paginator {
-  width: 30%;
-  box-sizing: border-box;
-  float: right; /* Ajout de cette ligne */
+  padding: 1px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  width: 600px;
+  float: right;
 }
 
 .myDivWidth {
@@ -76,6 +107,98 @@
 .blockButton {
   background-color: #d3d3d3; /* Light gray */
 }
-.center-header-cell th {
+
+.center-header {
   text-align: center;
+  padding-left: 20px; /* Adjust the indentation as needed */
+  padding-right: 20px; /* Adjust the indentation as needed */
+}
+
+.no-results {
+  margin-top: 20px;
+  color: #f00;
+  grid-column: 1 / -1; /* occupe toutes les colonnes disponibles */
+  text-align: center;
+  font-size: 20px;
+}
+
+.custom-input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  width: 300px;
+  float: right;
+  margin-bottom: 35px;
+}
+
+.scrollable-column {
+  max-height: 100px; /* Définir à la hauteur maximale que vous voulez */
+  overflow: auto;
+}
+
+.test-row {
+  background-color: red; /* rend la ligne de test facilement visible */
+}
+
+.tableau-cadre {
+  border: 1px solid #ccc; /* Couleur et épaisseur du cadre */
+  border-radius: 4px; /* Bordures arrondies du cadre */
+  padding: 10px; /* Marge intérieure du cadre */
+}
+
+.mat-row,
+.mat-header-row {
+  height: 48px;
+}
+
+.example-element-row {
+  height: 48px;
+}
+
+.example-element-detail {
+  overflow: hidden;
+  display: flex;
+}
+
+/* Styles spécifiques pour la ligne supplémentaire */
+.supplementary-row {
+  background-color: #ebebeb;
+}
+
+.supplementary-cell {
+  border: 1px solid #3b3b3b7d;
+  text-align: center;
+  padding: 10px;
+  word-wrap: break-word;
+  vertical-align: middle;
+}
+/* aaaaaaaaaaaaaaaaaaaaaaaaaaaa */
+.professional-button {
+  background-color: transparent; /* rend le fond transparent */
+  border: none; /* enlève la bordure */
+  color: #777; /* couleur du texte en noir */
+  padding: 5px 10px; /* espace intérieur du bouton */
+  text-align: center; /* aligne le texte au centre */
+  text-decoration: none; /* enlève le soulignement */
+  display: flex; /* change pour aligner le texte et l'icône */
+  align-items: center; /* ajouté pour centrer verticalement le texte et l'icône */
+  justify-content: center; /* ajouté pour centrer horizontalement le texte et l'icône */
+  font-size: 14px; /* taille du texte */
+  font-weight: bold; /* rend le texte en gras */
+  cursor: pointer; /* change le curseur en une main quand vous passez dessus */
+  transition: all 0.3s ease 0s; /* transition douce quand on passe dessus */
+  float: right; /* aligne le bouton à droite */
+}
+
+.professional-button:hover {
+  color: #292828; /* change la couleur du texte quand on passe dessus */
+}
+
+.professional-button:active {
+  color: #b9afaf; /* change la couleur du texte quand on clique dessus */
+}
+
+.professional-button:focus {
+  outline: none; /* enlève le contour quand le bouton est en focus */
 }

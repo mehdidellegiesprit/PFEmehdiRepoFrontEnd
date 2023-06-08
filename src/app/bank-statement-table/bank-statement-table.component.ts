@@ -14,6 +14,8 @@ import { MatTableDataSource } from '@angular/material/table';
 import { DonneeExtrait } from '../model/DonneeExtrait';
 import { DatePipe } from '@angular/common';
 import { v4 as uuidv4 } from 'uuid';
+import { MatIconModule, MatIconRegistry } from '@angular/material/icon';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-bank-statement-table',
@@ -38,6 +40,7 @@ export class BankStatementTableComponent implements OnInit, OnChanges {
   buttons: { collapseId: string }[];
   activeButton: string | null = null;
   isIconUp: boolean = false;
+  showFullText: { [key: number]: boolean } = {};
 
   generateButtons(): { collapseId: string }[] {
     const button = {
@@ -84,18 +87,44 @@ export class BankStatementTableComponent implements OnInit, OnChanges {
     }
     return '';
   }
-  constructor(private datePipe: DatePipe) {
+
+  constructor(
+    private datePipe: DatePipe,
+    private matIconRegistry: MatIconRegistry,
+    private domSanitizer: DomSanitizer
+  ) {
     this.dataSource = new MatTableDataSource<DonneeExtrait>(this.data);
+
+    // Ajoutez l'icône "expand_less" en ligne
+    this.matIconRegistry.addSvgIconLiteral(
+      'expand_less',
+      this.domSanitizer.bypassSecurityTrustHtml(
+        `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path d="M19 13H5v-2h14v2z"/>
+      </svg>`
+      )
+    );
+    this.matIconRegistry.addSvgIcon(
+      'expand_more',
+      this.domSanitizer.bypassSecurityTrustResourceUrl(
+        'chemin_vers_expand_more.svg'
+      )
+    );
   }
+
   ngOnInit(): void {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
     this.buttons = this.generateButtons(); // Generate buttons based on data length
+    // Initialize showFullText for each data item to be false
+    this.data.forEach((_, index) => (this.showFullText[index] = false));
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['data'].currentValue !== changes['data'].previousValue) {
       this.dataSource.data = this.data;
+      // Initialize showFullText for each data item to be false
+      this.data.forEach((_, index) => (this.showFullText[index] = false));
     }
   }
 
@@ -104,8 +133,44 @@ export class BankStatementTableComponent implements OnInit, OnChanges {
     this.dataSource.sort = this.sort;
   }
 
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+  applyFilter(event: KeyboardEvent) {
+    const inputElement = event.target as HTMLInputElement;
+    const filterValue = inputElement.value.trim().toLowerCase();
+    this.dataSource.filterPredicate = (data: DonneeExtrait, filter: string) => {
+      const formattedDateDonneeExtrait = this.formatDate(data.dateDonneeExtrait)
+        ? this.formatDate(data.dateDonneeExtrait).toLowerCase()
+        : '';
+      const formattedDateValeurDonneeExtrait = this.formatDate(
+        data.dateValeurDonneeExtrait
+      )
+        ? this.formatDate(data.dateValeurDonneeExtrait).toLowerCase()
+        : '';
+      const operations = data.operations ? data.operations.toLowerCase() : '';
+      const debit =
+        data.debit !== null
+          ? data.debit.toString().toLowerCase()
+          : 'aucun debit';
+      const credit =
+        data.credit !== null
+          ? data.credit.toString().toLowerCase()
+          : 'aucun credit';
+
+      return (
+        formattedDateDonneeExtrait.includes(filter) ||
+        formattedDateValeurDonneeExtrait.includes(filter) ||
+        operations.includes(filter) ||
+        debit.includes(filter) ||
+        credit.includes(filter)
+      );
+    };
+    this.dataSource.filter = filterValue;
+  }
+
+  genererEspaces(nombreEspaces: number): string {
+    return '&nbsp;'.repeat(nombreEspaces);
+  }
+
+  toggleShowFullText(index: number): void {
+    this.showFullText[index] = !this.showFullText[index];
   }
 }

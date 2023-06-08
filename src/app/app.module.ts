@@ -24,7 +24,7 @@ import {
 } from '@azure/msal-browser';
 
 import 'tslib';
-
+import { MatIconModule } from '@angular/material/icon';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BankStatementTableComponent } from './bank-statement-table/bank-statement-table.component';
 import { DatePipe } from '@angular/common';
@@ -55,6 +55,7 @@ export function MSALInstanceFactory(): IPublicClientApplication {
     MsalModule,
     BrowserAnimationsModule,
     MaterialModule,
+    MatIconModule,
   ],
   providers: [
     DatePipe,
