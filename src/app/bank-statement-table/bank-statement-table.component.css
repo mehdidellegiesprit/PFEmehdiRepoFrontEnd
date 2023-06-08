@@ -49,11 +49,16 @@
 }
 
 .search-bar {
-  margin-left: 15px;
+  display: flex;
+  justify-content: flex-end;
+  margin: 15px 15px 8px 0;
   flex-grow: 1;
-  margin-top: 15px;
-  margin-bottom: 8px;
-  text-align: left;
+}
+
+/* Nouvelle classe pour l'élément de formulaire */
+.search-bar mat-form-field {
+  width: 400px; /* Ajustez la valeur selon vos besoins */
+  height: 50px; /* Ajustez la valeur selon vos besoins */
 }
 
 .zero-debit {
@@ -201,4 +206,21 @@
 
 .professional-button:focus {
   outline: none; /* enlève le contour quand le bouton est en focus */
+}
+.color-sample {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  margin-right: 5px;
+}
+
+.zero-debit {
+  background-color: #dff0d8;
+}
+
+.non-zero-debit {
+  background-color: #fce4d6;
+}
+.legend {
+  margin-left: 10px; /* Adjust the indentation as needed */
 }

@@ -49,6 +49,21 @@
                 <input matInput (keyup)="applyFilter($event)" />
               </mat-form-field>
             </div>
+            <div class="legend">
+              <div style="display: flex; align-items: center">
+                <span class="color-sample zero-debit"></span>
+                <span style="margin-left: 10px"
+                  >: Opération de crédit (aucun débit)</span
+                >
+              </div>
+              <div style="display: flex; align-items: center">
+                <span class="color-sample non-zero-debit"></span>
+                <span style="margin-left: 10px"
+                  >: Opération de débit (aucun crédit)</span
+                >
+              </div>
+            </div>
+
             <!-- Table content -->
             <table
               mat-table
