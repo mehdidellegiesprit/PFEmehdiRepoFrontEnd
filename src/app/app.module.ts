@@ -28,6 +28,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BankStatementTableComponent } from './bank-statement-table/bank-statement-table.component';
 import { DatePipe } from '@angular/common';
+import { MatSelectModule } from '@angular/material/select';
+import { MatChipsModule } from '@angular/material/chips';
+
 export function MSALInstanceFactory(): IPublicClientApplication {
   return new PublicClientApplication({
     auth: {
@@ -56,6 +59,8 @@ export function MSALInstanceFactory(): IPublicClientApplication {
     BrowserAnimationsModule,
     MaterialModule,
     MatIconModule,
+    MatSelectModule,
+    MatChipsModule,
   ],
   providers: [
     DatePipe,
