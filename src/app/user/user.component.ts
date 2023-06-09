@@ -23,7 +23,7 @@ import { Role } from '../enum/role.enum';
 })
 export class UserComponent implements OnInit, OnDestroy {
   private titleSubject = new BehaviorSubject<string>('Users');
-  public titleAction$ = this.titleSubject.asObservable();
+  public titleAction$ = this.titleSubject;
   //titleAction$ va faire un trigger a titleSubject si sa valeur est modifier elle va etre notifier
   //Dispatcher!
   public users: User[] = [];

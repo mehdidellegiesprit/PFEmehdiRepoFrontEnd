@@ -30,7 +30,7 @@ import { BankStatementTableComponent } from './bank-statement-table/bank-stateme
 import { DatePipe } from '@angular/common';
 import { MatSelectModule } from '@angular/material/select';
 import { MatChipsModule } from '@angular/material/chips';
-
+import { FullCalendarModule } from '@fullcalendar/angular';
 export function MSALInstanceFactory(): IPublicClientApplication {
   return new PublicClientApplication({
     auth: {
@@ -61,6 +61,7 @@ export function MSALInstanceFactory(): IPublicClientApplication {
     MatIconModule,
     MatSelectModule,
     MatChipsModule,
+    FullCalendarModule,
   ],
   providers: [
     DatePipe,

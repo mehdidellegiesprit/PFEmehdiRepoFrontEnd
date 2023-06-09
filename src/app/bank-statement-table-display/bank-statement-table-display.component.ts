@@ -11,6 +11,7 @@ import { fr } from 'date-fns/locale';
 import { SocieteService } from '../service/societe.service';
 import { Societe } from '../model/Societe';
 import { ExtraitBancaire } from '../model/ExtraitBancaire';
+import dayGridPlugin from '@fullcalendar/daygrid';
 
 @Component({
   selector: 'app-bank-statement-table-display',
@@ -173,4 +174,13 @@ export class BankStatementTableDisplayComponent implements OnInit, OnDestroy {
     // Si aucun extrait n'est trouvé, on retourne null
     return null;
   }
+
+  calendarOptions: any = {
+    plugins: [dayGridPlugin],
+    initialView: 'dayGridMonth',
+    events: [
+      // array of event objects
+    ],
+    // additional configuration options
+  };
 }
