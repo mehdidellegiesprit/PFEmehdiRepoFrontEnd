@@ -10,6 +10,7 @@ import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import { SocieteService } from '../service/societe.service';
 import { Societe } from '../model/Societe';
+import { ExtraitBancaire } from '../model/ExtraitBancaire';
 
 @Component({
   selector: 'app-bank-statement-table-display',
@@ -118,7 +119,7 @@ export class BankStatementTableDisplayComponent implements OnInit, OnDestroy {
   }
   selectedSociete: Societe; // Ajoutez cette ligne pour déclarer la propriété
   selectedReleveBancaire?: ReleveBancaire;
-
+  selectedDate: Date = new Date(); // initialise à la date actuelle
   onChange(event: any) {
     // console.log('Societes:', this.societes);
     // console.log('Releves:', this.releves);
@@ -155,5 +156,21 @@ export class BankStatementTableDisplayComponent implements OnInit, OnDestroy {
     //   'Liste des ids de sociétés dans les relevés :',
     //   this.releves.map((releve) => releve.id_societe)
     // );
+  }
+
+  // Voici comment vous pouvez créer la méthode de recherche
+  searchExtraitByDate(date: Date): ExtraitBancaire | null {
+    // Nous convertissons la date de recherche en string pour faciliter la comparaison
+    const searchDateStr = date.toISOString().slice(0, 10); // format : yyyy-mm-dd
+
+    for (let extrait of this.selectedReleveBancaire!.extraits) {
+      // Nous convertissons aussi la date de l'extrait en string pour la comparaison
+      const extraitDateStr = extrait.dateExtrait.toISOString().slice(0, 10); // format : yyyy-mm-dd
+      if (extraitDateStr === searchDateStr) {
+        return extrait;
+      }
+    }
+    // Si aucun extrait n'est trouvé, on retourne null
+    return null;
   }
 }
