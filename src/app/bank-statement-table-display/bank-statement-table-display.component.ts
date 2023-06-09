@@ -120,41 +120,40 @@ export class BankStatementTableDisplayComponent implements OnInit, OnDestroy {
   selectedReleveBancaire?: ReleveBancaire;
 
   onChange(event: any) {
-    this.selectedSociete = event.value;
-    if (this.selectedSociete) {
-      console.log(
-        'Id de Société sélectionnée :',
-        this.selectedSociete.id.toString()
-      );
-    }
+    // console.log('Societes:', this.societes);
+    // console.log('Releves:', this.releves);
 
-    //console.log('Relevé bancaire sélectionné :', this.selectedReleveBancaire);
-    console.log('kkkkkkkkkkkkkkkkkkkkkkkkkkkk');
+    this.selectedSociete = event.value;
+    // if (this.selectedSociete) {
+    //   console.log('Id de Société sélectionnée :', this.selectedSociete.id);
+    // }
 
     let foundReleveBancaire;
     for (const releve of this.releves) {
-      console.log('releve.id_societe :', releve.id_societe.toString());
-
-      console.log(
-        releve.id_societe.toString() === this.selectedSociete.id.toString()
-      );
-      if (releve.id_societe.toString() === this.selectedSociete.toString()) {
+      // console.log('releve.id_societe :', releve.id_societe);
+      // console.log('Id de Société sélectionnée :', this.selectedSociete.id);
+      if (
+        (releve.id_societe as any).date ===
+          (this.selectedSociete.id as any).date &&
+        (releve.id_societe as any).timestamp ===
+          (this.selectedSociete.id as any).timestamp
+      ) {
         foundReleveBancaire = releve;
-        break; // Sortir de la boucle une fois qu'un élément correspondant est trouvé
+        break;
       }
     }
-    console.log('kkkkkkkkkkkkkkkkkkkkkkkkkkkk');
+    // console.log('kkkkkkkkkkkkkkkkkkkkkkkkkkkk');
 
     if (foundReleveBancaire) {
       this.selectedReleveBancaire = foundReleveBancaire;
     } else {
-      console.warn('Aucun ReleveBancaire trouvé pour cette société.');
+      //console.warn('Aucun ReleveBancaire trouvé pour cette société.');
       this.selectedReleveBancaire = undefined;
     }
 
-    console.log(
-      'Liste des ids de sociétés dans les relevés :',
-      this.releves.map((releve) => releve.id_societe)
-    );
+    // console.log(
+    //   'Liste des ids de sociétés dans les relevés :',
+    //   this.releves.map((releve) => releve.id_societe)
+    // );
   }
 }
