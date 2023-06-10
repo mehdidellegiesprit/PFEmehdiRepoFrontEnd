@@ -176,23 +176,8 @@ table {
 .blockButton {
   background-color: #d3d3d3; /* Light gray */
 }
-.full-calendar-container {
-  width: 600px;
-  height: 600px;
+/* .full-calendar-container {
+  width: 1000px;
+  height: 1000px;
   margin: auto;
-}
-
-.full-calendar-container .fc-daygrid-day {
-  background-color: #f2f2f2;
-  border-color: #ccc;
-}
-
-.full-calendar-container .fc-event {
-  background-color: #eaeaea;
-  border-color: #999;
-  color: #333;
-}
-
-.full-calendar-container .fc-today {
-  background-color: #f8f8f8;
-}
+} */

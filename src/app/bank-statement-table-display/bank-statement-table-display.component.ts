@@ -14,6 +14,8 @@ import { ExtraitBancaire } from '../model/ExtraitBancaire';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import { FullCalendarComponent } from '@fullcalendar/angular';
 
+import { Calendar, LocaleInput } from '@fullcalendar/core';
+import frLocale from '@fullcalendar/core/locales/fr';
 @Component({
   selector: 'app-bank-statement-table-display',
   templateUrl: './bank-statement-table-display.component.html',
@@ -128,8 +130,26 @@ export class BankStatementTableDisplayComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.getAllSocietes();
-    this.getAllRelevesBancaires();
+    this.subscription.push(
+      this.bankStatementViewerService.getAllRelevesBancaires().subscribe(
+        (response: ReleveBancaire[]) => {
+          this.releves = response;
+          console.log('**releves:', this.releves);
+
+          const calendarApi = this.calendarComponent.getApi();
+          calendarApi.setOption('locale', frLocale as LocaleInput);
+
+          // Call getAllSocietes after fetching the releves data
+          this.getAllSocietes();
+        },
+        (errorResponse: HttpErrorResponse) => {
+          this.notificationService.notify(
+            NotificationType.ERROR,
+            errorResponse.error.message
+          );
+        }
+      )
+    );
   }
 
   ngOnDestroy(): void {
@@ -254,5 +274,18 @@ export class BankStatementTableDisplayComponent implements OnInit, OnDestroy {
     const calendarApi = this.calendarComponent.getApi();
     calendarApi.gotoDate(`${this.selectedExtraitYear}-01-01`); // use fullcalendar's gotoDate method
     calendarApi.render(); // Here we force the calendar to re-render
+  }
+  getDayCellSize(): string {
+    // Calcul de la taille des carreaux en fonction de la logique souhaitée
+    // Par exemple, vous pouvez utiliser la taille de l'écran ou une autre mesure
+    const screenSize = window.innerWidth;
+
+    if (screenSize < 768) {
+      // Petite taille d'écran, utiliser une taille plus petite pour les carreaux
+      return '20px';
+    } else {
+      // Grande taille d'écran, utiliser une taille plus grande pour les carreaux
+      return '30px';
+    }
   }
 }
