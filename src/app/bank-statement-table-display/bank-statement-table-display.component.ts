@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { NotificationService } from '../service/notification.service';
 import { BankStatementViewerService } from '../service/bank-statement-viewer.service';
@@ -12,6 +12,7 @@ import { SocieteService } from '../service/societe.service';
 import { Societe } from '../model/Societe';
 import { ExtraitBancaire } from '../model/ExtraitBancaire';
 import dayGridPlugin from '@fullcalendar/daygrid';
+import { FullCalendarComponent } from '@fullcalendar/angular';
 
 @Component({
   selector: 'app-bank-statement-table-display',
@@ -19,10 +20,22 @@ import dayGridPlugin from '@fullcalendar/daygrid';
   styleUrls: ['./bank-statement-table-display.component.css'],
 })
 export class BankStatementTableDisplayComponent implements OnInit, OnDestroy {
+  @ViewChild('calendar') calendarComponent: FullCalendarComponent; // Here we get a reference to the calendar
   releves: ReleveBancaire[] = [];
   societes: Societe[] = [];
   private subscription: Subscription[] = [];
   isVisible = false; // Initialize as hidden
+
+  private _selectedReleveBancaire?: ReleveBancaire;
+
+  public get selectedReleveBancaire(): ReleveBancaire | undefined {
+    return this._selectedReleveBancaire;
+  }
+
+  public set selectedReleveBancaire(value: ReleveBancaire | undefined) {
+    this._selectedReleveBancaire = value;
+    this.calendarOptions.events = this.getCalendarEvents(value);
+  }
 
   onToggle(id_div: string): void {
     const divElement = document.getElementById(id_div);
@@ -47,12 +60,14 @@ export class BankStatementTableDisplayComponent implements OnInit, OnDestroy {
     private bankStatementViewerService: BankStatementViewerService,
     private societeService: SocieteService
   ) {}
+
   formatDate(date: any): string {
     if (date) {
       return this.datePipe.transform(date, 'dd/MM/yyyy') || '';
     }
     return '';
   }
+
   convertDate(dateString: string | null): string {
     if (dateString) {
       const date = new Date(dateString);
@@ -94,6 +109,7 @@ export class BankStatementTableDisplayComponent implements OnInit, OnDestroy {
       )
     );
   }
+
   public getAllSocietes(): void {
     this.subscription.push(
       this.societeService.getAllSocietes().subscribe(
@@ -110,6 +126,7 @@ export class BankStatementTableDisplayComponent implements OnInit, OnDestroy {
       )
     );
   }
+
   ngOnInit(): void {
     this.getAllSocietes();
     this.getAllRelevesBancaires();
@@ -118,22 +135,15 @@ export class BankStatementTableDisplayComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.subscription.forEach((sub) => sub.unsubscribe());
   }
-  selectedSociete: Societe; // Ajoutez cette ligne pour déclarer la propriété
-  selectedReleveBancaire?: ReleveBancaire;
-  selectedDate: Date = new Date(); // initialise à la date actuelle
-  onChange(event: any) {
-    // console.log('Societes:', this.societes);
-    // console.log('Releves:', this.releves);
 
+  selectedSociete: Societe;
+  selectedDate: Date = new Date(); // initialise à la date actuelle
+
+  onChange(event: any) {
     this.selectedSociete = event.value;
-    // if (this.selectedSociete) {
-    //   console.log('Id de Société sélectionnée :', this.selectedSociete.id);
-    // }
 
     let foundReleveBancaire;
     for (const releve of this.releves) {
-      // console.log('releve.id_societe :', releve.id_societe);
-      // console.log('Id de Société sélectionnée :', this.selectedSociete.id);
       if (
         (releve.id_societe as any).date ===
           (this.selectedSociete.id as any).date &&
@@ -144,43 +154,105 @@ export class BankStatementTableDisplayComponent implements OnInit, OnDestroy {
         break;
       }
     }
-    // console.log('kkkkkkkkkkkkkkkkkkkkkkkkkkkk');
 
     if (foundReleveBancaire) {
       this.selectedReleveBancaire = foundReleveBancaire;
+      let distinctYears = this.getDistinctExtraitYears();
+      if (distinctYears.length > 0) {
+        // Set selectedExtraitYear to the first year in the list
+        this.selectedExtraitYear = distinctYears[0];
+        // Then call onExtraitYearChange with the first year in the list
+        this.onExtraitYearChange({ target: { value: distinctYears[0] } });
+      }
     } else {
-      //console.warn('Aucun ReleveBancaire trouvé pour cette société.');
       this.selectedReleveBancaire = undefined;
     }
-
-    // console.log(
-    //   'Liste des ids de sociétés dans les relevés :',
-    //   this.releves.map((releve) => releve.id_societe)
-    // );
   }
 
-  // Voici comment vous pouvez créer la méthode de recherche
   searchExtraitByDate(date: Date): ExtraitBancaire | null {
-    // Nous convertissons la date de recherche en string pour faciliter la comparaison
     const searchDateStr = date.toISOString().slice(0, 10); // format : yyyy-mm-dd
 
-    for (let extrait of this.selectedReleveBancaire!.extraits) {
-      // Nous convertissons aussi la date de l'extrait en string pour la comparaison
+    for (let extrait of this._selectedReleveBancaire!.extraits) {
       const extraitDateStr = extrait.dateExtrait.toISOString().slice(0, 10); // format : yyyy-mm-dd
       if (extraitDateStr === searchDateStr) {
         return extrait;
       }
     }
-    // Si aucun extrait n'est trouvé, on retourne null
     return null;
+  }
+
+  getCalendarEvents(releve: any) {
+    console.log('getCalendarEvents triggered with releve: ', releve);
+
+    // let events = [];
+    let events = [
+      {
+        title: 'Test Event',
+        date: '2023-01-01',
+        backgroundColor: 'red',
+      },
+    ];
+
+    for (let extrait of releve.extraits) {
+      console.log('extrait object: ', extrait);
+      let event = {
+        title:
+          'ExtraitBancaire - ' +
+          format(new Date(extrait.dateExtrait), 'yyyy-MM-dd'),
+        date: format(
+          new Date(extrait.dateDuSoldeCrediteurDebutMois),
+          'yyyy-MM-dd'
+        ),
+        backgroundColor: 'red',
+        // Ajout d'informations supplémentaires
+        totalMouvementsDebit: extrait.totalMouvementsDebit,
+        totalMouvementsCredit: extrait.totalMouvementsCredit,
+        donneeExtraits: extrait.donneeExtraits,
+      };
+
+      events.push(event);
+    }
+
+    console.log('Events generated: ', events);
+    return events;
   }
 
   calendarOptions: any = {
     plugins: [dayGridPlugin],
     initialView: 'dayGridMonth',
-    events: [
-      // array of event objects
-    ],
-    // additional configuration options
+    events: [],
+    eventColor: '#0000ff', // bleu
+    eventBackgroundColor: '#0000ff', // bleu
+    eventBorderColor: '#ff0000', // rouge
+    eventTextColor: '#00ff00', // vert
   };
+
+  getDistinctExtraitYears(): number[] {
+    let distinctYears: number[] = [];
+
+    if (this.selectedReleveBancaire) {
+      this.selectedReleveBancaire.extraits.forEach((extrait) => {
+        const date = new Date(extrait.dateExtrait);
+        const year = date.getFullYear();
+        if (!distinctYears.includes(year)) {
+          distinctYears.push(year);
+        }
+      });
+    }
+
+    return distinctYears;
+  }
+
+  selectedExtraitYear: number = new Date().getFullYear(); // initialise à l'année actuelle
+
+  onExtraitYearChange(event: any): void {
+    this.selectedExtraitYear = Number(event.target.value);
+    this.calendarOptions.events = this.getCalendarEvents(
+      this.selectedReleveBancaire
+    );
+    this.calendarOptions.initialView = 'dayGridMonth';
+    const calendarApi = this.calendarComponent.getApi();
+    calendarApi.gotoDate(`${this.selectedExtraitYear}-01-01`); // use fullcalendar's gotoDate method
+    calendarApi.render(); // Here we force the calendar to re-render
+  }
 }
