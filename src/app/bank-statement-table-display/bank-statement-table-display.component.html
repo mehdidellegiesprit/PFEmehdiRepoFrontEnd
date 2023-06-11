@@ -38,13 +38,12 @@
       >
     </mat-select>
   </mat-form-field>
-
+  <mat-label class="calendrier-interactif-label">
+    Les extraits bancaires sont présentés à travers notre calendrier interactif
+  </mat-label>
   <div class="full-calendar-container" [hidden]="!isYearSelected">
-    <full-calendar
-      *ngIf="isYearSelected"
-      #calendar
-      [options]="calendarOptions"
-    ></full-calendar>
+    <full-calendar *ngIf="isYearSelected" #calendar [options]="calendarOptions">
+    </full-calendar>
   </div>
 </div>
 

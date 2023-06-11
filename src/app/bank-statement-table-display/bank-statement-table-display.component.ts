@@ -213,10 +213,7 @@ export class BankStatementTableDisplayComponent implements OnInit, OnDestroy {
         // Ajoute l'événement uniquement si l'année correspond
         let event = {
           title: format(new Date(extrait.dateExtrait), 'yyyy-MM-dd'),
-          date: format(
-            new Date(extrait.dateDuSoldeCrediteurDebutMois),
-            'yyyy-MM-dd'
-          ),
+          date: format(new Date(extrait.dateExtrait), 'yyyy-MM-dd'),
           backgroundColor: '#1976d2', // Couleur d'arrière-plan
           borderColor: '#1976d2', // Couleur de la bordure
           textColor: '#ffffff', // Couleur du texte
@@ -235,11 +232,16 @@ export class BankStatementTableDisplayComponent implements OnInit, OnDestroy {
     plugins: [dayGridPlugin],
     initialView: 'dayGridMonth',
     events: [],
-    eventColor: 'blue', // Couleur par défaut des événements
-    eventBackgroundColor: 'blue', // Couleur de fond par défaut des événements
-    eventBorderColor: 'red', // Couleur de bordure par défaut des événements
-    eventTextColor: 'green', // Couleur du texte par défaut des événements
+    eventColor: 'blue',
+    eventBackgroundColor: 'blue',
+    eventBorderColor: 'red',
+    eventTextColor: 'green',
+    eventClick: this.onEventClick.bind(this),
   };
+
+  onEventClick(event: any): void {
+    console.log('Événement cliqué :', event.event);
+  }
 
   getDistinctExtraitYears(): number[] {
     let distinctYears: number[] = [];
