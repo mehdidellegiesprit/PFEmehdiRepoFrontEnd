@@ -203,7 +203,7 @@ export class BankStatementTableDisplayComponent implements OnInit, OnDestroy {
       {
         title: 'Test Event',
         date: '2023-01-01',
-        backgroundColor: 'red',
+        backgroundColor: 'blue',
       },
     ];
 
@@ -212,14 +212,14 @@ export class BankStatementTableDisplayComponent implements OnInit, OnDestroy {
       if (extraitYear === year) {
         // Ajoute l'événement uniquement si l'année correspond
         let event = {
-          title:
-            'ExtraitBancaire - ' +
-            format(new Date(extrait.dateExtrait), 'yyyy-MM-dd'),
+          title: format(new Date(extrait.dateExtrait), 'yyyy-MM-dd'),
           date: format(
             new Date(extrait.dateDuSoldeCrediteurDebutMois),
             'yyyy-MM-dd'
           ),
-          backgroundColor: 'red',
+          backgroundColor: '#1976d2', // Couleur d'arrière-plan
+          borderColor: '#1976d2', // Couleur de la bordure
+          textColor: '#ffffff', // Couleur du texte
           totalMouvementsDebit: extrait.totalMouvementsDebit,
           totalMouvementsCredit: extrait.totalMouvementsCredit,
           donneeExtraits: extrait.donneeExtraits,
@@ -235,10 +235,10 @@ export class BankStatementTableDisplayComponent implements OnInit, OnDestroy {
     plugins: [dayGridPlugin],
     initialView: 'dayGridMonth',
     events: [],
-    eventColor: '#0000ff', // bleu
-    eventBackgroundColor: '#0000ff', // bleu
-    eventBorderColor: '#ff0000', // rouge
-    eventTextColor: '#00ff00', // vert
+    eventColor: 'blue', // Couleur par défaut des événements
+    eventBackgroundColor: 'blue', // Couleur de fond par défaut des événements
+    eventBorderColor: 'red', // Couleur de bordure par défaut des événements
+    eventTextColor: 'green', // Couleur du texte par défaut des événements
   };
 
   getDistinctExtraitYears(): number[] {

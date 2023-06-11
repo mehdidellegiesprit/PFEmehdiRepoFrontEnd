@@ -10,33 +10,42 @@
       </mat-option>
     </mat-select>
   </mat-form-field>
-  <mat-chip-list *ngIf="selectedReleveBancaire">
+  <mat-chip-list *ngIf="selectedReleveBancaire" class="custom-chip-list">
     <mat-chip>RIB : {{ selectedReleveBancaire.iban }}</mat-chip>
   </mat-chip-list>
 </div>
 
-<mat-form-field appearance="fill" style="width: 300px">
-  <mat-label>Sélectionnez une année d'extrait</mat-label>
-  <mat-select
-    [(value)]="selectedExtraitYear"
-    (selectionChange)="onExtraitYearChange($event)"
-  >
-    <mat-option [value]="null">-- Sélectionnez une année --</mat-option>
-    <mat-option *ngFor="let year of getDistinctExtraitYears()" [value]="year">{{
-      year
-    }}</mat-option>
-  </mat-select>
-</mat-form-field>
-
 <div
-  class="full-calendar-container"
-  [hidden]="!(isSocieteSelected && isYearSelected)"
+  class="calendar-container"
+  style="display: flex; flex-direction: column; align-items: left"
+  [hidden]="!isSocieteSelected"
 >
-  <full-calendar
-    *ngIf="isSocieteSelected && isYearSelected"
-    #calendar
-    [options]="calendarOptions"
-  ></full-calendar>
+  <mat-form-field
+    appearance="fill"
+    style="width: 300px"
+    [hidden]="!isSocieteSelected"
+  >
+    <mat-label>Sélectionnez une année d'extrait</mat-label>
+    <mat-select
+      [(value)]="selectedExtraitYear"
+      (selectionChange)="onExtraitYearChange($event)"
+    >
+      <mat-option [value]="null">-- Sélectionnez une année --</mat-option>
+      <mat-option
+        *ngFor="let year of getDistinctExtraitYears()"
+        [value]="year"
+        >{{ year }}</mat-option
+      >
+    </mat-select>
+  </mat-form-field>
+
+  <div class="full-calendar-container" [hidden]="!isYearSelected">
+    <full-calendar
+      *ngIf="isYearSelected"
+      #calendar
+      [options]="calendarOptions"
+    ></full-calendar>
+  </div>
 </div>
 
 <!-- stop here  -->

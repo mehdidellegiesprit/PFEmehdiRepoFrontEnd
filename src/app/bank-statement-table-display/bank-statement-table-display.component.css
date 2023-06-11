@@ -177,9 +177,20 @@ table {
   background-color: #d3d3d3; /* Light gray */
 }
 .full-calendar-container {
-  width: 40%;
-  height: 40%;
+  width: 30%;
+  height: 70%;
   margin-bottom: 10%;
   margin-top: 2%;
   margin-left: 2%;
+}
+.custom-chip-list {
+  display: inline-flex;
+  align-items: center;
+  padding: 12px 20px;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 4px;
+  background-color: #f5f5f5; /* couleur de fond gris clair */
+  box-shadow: 0 2px 1px -1px rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14),
+    0 1px 3px 0 rgba(0, 0, 0, 0.12);
+  margin-bottom: 16px;
 }
