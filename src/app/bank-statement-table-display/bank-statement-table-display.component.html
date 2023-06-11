@@ -15,26 +15,32 @@
   </mat-chip-list>
 </div>
 
-<!-- <mat-form-field appearance="fill">
-  <mat-label>Choose a date</mat-label>
-  <input matInput [matDatepicker]="picker" [(ngModel)]="selectedDate" />
-  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-  <mat-datepicker #picker></mat-datepicker>
-</mat-form-field> -->
-<label>
-  Sélectionnez une année d'extrait:
-  <select (click)="onExtraitYearChange($event)">
-    <option *ngFor="let year of getDistinctExtraitYears()" [value]="year">
-      {{ year }}
-    </option>
-  </select>
-</label>
-<div class="full-calendar-container">
-  <full-calendar #calendar [options]="calendarOptions"></full-calendar>
+<mat-form-field appearance="fill" style="width: 300px">
+  <mat-label>Sélectionnez une année d'extrait</mat-label>
+  <mat-select
+    [(value)]="selectedExtraitYear"
+    (selectionChange)="onExtraitYearChange($event)"
+  >
+    <mat-option [value]="null">-- Sélectionnez une année --</mat-option>
+    <mat-option *ngFor="let year of getDistinctExtraitYears()" [value]="year">{{
+      year
+    }}</mat-option>
+  </mat-select>
+</mat-form-field>
+
+<div
+  class="full-calendar-container"
+  [hidden]="!(isSocieteSelected && isYearSelected)"
+>
+  <full-calendar
+    *ngIf="isSocieteSelected && isYearSelected"
+    #calendar
+    [options]="calendarOptions"
+  ></full-calendar>
 </div>
 
 <!-- stop here  -->
-<div id="accordion" *ngFor="let r of releves; let i = index">
+<div id="accordion" *ngFor="let r of releves; let i = index" hidden>
   <div class="card">
     <div>
       <!-- Content for the first column -->
@@ -137,5 +143,6 @@
   id="fileUploader"
   (change)="onFileInputChange($event)"
   style="display: none"
+  hidden
 />
-<input type="file" (change)="onFileInputChange($event)" />
+<input type="file" (change)="onFileInputChange($event)" hidden />

@@ -176,8 +176,10 @@ table {
 .blockButton {
   background-color: #d3d3d3; /* Light gray */
 }
-/* .full-calendar-container {
-  width: 1000px;
-  height: 1000px;
-  margin: auto;
-} */
+.full-calendar-container {
+  width: 40%;
+  height: 40%;
+  margin-bottom: 10%;
+  margin-top: 2%;
+  margin-left: 2%;
+}
