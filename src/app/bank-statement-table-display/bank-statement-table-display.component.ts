@@ -305,14 +305,60 @@ export class BankStatementTableDisplayComponent implements OnInit, OnDestroy {
     }
     this.updateCalendar();
   }
+  convertFrenchDate(dateString: string): Date {
+    const months = [
+      'janvier',
+      'février',
+      'mars',
+      'avril',
+      'mai',
+      'juin',
+      'juillet',
+      'août',
+      'septembre',
+      'octobre',
+      'novembre',
+      'décembre',
+    ];
+
+    // Split date string into day, month, year
+    const [day, month, year] = dateString.split(' ');
+
+    // Convert month to number
+    const monthNumber = months.indexOf(month.toLowerCase()) + 1;
+
+    // Create a new Date object
+    return new Date(Number(year), monthNumber - 1, Number(day));
+  }
+
+  selectedYearExtraitDates: string[] = [];
 
   onExtraitYearChange(event: any): void {
     this.selectedExtraitYear = Number(event.value); // Changer ici
 
     if (!isNaN(this.selectedExtraitYear)) {
       this.isYearSelected = true;
+
+      // Chercher toutes les dates d'extrait pour l'année sélectionnée
+      this.selectedYearExtraitDates =
+        this.selectedReleveBancaire?.extraits
+          .filter(
+            (extrait) =>
+              new Date(extrait.dateExtrait).getFullYear() ===
+              this.selectedExtraitYear
+          )
+
+          .map((extrait) => {
+            if (typeof extrait.dateExtrait === 'string') {
+              const date = new Date(extrait.dateExtrait);
+              return this.convertDate(date.toISOString());
+            } else {
+              return this.convertDate(extrait.dateExtrait.toISOString());
+            }
+          }) || [];
     } else {
       this.isYearSelected = false;
+      this.selectedYearExtraitDates = []; // Reset si l'année n'est pas sélectionnée
     }
 
     this.updateCalendar();
