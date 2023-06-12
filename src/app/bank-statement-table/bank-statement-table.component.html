@@ -9,181 +9,154 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
     />
   </head>
-  <body class="blockButton">
-    <div class="button-row" *ngFor="let button of buttons; let i = index">
-      <div class="button-pair">
-        <div class="c1">
-          <a
-            [id]="'idbuttonByExtrait' + button.collapseId"
-            class="btn btn-primary myDivWidth"
-            role="button"
-            aria-expanded="false"
-            aria-controls="multiCollapseExample1"
-            (click)="toggleVisibility(button.collapseId)"
-            [title]="titleButtonExtrait"
-          >
-            <span class="toggle-label">Extrait du</span>
-            <span class="date-extrait"
-              >&nbsp;{{ formattedDateExtrait }}&nbsp;</span
-            >&nbsp;
-            <i
-              class="fas"
-              [ngClass]="{
-                'fa-angle-down': !isIconUp,
-                'fa-angle-up': isIconUp
-              }"
-            ></i>
-          </a>
-        </div>
-      </div>
-      <div class="row container-child">
-        <div class="col">
-          <div
-            class="collapse multi-collapse"
-            [id]="button.collapseId"
-            [ngClass]="{ show: activeButton === button.collapseId }"
-          >
-            <div class="search-bar">
-              <mat-form-field>
-                <mat-label>Search...</mat-label>
-                <input matInput (keyup)="applyFilter($event)" />
-              </mat-form-field>
+  <body>
+    <span class="toggle-label">Extrait du</span>
+    <span class="date-extrait">&nbsp;{{ formattedDateExtrait }}&nbsp;</span
+    >&nbsp;
+
+    <div class="row container-child">
+      <div class="col">
+        <div>
+          <div class="search-bar">
+            <mat-form-field>
+              <mat-label>Search...</mat-label>
+              <input matInput (keyup)="applyFilter($event)" />
+            </mat-form-field>
+          </div>
+          <div class="legend">
+            <div style="display: flex; align-items: center">
+              <span class="color-sample zero-debit"></span>
+              <span style="margin-left: 10px"
+                >: Opération de crédit (aucun débit)</span
+              >
             </div>
-            <div class="legend">
-              <div style="display: flex; align-items: center">
-                <span class="color-sample zero-debit"></span>
-                <span style="margin-left: 10px"
-                  >: Opération de crédit (aucun débit)</span
-                >
-              </div>
-              <div style="display: flex; align-items: center">
-                <span class="color-sample non-zero-debit"></span>
-                <span style="margin-left: 10px"
-                  >: Opération de débit (aucun crédit)</span
-                >
-              </div>
+            <div style="display: flex; align-items: center">
+              <span class="color-sample non-zero-debit"></span>
+              <span style="margin-left: 10px"
+                >: Opération de débit (aucun crédit)</span
+              >
             </div>
+          </div>
+
+          <!-- Table content -->
+          <table
+            mat-table
+            [dataSource]="dataSource"
+            matSort
+            class="tableau-bordure"
+          >
+            <!-- Column definitions -->
+            <!-- dateDonneeExtrait Column -->
+            <ng-container matColumnDef="dateDonneeExtrait">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                <span>Date opération</span>
+              </th>
+              <td mat-cell *matCellDef="let element">
+                {{ formatDate(element.dateDonneeExtrait) }}
+              </td>
+            </ng-container>
+
+            <!-- dateValeurDonneeExtrait Column -->
+            <ng-container matColumnDef="dateValeurDonneeExtrait">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                <span>Date Valeur opération</span>
+              </th>
+              <td mat-cell *matCellDef="let element">
+                {{ formatDate(element.dateValeurDonneeExtrait) }}
+              </td>
+            </ng-container>
+
+            <!-- operations Column -->
+            <ng-container matColumnDef="operations">
+              <th
+                mat-header-cell
+                *matHeaderCellDef
+                mat-sort-header
+                class="equal-width-cell"
+              >
+                <span>Opération</span>
+              </th>
+              <td
+                mat-cell
+                *matCellDef="let element; let i = index"
+                class="equal-width-cell"
+              >
+                <div>
+                  <div>
+                    <span *ngIf="showFullText[i]">{{
+                      element.operations
+                    }}</span>
+                    <span *ngIf="!showFullText[i]">{{
+                      element.operations | slice : 0 : 35
+                    }}</span>
+                  </div>
+                  <button
+                    (click)="toggleShowFullText(i)"
+                    class="professional-button"
+                    *ngIf="element.operations.length > 35"
+                  >
+                    {{ showFullText[i] ? "Show less" : "Show more" }}
+                    <mat-icon>{{
+                      showFullText[i] ? "expand_less" : "expand_more"
+                    }}</mat-icon>
+                  </button>
+                </div>
+              </td>
+            </ng-container>
+
+            <!-- debit Column -->
+            <ng-container matColumnDef="debit">
+              <th
+                mat-header-cell
+                *matHeaderCellDef
+                mat-sort-header
+                class="equal-width-cell"
+              >
+                <span>Débit en euros &nbsp;&euro;</span>
+              </th>
+              <td mat-cell *matCellDef="let element" class="equal-width-cell">
+                <div *ngIf="element.debit !== 0">
+                  {{ element.debit }}<span>&nbsp;&euro;</span>
+                </div>
+                <div *ngIf="element.debit === 0">Aucun débit</div>
+              </td>
+            </ng-container>
+
+            <!-- credit Column -->
+            <ng-container matColumnDef="credit">
+              <th
+                mat-header-cell
+                *matHeaderCellDef
+                mat-sort-header
+                class="equal-width-cell"
+              >
+                <span>Credit en euros &nbsp;&euro;</span>
+              </th>
+              <td mat-cell *matCellDef="let element" class="equal-width-cell">
+                <div *ngIf="element.credit !== 0">
+                  {{ element.credit }}<span>&nbsp;&euro;</span>
+                </div>
+                <div *ngIf="element.credit === 0">Aucun credit</div>
+              </td>
+            </ng-container>
 
             <!-- Table content -->
-            <table
-              mat-table
-              [dataSource]="dataSource"
-              matSort
-              class="tableau-bordure"
-            >
-              <!-- Column definitions -->
-              <!-- dateDonneeExtrait Column -->
-              <ng-container matColumnDef="dateDonneeExtrait">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                  <span>Date opération</span>
-                </th>
-                <td mat-cell *matCellDef="let element">
-                  {{ formatDate(element.dateDonneeExtrait) }}
-                </td>
-              </ng-container>
-
-              <!-- dateValeurDonneeExtrait Column -->
-              <ng-container matColumnDef="dateValeurDonneeExtrait">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                  <span>Date Valeur opération</span>
-                </th>
-                <td mat-cell *matCellDef="let element">
-                  {{ formatDate(element.dateValeurDonneeExtrait) }}
-                </td>
-              </ng-container>
-
-              <!-- operations Column -->
-              <ng-container matColumnDef="operations">
-                <th
-                  mat-header-cell
-                  *matHeaderCellDef
-                  mat-sort-header
-                  class="equal-width-cell"
-                >
-                  <span>Opération</span>
-                </th>
-                <td
-                  mat-cell
-                  *matCellDef="let element; let i = index"
-                  class="equal-width-cell"
-                >
-                  <div>
-                    <div>
-                      <span *ngIf="showFullText[i]">{{
-                        element.operations
-                      }}</span>
-                      <span *ngIf="!showFullText[i]">{{
-                        element.operations | slice : 0 : 35
-                      }}</span>
-                    </div>
-                    <button
-                      (click)="toggleShowFullText(i)"
-                      class="professional-button"
-                      *ngIf="element.operations.length > 35"
-                    >
-                      {{ showFullText[i] ? "Show less" : "Show more" }}
-                      <mat-icon>{{
-                        showFullText[i] ? "expand_less" : "expand_more"
-                      }}</mat-icon>
-                    </button>
-                  </div>
-                </td>
-              </ng-container>
-
-              <!-- debit Column -->
-              <ng-container matColumnDef="debit">
-                <th
-                  mat-header-cell
-                  *matHeaderCellDef
-                  mat-sort-header
-                  class="equal-width-cell"
-                >
-                  <span>Débit en euros &nbsp;&euro;</span>
-                </th>
-                <td mat-cell *matCellDef="let element" class="equal-width-cell">
-                  <div *ngIf="element.debit !== 0">
-                    {{ element.debit }}<span>&nbsp;&euro;</span>
-                  </div>
-                  <div *ngIf="element.debit === 0">Aucun débit</div>
-                </td>
-              </ng-container>
-
-              <!-- credit Column -->
-              <ng-container matColumnDef="credit">
-                <th
-                  mat-header-cell
-                  *matHeaderCellDef
-                  mat-sort-header
-                  class="equal-width-cell"
-                >
-                  <span>Credit en euros &nbsp;&euro;</span>
-                </th>
-                <td mat-cell *matCellDef="let element" class="equal-width-cell">
-                  <div *ngIf="element.credit !== 0">
-                    {{ element.credit }}<span>&nbsp;&euro;</span>
-                  </div>
-                  <div *ngIf="element.credit === 0">Aucun credit</div>
-                </td>
-              </ng-container>
-
-              <!-- Table content -->
-              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-              <tr
-                mat-row
-                *matRowDef="let row; columns: displayedColumns"
-                [ngClass]="{
-                  'zero-debit': row.debit === 0,
-                  'non-zero-debit': row.debit !== 0
-                }"
-              ></tr>
-            </table>
-            <div class="c1">
-              <mat-paginator
-                [pageSizeOptions]="[5, 10, 20]"
-                showFirstLastButtons
-                class="custom-paginator"
-              ></mat-paginator>
-            </div>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr
+              mat-row
+              *matRowDef="let row; columns: displayedColumns"
+              [ngClass]="{
+                'zero-debit': row.debit === 0,
+                'non-zero-debit': row.debit !== 0
+              }"
+            ></tr>
+          </table>
+          <div class="c1">
+            <mat-paginator
+              [pageSizeOptions]="[5, 10, 20]"
+              showFirstLastButtons
+              class="custom-paginator"
+            ></mat-paginator>
           </div>
         </div>
       </div>

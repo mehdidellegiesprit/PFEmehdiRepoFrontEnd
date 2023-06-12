@@ -1,19 +1,9 @@
-/* Global Styles */
 body {
   font-family: Arial, sans-serif;
   background-color: #f5f6fa;
   color: #2c3e50;
   margin: 0;
   padding: 0;
-}
-
-a {
-  color: #3498db;
-  text-decoration: none;
-}
-
-a:hover {
-  color: #2980b9;
 }
 
 .container {
@@ -23,7 +13,6 @@ a:hover {
   box-sizing: border-box;
 }
 
-/* Navigation */
 .navbar {
   background-color: #2c3e50;
   color: #ecf0f1;
@@ -33,111 +22,22 @@ a:hover {
   padding: 10px 20px;
 }
 
-.navbar-brand {
-  font-size: 1.5rem;
-  font-weight: bold;
-}
-
-.navbar-nav {
-  display: flex;
-  align-items: center;
-}
-
-.nav-item {
-  margin-left: 10px;
-}
-
-.nav-link {
-  color: #ecf0f1;
-  font-weight: bold;
-}
-
-/* Main Content */
 .card {
   margin-bottom: 20px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  /* added new */
   border-radius: 5px;
   border-left: 1px solid #100e0e;
-}
-
-.card-header {
-  padding: 10px;
-  background-color: #3498db;
-  color: #f1ecef;
-  font-weight: bold;
 }
 
 .card-body {
   padding: 20px;
-  /* added new */
   border-radius: 5px;
   border-left: 1px solid #100e0e;
 }
 
-.card-title {
-  font-size: 1.2rem;
-  font-weight: bold;
-  margin-bottom: 10px;
-}
-
-.card-text {
-  margin-bottom: 20px;
-}
-
-.btn {
-  background-color: #3498db;
-  color: #ecf0f1;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-.btn-primary {
-  background-color: #3498db;
-}
-
-.btn-danger {
-  background-color: #e74c3c;
-}
-
-.btn-success {
-  background-color: #2ecc71;
-}
-
-/* Footer */
-.footer {
-  background-color: #2c3e50;
-  color: #ecf0f1;
-  padding: 10px;
-  text-align: center;
-}
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-.search-bar {
-  display: flex;
-  justify-content: flex-end;
-}
-.hidden-div {
-  display: none;
-}
-.div-border {
-  width: 100%;
-  margin-left: auto;
-  margin-right: auto;
-  margin-bottom: 15px;
-  padding: 8px; /* You might want some padding to match the table cells */
-}
-
-/* Updated Table Styles */
 .custom-table {
   border-collapse: collapse;
   width: 100%;
-
   border: 3px solid #bdc3c7;
 }
 
@@ -161,44 +61,40 @@ table {
   text-align: center;
   vertical-align: middle;
 }
-.credit-debut,
-.credit-fin {
-  color: #27ae60; /* vert doux */
-}
 
-.mouvement-debit {
-  color: #e74c3c; /* rouge doux */
-}
-
-.mouvement-credit {
-  color: #27ae60; /* vert doux */
-}
-.blockButton {
-  background-color: #d3d3d3; /* Light gray */
-}
 .full-calendar-container {
   width: 30%;
   height: 70%;
   margin-bottom: 10%;
-  /* margin-top: 2%; */
-  /* margin-left: 2%; */
 }
+
 .custom-chip-list {
   display: inline-flex;
   align-items: center;
   padding: 12px 20px;
   border: 1px solid rgba(0, 0, 0, 0.15);
   border-radius: 4px;
-  background-color: #f5f5f5; /* couleur de fond gris clair */
+  background-color: #f5f5f5;
   box-shadow: 0 2px 1px -1px rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14),
     0 1px 3px 0 rgba(0, 0, 0, 0.12);
   margin-bottom: 16px;
 }
+
 .calendrier-interactif-label {
   font-size: 12px;
   font-weight: bold;
   color: #333333e4;
-  margin-bottom: 10px;
-  margin-top: 10px;
-  /* margin-left: 2%; */
+}
+
+/* Ajouté des marges pour améliorer l'espacement */
+body,
+.container,
+.navbar,
+.card,
+.card-body,
+.custom-table,
+.full-calendar-container,
+.custom-chip-list,
+.calendrier-interactif-label {
+  margin-bottom: 20px;
 }

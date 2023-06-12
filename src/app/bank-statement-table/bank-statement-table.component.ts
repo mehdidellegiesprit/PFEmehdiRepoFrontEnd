@@ -118,6 +118,12 @@ export class BankStatementTableComponent implements OnInit, OnChanges {
     this.buttons = this.generateButtons(); // Generate buttons based on data length
     // Initialize showFullText for each data item to be false
     this.data.forEach((_, index) => (this.showFullText[index] = false));
+
+    // Set activeButton to the id of the first (and only) button
+    this.activeButton = this.buttons[0].collapseId;
+    this.isIconUp = true;
+    this.titleButtonExtrait = 'Click to hide additional details';
+    this.setButtonTitle(this.activeButton, this.titleButtonExtrait);
   }
 
   ngOnChanges(changes: SimpleChanges): void {

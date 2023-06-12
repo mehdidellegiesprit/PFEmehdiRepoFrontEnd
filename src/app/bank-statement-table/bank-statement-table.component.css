@@ -69,9 +69,8 @@
   background-color: #fce4d6; /* Background color for rows with debit = 0 */
 }
 
-.container-child {
-  margin-top: 10px;
-  padding: 5px;
+.container-child:first-child {
+  margin-top: 0;
 }
 
 .c1 {
