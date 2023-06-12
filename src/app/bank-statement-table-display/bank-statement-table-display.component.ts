@@ -239,9 +239,41 @@ export class BankStatementTableDisplayComponent implements OnInit, OnDestroy {
     eventClick: this.onEventClick.bind(this),
     locale: frLocale, // Ajoutez cette ligne
   };
+  displayContent = false;
+  selectedExtrait: ExtraitBancaire; // Remplacez 'any' par le type approprié pour vos extraits
 
   onEventClick(event: any): void {
-    console.log('Événement cliqué :', event.event);
+    console.log('onEventClick');
+    console.log('Event Clicked:', event.event);
+
+    const eventTitle = event.event.title;
+    if (this.selectedReleveBancaire && this.selectedReleveBancaire.extraits) {
+      const matchingExtrait = this.selectedReleveBancaire.extraits.find(
+        (extrait) => {
+          if (typeof extrait.dateExtrait === 'string') {
+            // Convert string date to Date object
+            const extraitDate = new Date(extrait.dateExtrait);
+            // Format the date to match the event title
+            const formattedDate = extraitDate.toISOString().slice(0, 10);
+
+            return formattedDate === eventTitle;
+          }
+          return false;
+        }
+      );
+
+      if (matchingExtrait) {
+        this.selectedExtrait = matchingExtrait;
+        this.displayContent = true;
+        setTimeout(() => {
+          this.calendarComponent.getApi().render(); // Refresh the calendar events
+        }, 0);
+      } else {
+        console.log('No matching extrait found for event title:', eventTitle);
+      }
+    } else {
+      console.log('No selected releve or extrait available');
+    }
   }
 
   getDistinctExtraitYears(): number[] {

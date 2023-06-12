@@ -62,109 +62,54 @@
 </div>
 
 <!-- stop here  -->
-<div id="accordion" *ngFor="let r of releves; let i = index" hidden>
-  <div class="card">
-    <div>
-      <!-- Content for the first column -->
-      <div class="card-header" [id]="'heading' + i">
-        <h5 class="mb-0">
-          <button
-            class="btn btn-link"
-            data-toggle="collapse"
-            [attr.data-target]="'#collapse' + i"
-            aria-expanded="true"
-            [attr.aria-controls]="'collapse' + i"
-          >
-            Societe: {{ r.nomBank }} / Rib: {{ r.iban }}
-          </button>
-        </h5>
-      </div>
-    </div>
-    <div>
-      <!-- Content for the second column -->
-      <div
-        [id]="'collapse' + i"
-        class="collapse"
-        [attr.aria-labelledby]="'heading' + i"
-        data-parent="#accordion"
-      >
-        <div
-          class="card-body"
-          *ngFor="let extrait of r.extraits; let j = index"
+<div *ngIf="selectedReleveBancaire && displayContent">
+  <div *ngFor="let extrait of selectedReleveBancaire.extraits; let i = index">
+    <div class="card-body" *ngIf="extrait === selectedExtrait">
+      <app-bank-statement-table
+        [data]="selectedExtrait.donneeExtraits"
+        [formattedDateExtrait]="
+          convertDate(selectedExtrait.dateExtrait.toString())
+        "
+      ></app-bank-statement-table>
+
+      <h2 class="center-header">
+        <span
+          >Informations sur les soldes créditeurs et les mouvements de
+          l'extrait</span
         >
-          <!-- we call the child component that contain the table -->
-          <div>
-            <app-bank-statement-table
-              [data]="extrait.donneeExtraits"
-              [formattedDateExtrait]="
-                convertDate(extrait.dateExtrait.toString())
-              "
-              (toggle)="onToggle('myDiv' + i + '--' + j)"
-            ></app-bank-statement-table>
-          </div>
+      </h2>
 
-          <!-- we display the data without the table  -->
-          <!-- cette encapsule tous le block en clickant sur le boutton extrait du 30/05/2022 -->
-          <div
-            [id]="'myDiv' + i + '--' + j"
-            class="hidden-div div-border blockButton"
-          >
-            <h2 class="center-header">
-              <span
-                >Informations sur les soldes créditeurs et les mouvements de
-                l'extrait</span
-              >
-            </h2>
+      <table class="custom-table">
+        <tr>
+          <th class="date-extrait">Date d'extrait</th>
+          <th class="date-debut">Date solde créditeur début mois</th>
+          <th class="credit-debut">
+            Crédit solde créditeur début mois en &nbsp;<span>&euro;</span>
+          </th>
+          <th class="date-fin">Date solde créditeur fin mois</th>
+          <th class="credit-fin">
+            Crédit solde créditeur fin mois en &nbsp;<span>&euro;</span>
+          </th>
+          <th class="mouvement-debit">
+            Total mouvement débit en &nbsp;<span>&euro;</span>
+          </th>
+          <th class="mouvement-credit">
+            Total mouvement crédit en &nbsp;<span>&euro;</span>
+          </th>
+        </tr>
 
-            <!-- debut mon tableau  -->
-
-            <table class="custom-table">
-              <tr>
-                <th class="date-extrait">Date d'extrait</th>
-                <th class="date-debut">Date solde créditeur début mois</th>
-                <th class="credit-debut">
-                  Crédit solde créditeur début mois en &nbsp;<span>&euro;</span>
-                </th>
-                <th class="date-fin">Date solde créditeur fin mois</th>
-                <th class="credit-fin">
-                  Crédit solde créditeur fin mois en &nbsp;<span>&euro;</span>
-                </th>
-                <th class="mouvement-debit">
-                  Total mouvement débit en &nbsp;<span>&euro;</span>
-                </th>
-                <th class="mouvement-credit">
-                  Total mouvement crédit en &nbsp;<span>&euro;</span>
-                </th>
-              </tr>
-
-              <tr>
-                <td>{{ formatDate(extrait.dateExtrait) }}</td>
-                <td>
-                  {{ formatDate(extrait.dateDuSoldeCrediteurDebutMois) }}
-                </td>
-                <td>{{ extrait.creditDuSoldeCrediteurDebutMois }} &euro;</td>
-                <td>
-                  {{ formatDate(extrait.dateDuSoldeCrediteurFinMois) }}
-                </td>
-                <td>{{ extrait.creditDuSoldeCrediteurFinMois }} &euro;</td>
-                <td>{{ extrait.totalMouvementsDebit }} &euro;</td>
-                <td>{{ extrait.totalMouvementsCredit }} &euro;</td>
-              </tr>
-            </table>
-
-            <!-- fin mon tableau  -->
-          </div>
-        </div>
-      </div>
+        <tr>
+          <td>{{ formatDate(selectedExtrait.dateExtrait) }}</td>
+          <td>
+            {{ formatDate(selectedExtrait.dateDuSoldeCrediteurDebutMois) }}
+          </td>
+          <td>{{ selectedExtrait.creditDuSoldeCrediteurDebutMois }} &euro;</td>
+          <td>{{ formatDate(selectedExtrait.dateDuSoldeCrediteurFinMois) }}</td>
+          <td>{{ selectedExtrait.creditDuSoldeCrediteurFinMois }} &euro;</td>
+          <td>{{ selectedExtrait.totalMouvementsDebit }} &euro;</td>
+          <td>{{ selectedExtrait.totalMouvementsCredit }} &euro;</td>
+        </tr>
+      </table>
     </div>
   </div>
 </div>
-
-<input
-  type="file"
-  id="fileUploader"
-  (change)="onFileInputChange($event)"
-  style="display: none"
-  hidden
-/>
-<input type="file" (change)="onFileInputChange($event)" hidden />

@@ -27,7 +27,7 @@ export class BankStatementTableComponent implements OnInit, OnChanges {
   @Input() data: DonneeExtrait[] = [];
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-  @Output() toggle: EventEmitter<any> = new EventEmitter<any>();
+  //@Output() toggle: EventEmitter<any> = new EventEmitter<any>();
   @Input() formattedDateExtrait: string;
 
   displayedColumns: string[] = [
@@ -68,7 +68,7 @@ export class BankStatementTableComponent implements OnInit, OnChanges {
       button.title = this.titleButtonExtrait;
     }
 
-    this.toggle.emit(!!this.activeButton);
+    //this.toggle.emit(!!this.activeButton);
     this.isIconUp = !this.isIconUp;
   }
 
