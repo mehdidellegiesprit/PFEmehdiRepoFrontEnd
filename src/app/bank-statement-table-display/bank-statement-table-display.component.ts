@@ -237,6 +237,7 @@ export class BankStatementTableDisplayComponent implements OnInit, OnDestroy {
     eventBorderColor: 'red',
     eventTextColor: 'green',
     eventClick: this.onEventClick.bind(this),
+    locale: frLocale, // Ajoutez cette ligne
   };
 
   onEventClick(event: any): void {
@@ -305,6 +306,7 @@ export class BankStatementTableDisplayComponent implements OnInit, OnDestroy {
     }
     this.updateCalendar();
   }
+
   convertFrenchDate(dateString: string): Date {
     const months = [
       'janvier',
