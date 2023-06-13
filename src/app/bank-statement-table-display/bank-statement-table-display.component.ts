@@ -414,6 +414,13 @@ export class BankStatementTableDisplayComponent implements OnInit, OnDestroy {
       } else {
         monthCard.classList.remove('colored-month');
       }
+
+      // 7. Ajouter un gestionnaire d'événements de clic à chaque mat-card
+      monthCard.addEventListener('click', () => {
+        if (monthCard.classList.contains('colored-month')) {
+          console.log(`Vous avez cliqué sur un mois coloré: ${cardMonth}`);
+        }
+      });
     });
   }
 
