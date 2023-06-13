@@ -228,6 +228,58 @@ export class BankStatementTableDisplayComponent implements OnInit, OnDestroy {
   };
   displayContent = false;
   selectedExtrait: ExtraitBancaire; // Remplacez 'any' par le type approprié pour vos extraits
+  onEventClick_colored_month(month: string): void {
+    console.log('onEventClick');
+
+    const months = [
+      'janvier',
+      'février',
+      'mars',
+      'avril',
+      'mai',
+      'juin',
+      'juillet',
+      'août',
+      'septembre',
+      'octobre',
+      'novembre',
+      'décembre',
+    ];
+
+    // Convert the string month to a number
+    const monthNumber = months.indexOf(month.toLowerCase());
+    if (monthNumber === -1) {
+      console.log('Invalid month:', month);
+      return;
+    }
+
+    if (this.selectedReleveBancaire && this.selectedReleveBancaire.extraits) {
+      const matchingExtrait = this.selectedReleveBancaire.extraits.find(
+        (extrait) => {
+          if (typeof extrait.dateExtrait === 'string') {
+            // Convert string date to Date object
+            const extraitDate = new Date(extrait.dateExtrait);
+
+            // Check if the date of the event is in the specified month
+            return extraitDate.getMonth() === monthNumber;
+          }
+          return false;
+        }
+      );
+
+      if (matchingExtrait) {
+        this.selectedExtrait = matchingExtrait;
+        this.displayContent = true;
+        setTimeout(() => {
+          this.calendarComponent.getApi().render(); // Refresh the calendar events
+        }, 0);
+      } else {
+        console.log('No matching extrait found for month:', month);
+      }
+    } else {
+      console.log('No selected releve or extrait available');
+    }
+  }
 
   onEventClick(event: any): void {
     console.log('onEventClick');
@@ -422,6 +474,7 @@ export class BankStatementTableDisplayComponent implements OnInit, OnDestroy {
       monthCard.addEventListener('click', () => {
         if (monthCard.classList.contains('colored-month')) {
           console.log(`Vous avez cliqué sur un mois coloré: ${cardMonth}`);
+          this.onEventClick_colored_month(cardMonth);
         }
       });
     });
