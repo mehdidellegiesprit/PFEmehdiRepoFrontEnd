@@ -6,6 +6,7 @@ import {
   AfterViewInit,
   Renderer2,
   ElementRef,
+  ViewEncapsulation,
 } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { NotificationService } from '../service/notification.service';
@@ -25,6 +26,7 @@ import { FullCalendarComponent } from '@fullcalendar/angular';
   selector: 'app-bank-statement-table-display',
   templateUrl: './bank-statement-table-display.component.html',
   styleUrls: ['./bank-statement-table-display.component.css'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class BankStatementTableDisplayComponent
   implements OnInit, OnDestroy, AfterViewInit
@@ -260,12 +262,29 @@ export class BankStatementTableDisplayComponent
   }
 
   ngAfterViewInit(): void {
+    this.updateCalendar();
     this.colorerCelluleMois(this.selectedYearExtraitDates);
   }
 
   updateCalendar(): void {
     if (this.selectedReleveBancaire && !isNaN(this.selectedExtraitYear)) {
       setTimeout(() => {
+        this.selectedYearExtraitDates =
+          this.selectedReleveBancaire?.extraits
+            .filter(
+              (extrait) =>
+                new Date(extrait.dateExtrait).getFullYear() ===
+                this.selectedExtraitYear
+            )
+            .map((extrait) =>
+              this.convertDate(
+                (extrait.dateExtrait instanceof Date
+                  ? extrait.dateExtrait
+                  : new Date(extrait.dateExtrait)
+                ).toISOString()
+              )
+            ) || [];
+
         this.colorerCelluleMois(this.selectedYearExtraitDates);
       }, 500);
     } else {
@@ -385,5 +404,24 @@ export class BankStatementTableDisplayComponent
 
   onExtraitDateChange(event: any): void {
     this.selectedDate = new Date(event.value);
+  }
+  getValeurSuivante() {
+    const distinctYears = this.getDistinctExtraitYears();
+    const currentIndex = distinctYears.indexOf(this.selectedExtraitYear);
+
+    if (currentIndex < distinctYears.length - 1) {
+      this.selectedExtraitYear = distinctYears[currentIndex + 1];
+      this.updateCalendar();
+    }
+  }
+
+  getValeurPrecedente() {
+    const distinctYears = this.getDistinctExtraitYears();
+    const currentIndex = distinctYears.indexOf(this.selectedExtraitYear);
+
+    if (currentIndex > 0) {
+      this.selectedExtraitYear = distinctYears[currentIndex - 1];
+      this.updateCalendar();
+    }
   }
 }

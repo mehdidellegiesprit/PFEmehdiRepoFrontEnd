@@ -102,3 +102,6 @@
 .legend {
   margin-left: 10px;
 }
+.row {
+  border: none !important; /* Supprimer la bordure */
+}

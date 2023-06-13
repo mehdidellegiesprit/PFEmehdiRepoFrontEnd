@@ -66,15 +66,17 @@ body {
 
 /* ------------------------------pour le nouveau calendrier------------------------------  */
 .calendar-container {
-  flex-wrap: wrap;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  height: 50vh;
   background-color: #eeeeee;
   font-family: "Poppins", sans-serif;
-  margin-bottom: -20px; /* Ajout de cette ligne pour supprimer l'espace */
-  width: 45%;
+  margin-bottom: 10px;
+  margin-left: 40px;
+  flex-grow: 1;
+  flex-shrink: 0;
+  width: 620px; /* Le fond s'étend sur toute la largeur disponible */
+  padding: 2%;
 }
 
 .calendar {
@@ -124,4 +126,8 @@ body {
 
 .colored-month:hover {
   background-color: #ff9900;
+}
+.custom-container {
+  margin-top: 50px;
+  border: none !important; /* Supprimer la bordure */
 }
