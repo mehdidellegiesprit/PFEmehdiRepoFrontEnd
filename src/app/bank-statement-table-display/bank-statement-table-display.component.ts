@@ -20,6 +20,7 @@ import { Societe } from '../model/Societe';
 import { ExtraitBancaire } from '../model/ExtraitBancaire';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import { FullCalendarComponent } from '@fullcalendar/angular';
+import { Renderer2, ElementRef } from '@angular/core';
 
 import { Calendar, LocaleInput } from '@fullcalendar/core';
 import frLocale from '@fullcalendar/core/locales/fr';
@@ -54,7 +55,7 @@ export class BankStatementTableDisplayComponent implements OnInit, OnDestroy {
   }
 
   onToggle(id_div: string): void {
-    const divElement = document.getElementById(id_div);
+    const divElement = this.el.nativeElement.querySelector(`#${id_div}`);
     console.log('onToggle', divElement);
 
     if (divElement) {
@@ -62,10 +63,10 @@ export class BankStatementTableDisplayComponent implements OnInit, OnDestroy {
 
       if (computedStyle.display === 'none') {
         // If the div is currently hidden, show it
-        divElement.style.display = 'block';
+        this.renderer.setStyle(divElement, 'display', 'block');
       } else {
         // If the div is currently visible, hide it
-        divElement.style.display = 'none';
+        this.renderer.setStyle(divElement, 'display', 'none');
       }
     }
   }
@@ -74,7 +75,9 @@ export class BankStatementTableDisplayComponent implements OnInit, OnDestroy {
     private datePipe: DatePipe,
     private notificationService: NotificationService,
     private bankStatementViewerService: BankStatementViewerService,
-    private societeService: SocieteService
+    private societeService: SocieteService,
+    private renderer: Renderer2, // Add this
+    private el: ElementRef // Add this
   ) {}
 
   formatDate(date: any): string {
