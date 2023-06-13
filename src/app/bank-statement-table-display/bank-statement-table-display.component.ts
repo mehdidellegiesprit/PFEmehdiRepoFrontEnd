@@ -52,22 +52,6 @@ export class BankStatementTableDisplayComponent implements OnInit, OnDestroy {
       }
     }
   }
-  updateCalendar(): void {
-    if (this.selectedReleveBancaire && !isNaN(this.selectedExtraitYear)) {
-      this.calendarOptions.events = this.getCalendarEvents(
-        this.selectedReleveBancaire,
-        this.selectedExtraitYear
-      );
-
-      if (this.calendarComponent) {
-        const calendarApi = this.calendarComponent.getApi();
-        calendarApi.gotoDate(`${this.selectedExtraitYear}-01-01`);
-        calendarApi.render();
-      }
-    } else {
-      this.calendarOptions.events = [];
-    }
-  }
 
   onToggle(id_div: string): void {
     const divElement = document.getElementById(id_div);
@@ -337,6 +321,27 @@ export class BankStatementTableDisplayComponent implements OnInit, OnDestroy {
       calendarApi.setOption('locale', frLocale);
     }
     this.updateCalendar();
+    this.colorerCelluleMois(this.selectedYearExtraitDates);
+  }
+
+  updateCalendar(): void {
+    if (this.selectedReleveBancaire && !isNaN(this.selectedExtraitYear)) {
+      setTimeout(() => {
+        this.calendarOptions.events = this.getCalendarEvents(
+          this.selectedReleveBancaire,
+          this.selectedExtraitYear
+        );
+
+        if (this.calendarComponent) {
+          const calendarApi = this.calendarComponent.getApi();
+          calendarApi.gotoDate(`${this.selectedExtraitYear}-01-01`);
+          calendarApi.render();
+          this.colorerCelluleMois(this.selectedYearExtraitDates);
+        }
+      }, 500); // delay in milliseconds
+    } else {
+      this.calendarOptions.events = [];
+    }
   }
 
   convertFrenchDate(dateString: string): Date {
@@ -366,9 +371,54 @@ export class BankStatementTableDisplayComponent implements OnInit, OnDestroy {
   }
 
   selectedYearExtraitDates: string[] = [];
+  colorerCelluleMois(dates: string[]): void {
+    // 1. Convertir les dates au format de mois et année (yyyy-MM)
+    const monthsToColor = dates.map((date) => {
+      const [year, month] = this.convertFrenchDate(date)
+        .toISOString()
+        .slice(0, 7)
+        .split('-');
+      return `${year}-${month}`;
+    });
+
+    // 2. Définir les noms de mois en français pour les utiliser plus tard
+    const frenchMonths = [
+      'Janvier',
+      'Février',
+      'Mars',
+      'Avril',
+      'Mai',
+      'Juin',
+      'Juillet',
+      'Août',
+      'Septembre',
+      'Octobre',
+      'Novembre',
+      'Décembre',
+    ];
+
+    // 3. Parcourir tous les mat-card du calendrier
+    const calendarMonths = document.querySelectorAll('.month');
+
+    calendarMonths.forEach((monthCard, index) => {
+      // 4. Obtenir le mois et l'année de la mat-card
+      const cardMonth = frenchMonths[index];
+      const cardDate = `${this.selectedExtraitYear}-${('0' + (index + 1)).slice(
+        -2
+      )}`; // suppose que selectedExtraitYear est l'année sélectionnée
+
+      // 5. Vérifier si le mois de la mat-card doit être coloré
+      if (monthsToColor.includes(cardDate)) {
+        // 6. Si oui, appliquer un style CSS pour changer la couleur de fond
+        monthCard.classList.add('colored-month');
+      } else {
+        monthCard.classList.remove('colored-month');
+      }
+    });
+  }
 
   onExtraitYearChange(event: any): void {
-    this.selectedExtraitYear = Number(event.value); // Changer ici
+    this.selectedExtraitYear = Number(event.value);
 
     if (!isNaN(this.selectedExtraitYear)) {
       this.isYearSelected = true;
@@ -381,21 +431,20 @@ export class BankStatementTableDisplayComponent implements OnInit, OnDestroy {
               new Date(extrait.dateExtrait).getFullYear() ===
               this.selectedExtraitYear
           )
+          .map((extrait) =>
+            this.convertDate(
+              (extrait.dateExtrait instanceof Date
+                ? extrait.dateExtrait
+                : new Date(extrait.dateExtrait)
+              ).toISOString()
+            )
+          ) || [];
 
-          .map((extrait) => {
-            if (typeof extrait.dateExtrait === 'string') {
-              const date = new Date(extrait.dateExtrait);
-              return this.convertDate(date.toISOString());
-            } else {
-              return this.convertDate(extrait.dateExtrait.toISOString());
-            }
-          }) || [];
+      this.colorerCelluleMois(this.selectedYearExtraitDates);
+      this.updateCalendar();
     } else {
       this.isYearSelected = false;
-      this.selectedYearExtraitDates = []; // Reset si l'année n'est pas sélectionnée
     }
-
-    this.updateCalendar();
   }
 
   onExtraitDateChange(event: any): void {

@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap");
+
 body {
   font-family: Arial, sans-serif;
   background-color: #f5f6fa;
@@ -97,4 +99,76 @@ body,
 .custom-chip-list,
 .calendrier-interactif-label {
   margin-bottom: 20px;
+}
+/* ------------------------------pour le nouveau calendrier------------------------------  */
+.calendar-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80vh;
+  background-color: #eeeeee;
+  font-family: "Poppins", sans-serif;
+}
+
+.calendar {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  width: 30%;
+  gap: 2rem;
+}
+
+.month {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-size: 20px;
+  color: white;
+  background-color: #6c757d;
+  border-radius: 10px;
+  box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.15);
+  transition: background-color 0.3s ease, transform 0.3s ease; /* Ajout d'un effet de transformation lors du survol */
+}
+
+.month:hover {
+  background-color: #494d4b;
+  cursor: pointer;
+  transform: scale(1.05); /* L'élément s'agrandit légèrement lors du survol */
+}
+
+.year-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Pour que les contrôles soient répartis uniformément */
+  width: 30%; /* Ajuste la largeur pour correspondre à celle du calendrier */
+  margin-bottom: 1rem;
+  margin-left: auto; /* Pour centrer les contrôles d'année */
+  margin-right: auto; /* Pour centrer les contrôles d'année */
+}
+
+.year-label {
+  font-size: 1.5em;
+}
+
+button {
+  color: #6c757d;
+  background-color: #ffffff;
+  border: none; /* Enlève la bordure par défaut des boutons */
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  transition: background-color 0.3s ease; /* Ajoute un effet de transition lors du survol */
+}
+
+button:hover {
+  background-color: #f0f0f0;
+  cursor: pointer; /* Change le curseur en forme de main lors du survol */
+}
+
+button:focus {
+  outline: none; /* Enlève le contour par défaut lors de la mise au point */
+}
+.colored-month {
+  background-color: blue;
 }

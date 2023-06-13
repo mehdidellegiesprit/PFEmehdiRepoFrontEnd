@@ -31,6 +31,8 @@ import { DatePipe } from '@angular/common';
 import { MatSelectModule } from '@angular/material/select';
 import { MatChipsModule } from '@angular/material/chips';
 import { FullCalendarModule } from '@fullcalendar/angular';
+import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
 export function MSALInstanceFactory(): IPublicClientApplication {
   return new PublicClientApplication({
     auth: {
@@ -62,6 +64,8 @@ export function MSALInstanceFactory(): IPublicClientApplication {
     MatSelectModule,
     MatChipsModule,
     FullCalendarModule,
+    MatCardModule,
+    MatButtonModule,
   ],
   providers: [
     DatePipe,

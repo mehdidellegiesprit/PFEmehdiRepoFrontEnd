@@ -1,3 +1,35 @@
+<div class="calendar-container">
+  <div class="calendar">
+    <button mat-icon-button class="control-button">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <!-- <div class="year-container">
+      <span class="year-label">2020</span>
+    </div> -->
+    <div style="display: flex; justify-content: center">
+      <span class="year-label">2020</span>
+    </div>
+    <div style="display: flex; justify-content: flex-end">
+      <button mat-icon-button class="control-button">
+        <mat-icon>arrow_forward</mat-icon>
+      </button>
+    </div>
+
+    <mat-card class="month">Janvier</mat-card>
+    <mat-card class="month">Février</mat-card>
+    <mat-card class="month">Mars</mat-card>
+    <mat-card class="month">Avril</mat-card>
+    <mat-card class="month">Mai</mat-card>
+    <mat-card class="month">Juin</mat-card>
+    <mat-card class="month">Juillet</mat-card>
+    <mat-card class="month">Août</mat-card>
+    <mat-card class="month">Septembre</mat-card>
+    <mat-card class="month">Octobre</mat-card>
+    <mat-card class="month">Novembre</mat-card>
+    <mat-card class="month">Décembre</mat-card>
+  </div>
+</div>
+
 <div style="display: flex; align-items: center; gap: 20px">
   <mat-form-field appearance="fill" style="width: 300px">
     <mat-label>Sélectionnez une société</mat-label>
@@ -46,7 +78,7 @@
           style="margin-left: 10px"
           *ngFor="let date of selectedYearExtraitDates"
         >
-          {{ date.slice(0, -4) }}/
+          {{ date }}/
         </span>
       </h4>
     </label>
@@ -58,6 +90,9 @@
   <div class="full-calendar-container" [hidden]="!isYearSelected">
     <full-calendar *ngIf="isYearSelected" #calendar [options]="calendarOptions">
     </full-calendar>
+    <!-- ici debut nv calendar  -->
+
+    <!-- end nv calendar -->
   </div>
 </div>
 
