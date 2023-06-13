@@ -1,4 +1,4 @@
-<div style="display: flex; align-items: center; gap: 20px">
+<div style="display: flex; align-items: center">
   <mat-form-field appearance="fill" style="width: 300px">
     <mat-label>Sélectionnez une société</mat-label>
     <mat-select
@@ -35,8 +35,9 @@
         <mat-option
           *ngFor="let year of getDistinctExtraitYears()"
           [value]="year"
-          >{{ year }}</mat-option
         >
+          {{ year }}
+        </mat-option>
       </mat-select>
     </mat-form-field>
     <label style="margin-left: 30px">
@@ -55,68 +56,58 @@
   <mat-label class="calendrier-interactif-label">
     Les extraits bancaires sont présentés à travers notre calendrier interactif
   </mat-label>
-  <div class="calendar-container">
-    <div class="calendar">
-      <button mat-icon-button class="control-button">
-        <mat-icon>arrow_back</mat-icon>
-      </button>
-      <!-- <div class="year-container">
-      <span class="year-label">2020</span>
-    </div> -->
-      <div style="display: flex; justify-content: center">
-        <mat-form-field
-          appearance="fill"
-          style="width: 170px; height: 70px"
-          [hidden]="!isSocieteSelected"
+  <div class="calendar">
+    <button mat-icon-button class="control-button">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+
+    <div style="display: flex; justify-content: center">
+      <mat-form-field
+        appearance="fill"
+        style="width: 170px; height: 70px"
+        [hidden]="!isSocieteSelected"
+      >
+        <mat-label>Année d'extrait</mat-label>
+        <mat-select
+          [(value)]="selectedExtraitYear"
+          (selectionChange)="onExtraitYearChange($event)"
         >
-          <mat-label>Année d'extrait</mat-label>
-          <mat-select
-            [(value)]="selectedExtraitYear"
-            (selectionChange)="onExtraitYearChange($event)"
+          <mat-option [value]="null">-- Sélectionnez une année --</mat-option>
+          <mat-option
+            *ngFor="let year of getDistinctExtraitYears()"
+            [value]="year"
           >
-            <mat-option [value]="null">-- Sélectionnez une année --</mat-option>
-            <mat-option
-              *ngFor="let year of getDistinctExtraitYears()"
-              [value]="year"
-              >{{ year }}</mat-option
-            >
-          </mat-select>
-        </mat-form-field>
-      </div>
-
-      <div style="display: flex; justify-content: flex-end">
-        <button mat-icon-button class="control-button">
-          <mat-icon>arrow_forward</mat-icon>
-        </button>
-      </div>
-
-      <mat-card class="month colored-month">Janvier</mat-card>
-      <mat-card class="month colored-month">Février</mat-card>
-      <mat-card class="month colored-month">Mars</mat-card>
-      <mat-card class="month colored-month">Avril</mat-card>
-      <mat-card class="month colored-month">Mai</mat-card>
-      <mat-card class="month colored-month">Juin</mat-card>
-      <mat-card class="month colored-month">Juillet</mat-card>
-      <mat-card class="month colored-month">Août</mat-card>
-      <mat-card class="month colored-month">Septembre</mat-card>
-      <mat-card class="month colored-month">Octobre</mat-card>
-      <mat-card class="month colored-month">Novembre</mat-card>
-      <mat-card class="month colored-month">Décembre</mat-card>
+            {{ year }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
     </div>
+
+    <div style="display: flex; justify-content: flex-end">
+      <button mat-icon-button class="control-button">
+        <mat-icon>arrow_forward</mat-icon>
+      </button>
+    </div>
+
+    <mat-card class="month colored-month">Janvier</mat-card>
+    <mat-card class="month colored-month">Février</mat-card>
+    <mat-card class="month colored-month">Mars</mat-card>
+    <mat-card class="month colored-month">Avril</mat-card>
+    <mat-card class="month colored-month">Mai</mat-card>
+    <mat-card class="month colored-month">Juin</mat-card>
+    <mat-card class="month colored-month">Juillet</mat-card>
+    <mat-card class="month colored-month">Août</mat-card>
+    <mat-card class="month colored-month">Septembre</mat-card>
+    <mat-card class="month colored-month">Octobre</mat-card>
+    <mat-card class="month colored-month">Novembre</mat-card>
+    <mat-card class="month colored-month">Décembre</mat-card>
   </div>
 </div>
 
 <!-- stop here  -->
-<div *ngIf="selectedReleveBancaire && displayContent">
+<div *ngIf="selectedReleveBancaire && displayContent" style="margin-top: 0">
   <div *ngFor="let extrait of selectedReleveBancaire.extraits; let i = index">
     <div class="card-body" *ngIf="extrait === selectedExtrait">
-      <app-bank-statement-table
-        [data]="selectedExtrait.donneeExtraits"
-        [formattedDateExtrait]="
-          convertDate(selectedExtrait.dateExtrait.toString())
-        "
-      ></app-bank-statement-table>
-
       <h2 class="center-header">
         <span
           >Informations sur les soldes créditeurs et les mouvements de
@@ -155,6 +146,13 @@
           <td>{{ selectedExtrait.totalMouvementsCredit }} &euro;</td>
         </tr>
       </table>
+      <app-bank-statement-table
+        [data]="selectedExtrait.donneeExtraits"
+        [formattedDateExtrait]="
+          convertDate(selectedExtrait.dateExtrait.toString())
+        "
+        style="margin-top: 0"
+      ></app-bank-statement-table>
     </div>
   </div>
 </div>
