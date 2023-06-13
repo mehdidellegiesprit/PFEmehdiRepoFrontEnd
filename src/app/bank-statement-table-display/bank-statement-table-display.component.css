@@ -172,3 +172,9 @@ button:focus {
 .colored-month {
   background-color: blue;
 }
+.hover-color {
+  background-color: #ff9900; /* Choisissez la couleur que vous préférez */
+}
+.colored-month:hover {
+  background-color: #ff9900;
+}

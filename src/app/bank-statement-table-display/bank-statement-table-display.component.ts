@@ -477,6 +477,21 @@ export class BankStatementTableDisplayComponent implements OnInit, OnDestroy {
           this.onEventClick_colored_month(cardMonth);
         }
       });
+      // Ajouter un événement de survol pour changer la couleur de la cellule
+      monthCard.addEventListener('mouseenter', () => {
+        if (monthCard.classList.contains('colored-month')) {
+          console.log(`mouseenter`);
+          monthCard.classList.add('hover-color');
+        }
+      });
+
+      // Ajouter un événement pour rétablir la couleur de la cellule lorsque le curseur quitte l'élément
+      monthCard.addEventListener('mouseleave', () => {
+        if (monthCard.classList.contains('colored-month')) {
+          console.log(`mouseleave`);
+          monthCard.classList.remove('hover-color');
+        }
+      });
     });
   }
 
