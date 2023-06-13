@@ -7,6 +7,8 @@ import {
   Renderer2,
   ElementRef,
   ViewEncapsulation,
+  QueryList,
+  ViewChildren,
 } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { NotificationService } from '../service/notification.service';
@@ -260,10 +262,31 @@ export class BankStatementTableDisplayComponent
       this.isSocieteSelected = false;
     }
   }
+  @ViewChildren('.month') months: QueryList<ElementRef>;
 
   ngAfterViewInit(): void {
     this.updateCalendar();
     this.colorerCelluleMois(this.selectedYearExtraitDates);
+
+    // Run the code to update the title attribute after a delay to ensure that the month cells have been colored.
+    setTimeout(() => {
+      this.months.forEach((month) => {
+        const backgroundColor = window.getComputedStyle(
+          month.nativeElement
+        ).backgroundColor;
+        const monthText = month.nativeElement.innerText;
+
+        if (backgroundColor === 'rgb(255, 153, 0)') {
+          // equivalent of #ff9900
+          month.nativeElement.setAttribute(
+            'title',
+            `Cliquez ici pour plus de détails sur l'extrait de ${monthText}`
+          );
+        } else {
+          month.nativeElement.setAttribute('title', '');
+        }
+      });
+    }, 0);
   }
 
   updateCalendar(): void {
@@ -312,7 +335,7 @@ export class BankStatementTableDisplayComponent
 
     return new Date(Number(year), monthNumber - 1, Number(day));
   }
-
+  // il y a un probeleme dans cette methode !!! a voir !!!!
   colorerCelluleMois(dates: string[]): void {
     const monthsToColor = dates.map((date) => {
       const [year, month] = this.convertFrenchDate(date)
@@ -347,30 +370,38 @@ export class BankStatementTableDisplayComponent
 
       if (monthsToColor.includes(cardDate)) {
         monthCard.classList.add('colored-month');
+        monthCard.setAttribute(
+          'title',
+          `Cliquez ici pour plus de détails sur l'extrait de ${cardMonth}`
+        );
       } else {
         monthCard.classList.remove('colored-month');
+        monthCard.setAttribute('title', '');
       }
 
-      monthCard.addEventListener('click', () => {
-        if (monthCard.classList.contains('colored-month')) {
-          console.log(`Vous avez cliqué sur un mois coloré: ${cardMonth}`);
-          this.onEventClick_colored_month(cardMonth);
-        }
-      });
+      if (!monthCard.classList.contains('event-added')) {
+        monthCard.classList.add('event-added');
+        monthCard.addEventListener('click', () => {
+          if (monthCard.classList.contains('colored-month')) {
+            console.log(`Vous avez cliqué sur un mois coloré: ${cardMonth}`);
+            this.onEventClick_colored_month(cardMonth);
+          }
+        });
 
-      monthCard.addEventListener('mouseenter', () => {
-        if (monthCard.classList.contains('colored-month')) {
-          console.log(`mouseenter`);
-          monthCard.classList.add('hover-color');
-        }
-      });
+        monthCard.addEventListener('mouseenter', () => {
+          if (monthCard.classList.contains('colored-month')) {
+            console.log(`mouseenter`);
+            monthCard.classList.add('hover-color');
+          }
+        });
 
-      monthCard.addEventListener('mouseleave', () => {
-        if (monthCard.classList.contains('colored-month')) {
-          console.log(`mouseleave`);
-          monthCard.classList.remove('hover-color');
-        }
-      });
+        monthCard.addEventListener('mouseleave', () => {
+          if (monthCard.classList.contains('colored-month')) {
+            console.log(`mouseleave`);
+            monthCard.classList.remove('hover-color');
+          }
+        });
+      }
     });
   }
 
