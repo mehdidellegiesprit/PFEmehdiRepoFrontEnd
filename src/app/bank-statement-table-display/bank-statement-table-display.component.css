@@ -1,27 +1,9 @@
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap");
-
 body {
   font-family: Arial, sans-serif;
   background-color: #f5f6fa;
   color: #2c3e50;
   margin: 0;
   padding: 0;
-}
-
-.container {
-  max-width: 960px;
-  margin: 0 auto;
-  padding: 20px;
-  box-sizing: border-box;
-}
-
-.navbar {
-  background-color: #2c3e50;
-  color: #ecf0f1;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px 20px;
 }
 
 .card {
@@ -64,12 +46,6 @@ body {
   vertical-align: middle;
 }
 
-.full-calendar-container {
-  width: 30%;
-  height: 70%;
-  margin-bottom: 10%;
-}
-
 .custom-chip-list {
   display: inline-flex;
   align-items: center;
@@ -88,26 +64,15 @@ body {
   color: #333333e4;
 }
 
-/* Ajouté des marges pour améliorer l'espacement */
-body,
-.container,
-.navbar,
-.card,
-.card-body,
-.custom-table,
-.full-calendar-container,
-.custom-chip-list,
-.calendrier-interactif-label {
-  margin-bottom: 20px;
-}
 /* ------------------------------pour le nouveau calendrier------------------------------  */
 .calendar-container {
   display: flex;
-  justify-content: center;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
   height: 80vh;
   background-color: #eeeeee;
   font-family: "Poppins", sans-serif;
+  margin-bottom: -20px; /* Ajouter cette ligne pour supprimer l'espace */
 }
 
 .calendar {
@@ -124,57 +89,37 @@ body,
   align-items: center;
   text-align: center;
   font-size: 20px;
+  width: 150px;
+  height: 70px;
   color: white;
   background-color: #6c757d;
   border-radius: 10px;
   box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.15);
-  transition: background-color 0.3s ease, transform 0.3s ease; /* Ajout d'un effet de transformation lors du survol */
+  transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
 .month:hover {
   background-color: #494d4b;
   cursor: pointer;
-  transform: scale(1.05); /* L'élément s'agrandit légèrement lors du survol */
+  transform: scale(1.05);
 }
 
 .year-controls {
   display: flex;
   align-items: center;
-  justify-content: space-between; /* Pour que les contrôles soient répartis uniformément */
-  width: 30%; /* Ajuste la largeur pour correspondre à celle du calendrier */
+  justify-content: space-between;
+  width: 30%;
   margin-bottom: 1rem;
-  margin-left: auto; /* Pour centrer les contrôles d'année */
-  margin-right: auto; /* Pour centrer les contrôles d'année */
 }
 
-.year-label {
-  font-size: 1.5em;
-}
-
-button {
-  color: #6c757d;
-  background-color: #ffffff;
-  border: none; /* Enlève la bordure par défaut des boutons */
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  transition: background-color 0.3s ease; /* Ajoute un effet de transition lors du survol */
-}
-
-button:hover {
-  background-color: #f0f0f0;
-  cursor: pointer; /* Change le curseur en forme de main lors du survol */
-}
-
-button:focus {
-  outline: none; /* Enlève le contour par défaut lors de la mise au point */
-}
 .colored-month {
   background-color: blue;
 }
+
 .hover-color {
-  background-color: #ff9900; /* Choisissez la couleur que vous préférez */
+  background-color: #ff9900;
 }
+
 .colored-month:hover {
   background-color: #ff9900;
 }

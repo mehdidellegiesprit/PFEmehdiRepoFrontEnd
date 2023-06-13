@@ -1,10 +1,11 @@
 import {
   Component,
-  Input,
   OnDestroy,
   OnInit,
   ViewChild,
   AfterViewInit,
+  Renderer2,
+  ElementRef,
 } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { NotificationService } from '../service/notification.service';
@@ -18,25 +19,30 @@ import { fr } from 'date-fns/locale';
 import { SocieteService } from '../service/societe.service';
 import { Societe } from '../model/Societe';
 import { ExtraitBancaire } from '../model/ExtraitBancaire';
-import dayGridPlugin from '@fullcalendar/daygrid';
 import { FullCalendarComponent } from '@fullcalendar/angular';
-import { Renderer2, ElementRef } from '@angular/core';
 
-import { Calendar, LocaleInput } from '@fullcalendar/core';
-import frLocale from '@fullcalendar/core/locales/fr';
 @Component({
   selector: 'app-bank-statement-table-display',
   templateUrl: './bank-statement-table-display.component.html',
   styleUrls: ['./bank-statement-table-display.component.css'],
 })
-export class BankStatementTableDisplayComponent implements OnInit, OnDestroy {
-  @ViewChild('calendar') calendarComponent: FullCalendarComponent; // Here we get a reference to the calendar
+export class BankStatementTableDisplayComponent
+  implements OnInit, OnDestroy, AfterViewInit
+{
+  @ViewChild('calendar') calendarComponent: FullCalendarComponent;
   releves: ReleveBancaire[] = [];
   societes: Societe[] = [];
-  private subscription: Subscription[] = [];
-  isVisible = false; // Initialize as hidden
-
+  private subscriptions: Subscription[] = [];
+  isVisible = false;
+  displayContent = false;
+  selectedExtrait: ExtraitBancaire;
   private _selectedReleveBancaire?: ReleveBancaire;
+  selectedYearExtraitDates: string[] = [];
+  selectedSociete: Societe;
+  selectedDate: Date = new Date();
+  selectedExtraitYear: number = new Date().getFullYear();
+  isYearSelected = false;
+  isSocieteSelected = false;
 
   public get selectedReleveBancaire(): ReleveBancaire | undefined {
     return this._selectedReleveBancaire;
@@ -45,28 +51,10 @@ export class BankStatementTableDisplayComponent implements OnInit, OnDestroy {
   public set selectedReleveBancaire(value: ReleveBancaire | undefined) {
     this._selectedReleveBancaire = value;
     if (value) {
-      let distinctYears = this.getDistinctExtraitYears();
+      const distinctYears = this.getDistinctExtraitYears();
       if (distinctYears.length > 0) {
-        // Set selectedExtraitYear to the first year in the list
         this.selectedExtraitYear = distinctYears[0];
         this.updateCalendar();
-      }
-    }
-  }
-
-  onToggle(id_div: string): void {
-    const divElement = this.el.nativeElement.querySelector(`#${id_div}`);
-    console.log('onToggle', divElement);
-
-    if (divElement) {
-      const computedStyle = window.getComputedStyle(divElement);
-
-      if (computedStyle.display === 'none') {
-        // If the div is currently hidden, show it
-        this.renderer.setStyle(divElement, 'display', 'block');
-      } else {
-        // If the div is currently visible, hide it
-        this.renderer.setStyle(divElement, 'display', 'none');
       }
     }
   }
@@ -76,8 +64,8 @@ export class BankStatementTableDisplayComponent implements OnInit, OnDestroy {
     private notificationService: NotificationService,
     private bankStatementViewerService: BankStatementViewerService,
     private societeService: SocieteService,
-    private renderer: Renderer2, // Add this
-    private el: ElementRef // Add this
+    private renderer: Renderer2,
+    private el: ElementRef
   ) {}
 
   formatDate(date: any): string {
@@ -97,7 +85,7 @@ export class BankStatementTableDisplayComponent implements OnInit, OnDestroy {
 
   public onFileInputChange(event: any): void {
     const file: File = event.target.files[0];
-    this.subscription.push(
+    this.subscriptions.push(
       this.bankStatementViewerService.uploadFile(file).subscribe(
         (response: any) => {
           console.log(response);
@@ -113,7 +101,7 @@ export class BankStatementTableDisplayComponent implements OnInit, OnDestroy {
   }
 
   public getAllRelevesBancaires(): void {
-    this.subscription.push(
+    this.subscriptions.push(
       this.bankStatementViewerService.getAllRelevesBancaires().subscribe(
         (response: ReleveBancaire[]) => {
           this.releves = response;
@@ -130,7 +118,7 @@ export class BankStatementTableDisplayComponent implements OnInit, OnDestroy {
   }
 
   public getAllSocietes(): void {
-    this.subscription.push(
+    this.subscriptions.push(
       this.societeService.getAllSocietes().subscribe(
         (response: Societe[]) => {
           this.societes = response;
@@ -147,7 +135,7 @@ export class BankStatementTableDisplayComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.subscription.push(
+    this.subscriptions.push(
       this.bankStatementViewerService.getAllRelevesBancaires().subscribe(
         (response: ReleveBancaire[]) => {
           this.releves = response;
@@ -167,17 +155,14 @@ export class BankStatementTableDisplayComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.subscription.forEach((sub) => sub.unsubscribe());
+    this.subscriptions.forEach((sub) => sub.unsubscribe());
   }
 
-  selectedSociete: Societe;
-  selectedDate: Date = new Date(); // initialise à la date actuelle
-
   searchExtraitByDate(date: Date): ExtraitBancaire | null {
-    const searchDateStr = date.toISOString().slice(0, 10); // format : yyyy-mm-dd
+    const searchDateStr = date.toISOString().slice(0, 10);
 
-    for (let extrait of this._selectedReleveBancaire!.extraits) {
-      const extraitDateStr = extrait.dateExtrait.toISOString().slice(0, 10); // format : yyyy-mm-dd
+    for (const extrait of this._selectedReleveBancaire!.extraits) {
+      const extraitDateStr = extrait.dateExtrait.toISOString().slice(0, 10);
       if (extraitDateStr === searchDateStr) {
         return extrait;
       }
@@ -185,49 +170,6 @@ export class BankStatementTableDisplayComponent implements OnInit, OnDestroy {
     return null;
   }
 
-  getCalendarEvents(releve: any, year: number) {
-    let events = [
-      {
-        title: 'Test Event',
-        date: '2023-01-01',
-        backgroundColor: 'blue',
-      },
-    ];
-
-    for (let extrait of releve.extraits) {
-      let extraitYear = new Date(extrait.dateExtrait).getFullYear();
-      if (extraitYear === year) {
-        // Ajoute l'événement uniquement si l'année correspond
-        let event = {
-          title: format(new Date(extrait.dateExtrait), 'yyyy-MM-dd'),
-          date: format(new Date(extrait.dateExtrait), 'yyyy-MM-dd'),
-          backgroundColor: '#1976d2', // Couleur d'arrière-plan
-          borderColor: '#1976d2', // Couleur de la bordure
-          textColor: '#ffffff', // Couleur du texte
-          totalMouvementsDebit: extrait.totalMouvementsDebit,
-          totalMouvementsCredit: extrait.totalMouvementsCredit,
-          donneeExtraits: extrait.donneeExtraits,
-        };
-        events.push(event);
-      }
-    }
-
-    return events;
-  }
-
-  calendarOptions: any = {
-    plugins: [dayGridPlugin],
-    initialView: 'dayGridMonth',
-    events: [],
-    eventColor: 'blue',
-    eventBackgroundColor: 'blue',
-    eventBorderColor: 'red',
-    eventTextColor: 'green',
-    eventClick: this.onEventClick.bind(this),
-    locale: frLocale, // Ajoutez cette ligne
-  };
-  displayContent = false;
-  selectedExtrait: ExtraitBancaire; // Remplacez 'any' par le type approprié pour vos extraits
   onEventClick_colored_month(month: string): void {
     console.log('onEventClick');
 
@@ -246,7 +188,6 @@ export class BankStatementTableDisplayComponent implements OnInit, OnDestroy {
       'décembre',
     ];
 
-    // Convert the string month to a number
     const monthNumber = months.indexOf(month.toLowerCase());
     if (monthNumber === -1) {
       console.log('Invalid month:', month);
@@ -257,10 +198,7 @@ export class BankStatementTableDisplayComponent implements OnInit, OnDestroy {
       const matchingExtrait = this.selectedReleveBancaire.extraits.find(
         (extrait) => {
           if (typeof extrait.dateExtrait === 'string') {
-            // Convert string date to Date object
             const extraitDate = new Date(extrait.dateExtrait);
-
-            // Check if the date of the event is in the specified month
             return extraitDate.getMonth() === monthNumber;
           }
           return false;
@@ -270,9 +208,6 @@ export class BankStatementTableDisplayComponent implements OnInit, OnDestroy {
       if (matchingExtrait) {
         this.selectedExtrait = matchingExtrait;
         this.displayContent = true;
-        setTimeout(() => {
-          this.calendarComponent.getApi().render(); // Refresh the calendar events
-        }, 0);
       } else {
         console.log('No matching extrait found for month:', month);
       }
@@ -281,42 +216,8 @@ export class BankStatementTableDisplayComponent implements OnInit, OnDestroy {
     }
   }
 
-  onEventClick(event: any): void {
-    console.log('onEventClick');
-    console.log('Event Clicked:', event.event);
-
-    const eventTitle = event.event.title;
-    if (this.selectedReleveBancaire && this.selectedReleveBancaire.extraits) {
-      const matchingExtrait = this.selectedReleveBancaire.extraits.find(
-        (extrait) => {
-          if (typeof extrait.dateExtrait === 'string') {
-            // Convert string date to Date object
-            const extraitDate = new Date(extrait.dateExtrait);
-            // Format the date to match the event title
-            const formattedDate = extraitDate.toISOString().slice(0, 10);
-
-            return formattedDate === eventTitle;
-          }
-          return false;
-        }
-      );
-
-      if (matchingExtrait) {
-        this.selectedExtrait = matchingExtrait;
-        this.displayContent = true;
-        setTimeout(() => {
-          this.calendarComponent.getApi().render(); // Refresh the calendar events
-        }, 0);
-      } else {
-        console.log('No matching extrait found for event title:', eventTitle);
-      }
-    } else {
-      console.log('No selected releve or extrait available');
-    }
-  }
-
   getDistinctExtraitYears(): number[] {
-    let distinctYears: number[] = [];
+    const distinctYears: number[] = [];
 
     if (this.selectedReleveBancaire) {
       this.selectedReleveBancaire.extraits.forEach((extrait) => {
@@ -331,71 +232,43 @@ export class BankStatementTableDisplayComponent implements OnInit, OnDestroy {
     return distinctYears;
   }
 
-  selectedExtraitYear: number = new Date().getFullYear(); // initialise à l'année actuelle
-
-  isYearSelected: boolean = false; // Ajout d'une nouvelle variable
-
-  isSocieteSelected: boolean = false; // Nouvelle variable
   onChange(event: any) {
-    this.isYearSelected = false; // Hide the calendar upon selecting a new company
-
+    this.isYearSelected = false;
     this.selectedSociete = event.value;
-    let foundReleveBancaire;
-    for (const releve of this.releves) {
-      if (
-        (releve.id_societe as any).date ===
-          (this.selectedSociete.id as any).date &&
-        (releve.id_societe as any).timestamp ===
-          (this.selectedSociete.id as any).timestamp
-      ) {
-        foundReleveBancaire = releve;
-        break;
-      }
-    }
+    const foundReleveBancaire = this.releves.find(
+      (releve: ReleveBancaire) =>
+        (releve.id_societe as any)?.date ===
+          (this.selectedSociete.id as any)?.date &&
+        (releve.id_societe as any)?.timestamp ===
+          (this.selectedSociete.id as any)?.timestamp
+    );
+
     if (foundReleveBancaire) {
       this.selectedReleveBancaire = foundReleveBancaire;
-      let distinctYears = this.getDistinctExtraitYears();
+      const distinctYears = this.getDistinctExtraitYears();
       if (distinctYears.length > 0) {
-        // Set selectedExtraitYear to the first year in the list
         this.selectedExtraitYear = distinctYears[0];
-        // Then call onExtraitYearChange with the first year in the list
         this.onExtraitYearChange({ value: distinctYears[0] });
       }
-      this.isSocieteSelected = true; // Indicates that a company has been selected
+      this.isSocieteSelected = true;
 
       setTimeout(() => this.updateCalendar(), 0);
     } else {
       this.selectedReleveBancaire = undefined;
-      this.isSocieteSelected = false; // Indicates that no company has been selected
+      this.isSocieteSelected = false;
     }
   }
 
   ngAfterViewInit(): void {
-    if (this.calendarComponent) {
-      const calendarApi = this.calendarComponent.getApi();
-      calendarApi.setOption('locale', frLocale);
-    }
-    this.updateCalendar();
     this.colorerCelluleMois(this.selectedYearExtraitDates);
   }
 
   updateCalendar(): void {
     if (this.selectedReleveBancaire && !isNaN(this.selectedExtraitYear)) {
       setTimeout(() => {
-        this.calendarOptions.events = this.getCalendarEvents(
-          this.selectedReleveBancaire,
-          this.selectedExtraitYear
-        );
-
-        if (this.calendarComponent) {
-          const calendarApi = this.calendarComponent.getApi();
-          calendarApi.gotoDate(`${this.selectedExtraitYear}-01-01`);
-          calendarApi.render();
-          this.colorerCelluleMois(this.selectedYearExtraitDates);
-        }
-      }, 500); // delay in milliseconds
+        this.colorerCelluleMois(this.selectedYearExtraitDates);
+      }, 500);
     } else {
-      this.calendarOptions.events = [];
     }
   }
 
@@ -415,19 +288,13 @@ export class BankStatementTableDisplayComponent implements OnInit, OnDestroy {
       'décembre',
     ];
 
-    // Split date string into day, month, year
     const [day, month, year] = dateString.split(' ');
-
-    // Convert month to number
     const monthNumber = months.indexOf(month.toLowerCase()) + 1;
 
-    // Create a new Date object
     return new Date(Number(year), monthNumber - 1, Number(day));
   }
 
-  selectedYearExtraitDates: string[] = [];
   colorerCelluleMois(dates: string[]): void {
-    // 1. Convertir les dates au format de mois et année (yyyy-MM)
     const monthsToColor = dates.map((date) => {
       const [year, month] = this.convertFrenchDate(date)
         .toISOString()
@@ -436,7 +303,6 @@ export class BankStatementTableDisplayComponent implements OnInit, OnDestroy {
       return `${year}-${month}`;
     });
 
-    // 2. Définir les noms de mois en français pour les utiliser plus tard
     const frenchMonths = [
       'Janvier',
       'Février',
@@ -452,32 +318,27 @@ export class BankStatementTableDisplayComponent implements OnInit, OnDestroy {
       'Décembre',
     ];
 
-    // 3. Parcourir tous les mat-card du calendrier
     const calendarMonths = document.querySelectorAll('.month');
 
     calendarMonths.forEach((monthCard, index) => {
-      // 4. Obtenir le mois et l'année de la mat-card
       const cardMonth = frenchMonths[index];
       const cardDate = `${this.selectedExtraitYear}-${('0' + (index + 1)).slice(
         -2
-      )}`; // suppose que selectedExtraitYear est l'année sélectionnée
+      )}`;
 
-      // 5. Vérifier si le mois de la mat-card doit être coloré
       if (monthsToColor.includes(cardDate)) {
-        // 6. Si oui, appliquer un style CSS pour changer la couleur de fond
         monthCard.classList.add('colored-month');
       } else {
         monthCard.classList.remove('colored-month');
       }
 
-      // 7. Ajouter un gestionnaire d'événements de clic à chaque mat-card
       monthCard.addEventListener('click', () => {
         if (monthCard.classList.contains('colored-month')) {
           console.log(`Vous avez cliqué sur un mois coloré: ${cardMonth}`);
           this.onEventClick_colored_month(cardMonth);
         }
       });
-      // Ajouter un événement de survol pour changer la couleur de la cellule
+
       monthCard.addEventListener('mouseenter', () => {
         if (monthCard.classList.contains('colored-month')) {
           console.log(`mouseenter`);
@@ -485,7 +346,6 @@ export class BankStatementTableDisplayComponent implements OnInit, OnDestroy {
         }
       });
 
-      // Ajouter un événement pour rétablir la couleur de la cellule lorsque le curseur quitte l'élément
       monthCard.addEventListener('mouseleave', () => {
         if (monthCard.classList.contains('colored-month')) {
           console.log(`mouseleave`);
@@ -500,8 +360,6 @@ export class BankStatementTableDisplayComponent implements OnInit, OnDestroy {
 
     if (!isNaN(this.selectedExtraitYear)) {
       this.isYearSelected = true;
-
-      // Chercher toutes les dates d'extrait pour l'année sélectionnée
       this.selectedYearExtraitDates =
         this.selectedReleveBancaire?.extraits
           .filter(

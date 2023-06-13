@@ -1,35 +1,3 @@
-<div class="calendar-container">
-  <div class="calendar">
-    <button mat-icon-button class="control-button">
-      <mat-icon>arrow_back</mat-icon>
-    </button>
-    <!-- <div class="year-container">
-      <span class="year-label">2020</span>
-    </div> -->
-    <div style="display: flex; justify-content: center">
-      <span class="year-label">2020</span>
-    </div>
-    <div style="display: flex; justify-content: flex-end">
-      <button mat-icon-button class="control-button">
-        <mat-icon>arrow_forward</mat-icon>
-      </button>
-    </div>
-
-    <mat-card class="month">Janvier</mat-card>
-    <mat-card class="month">Février</mat-card>
-    <mat-card class="month">Mars</mat-card>
-    <mat-card class="month">Avril</mat-card>
-    <mat-card class="month">Mai</mat-card>
-    <mat-card class="month">Juin</mat-card>
-    <mat-card class="month">Juillet</mat-card>
-    <mat-card class="month">Août</mat-card>
-    <mat-card class="month">Septembre</mat-card>
-    <mat-card class="month">Octobre</mat-card>
-    <mat-card class="month">Novembre</mat-card>
-    <mat-card class="month">Décembre</mat-card>
-  </div>
-</div>
-
 <div style="display: flex; align-items: center; gap: 20px">
   <mat-form-field appearance="fill" style="width: 300px">
     <mat-label>Sélectionnez une société</mat-label>
@@ -52,7 +20,7 @@
   style="display: flex; flex-direction: column; align-items: left"
   [hidden]="!isSocieteSelected"
 >
-  <div style="display: flex">
+  <div style="display: flex" hidden>
     <mat-form-field
       appearance="fill"
       style="width: 300px"
@@ -87,9 +55,54 @@
   <mat-label class="calendrier-interactif-label">
     Les extraits bancaires sont présentés à travers notre calendrier interactif
   </mat-label>
-  <div class="full-calendar-container" [hidden]="!isYearSelected">
-    <full-calendar *ngIf="isYearSelected" #calendar [options]="calendarOptions">
-    </full-calendar>
+  <div class="calendar-container">
+    <div class="calendar">
+      <button mat-icon-button class="control-button">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <!-- <div class="year-container">
+      <span class="year-label">2020</span>
+    </div> -->
+      <div style="display: flex; justify-content: center">
+        <mat-form-field
+          appearance="fill"
+          style="width: 170px; height: 70px"
+          [hidden]="!isSocieteSelected"
+        >
+          <mat-label>Année d'extrait</mat-label>
+          <mat-select
+            [(value)]="selectedExtraitYear"
+            (selectionChange)="onExtraitYearChange($event)"
+          >
+            <mat-option [value]="null">-- Sélectionnez une année --</mat-option>
+            <mat-option
+              *ngFor="let year of getDistinctExtraitYears()"
+              [value]="year"
+              >{{ year }}</mat-option
+            >
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div style="display: flex; justify-content: flex-end">
+        <button mat-icon-button class="control-button">
+          <mat-icon>arrow_forward</mat-icon>
+        </button>
+      </div>
+
+      <mat-card class="month colored-month">Janvier</mat-card>
+      <mat-card class="month colored-month">Février</mat-card>
+      <mat-card class="month colored-month">Mars</mat-card>
+      <mat-card class="month colored-month">Avril</mat-card>
+      <mat-card class="month colored-month">Mai</mat-card>
+      <mat-card class="month colored-month">Juin</mat-card>
+      <mat-card class="month colored-month">Juillet</mat-card>
+      <mat-card class="month colored-month">Août</mat-card>
+      <mat-card class="month colored-month">Septembre</mat-card>
+      <mat-card class="month colored-month">Octobre</mat-card>
+      <mat-card class="month colored-month">Novembre</mat-card>
+      <mat-card class="month colored-month">Décembre</mat-card>
+    </div>
   </div>
 </div>
 
