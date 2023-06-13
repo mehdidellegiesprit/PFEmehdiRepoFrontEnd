@@ -263,7 +263,6 @@ export class BankStatementTableDisplayComponent
     }
   }
   @ViewChildren('.month') months: QueryList<ElementRef>;
-
   ngAfterViewInit(): void {
     this.updateCalendar();
     this.colorerCelluleMois(this.selectedYearExtraitDates);
@@ -285,6 +284,20 @@ export class BankStatementTableDisplayComponent
         } else {
           month.nativeElement.setAttribute('title', '');
         }
+
+        this.renderer.listen(month.nativeElement, 'mouseenter', () => {
+          if (month.nativeElement.classList.contains('colored-month')) {
+            console.log(`mouseenter`);
+            this.renderer.addClass(month.nativeElement, 'hover-color');
+          }
+        });
+
+        this.renderer.listen(month.nativeElement, 'mouseleave', () => {
+          if (month.nativeElement.classList.contains('colored-month')) {
+            console.log(`mouseleave`);
+            this.renderer.removeClass(month.nativeElement, 'hover-color');
+          }
+        });
       });
     }, 0);
   }

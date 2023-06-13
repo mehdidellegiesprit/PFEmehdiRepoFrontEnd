@@ -25,38 +25,7 @@
     style="display: flex; flex-direction: column; align-items: left"
     [hidden]="!isSocieteSelected"
   >
-    <!-- <div style="display: flex" hidden>
-      <mat-form-field
-        appearance="fill"
-        style="width: 300px"
-        [hidden]="!isSocieteSelected"
-      >
-        <mat-label>Sélectionnez une année d'extrait</mat-label>
-        <mat-select
-          [(value)]="selectedExtraitYear"
-          (selectionChange)="onExtraitYearChange($event)"
-        >
-          <mat-option [value]="null">-- Sélectionnez une année --</mat-option>
-          <mat-option
-            *ngFor="let year of getDistinctExtraitYears()"
-            [value]="year"
-          >
-            {{ year }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-      <label style="margin-left: 30px">
-        <h4>
-          Voici les dates d'extrait correspondant à l'année sélectionnée :<br />
-          <span
-            style="margin-left: 10px"
-            *ngFor="let date of selectedYearExtraitDates"
-          >
-            {{ date }}/
-          </span>
-        </h4>
-      </label>
-    </div> -->
+   
     <div>
       <mat-label class="calendrier-interactif-label">
         Les extraits bancaires sont présentés à travers notre calendrier

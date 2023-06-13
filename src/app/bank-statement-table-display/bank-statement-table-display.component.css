@@ -97,9 +97,9 @@ body {
   height: 70px;
   color: white;
   background-color: #6c757d;
-  border-radius: 10px;
-  box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.15);
-  transition: background-color 0.3s ease, transform 0.3s ease;
+  /* border-radius: 10px; */
+  /* box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.15); */
+  /* transition: background-color 0.3s ease, transform 0.3s ease; */
 }
 
 .month:hover {
