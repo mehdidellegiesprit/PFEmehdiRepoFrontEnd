@@ -9,6 +9,7 @@ import {
   ViewEncapsulation,
   QueryList,
   ViewChildren,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { NotificationService } from '../service/notification.service';
@@ -47,6 +48,7 @@ export class BankStatementTableDisplayComponent
   selectedExtraitYear: number = new Date().getFullYear();
   isYearSelected = false;
   isSocieteSelected = false;
+  @ViewChildren('.month') months: QueryList<ElementRef>;
 
   public get selectedReleveBancaire(): ReleveBancaire | undefined {
     return this._selectedReleveBancaire;
@@ -69,156 +71,9 @@ export class BankStatementTableDisplayComponent
     private bankStatementViewerService: BankStatementViewerService,
     private societeService: SocieteService,
     private renderer: Renderer2,
-    private el: ElementRef
+    private el: ElementRef,
+    private changeDetectorRef: ChangeDetectorRef
   ) {}
-
-  formatDate(date: any): string {
-    if (date) {
-      return this.datePipe.transform(date, 'dd/MM/yyyy') || '';
-    }
-    return '';
-  }
-
-  convertDate(dateString: string | null): string {
-    if (dateString) {
-      const date = new Date(dateString);
-      return format(date, 'dd MMMM yyyy', { locale: fr });
-    }
-    return '';
-  }
-
-  public onFileInputChange(event: any): void {
-    const file: File = event.target.files[0];
-    this.subscriptions.push(
-      this.bankStatementViewerService.uploadFile(file).subscribe(
-        (response: any) => {
-          console.log(response);
-        },
-        (errorResponse: HttpErrorResponse) => {
-          this.notificationService.notify(
-            NotificationType.ERROR,
-            errorResponse.error.message
-          );
-        }
-      )
-    );
-  }
-
-  public getAllRelevesBancaires(): void {
-    this.subscriptions.push(
-      this.bankStatementViewerService.getAllRelevesBancaires().subscribe(
-        (response: ReleveBancaire[]) => {
-          this.releves = response;
-          console.log('**releves:', this.releves);
-        },
-        (errorResponse: HttpErrorResponse) => {
-          this.notificationService.notify(
-            NotificationType.ERROR,
-            errorResponse.error.message
-          );
-        }
-      )
-    );
-  }
-
-  public getAllSocietes(): void {
-    this.subscriptions.push(
-      this.societeService.getAllSocietes().subscribe(
-        (response: Societe[]) => {
-          this.societes = response;
-          //console.log('*****societes:', this.societes);
-        },
-        (errorResponse: HttpErrorResponse) => {
-          this.notificationService.notify(
-            NotificationType.ERROR,
-            errorResponse.error.message
-          );
-        }
-      )
-    );
-  }
-
-  ngOnInit(): void {
-    this.subscriptions.push(
-      this.bankStatementViewerService.getAllRelevesBancaires().subscribe(
-        (response: ReleveBancaire[]) => {
-          this.releves = response;
-          //console.log('**releves:', this.releves);
-
-          // Call getAllSocietes after fetching the releves data
-          this.getAllSocietes();
-        },
-        (errorResponse: HttpErrorResponse) => {
-          this.notificationService.notify(
-            NotificationType.ERROR,
-            errorResponse.error.message
-          );
-        }
-      )
-    );
-  }
-
-  ngOnDestroy(): void {
-    this.subscriptions.forEach((sub) => sub.unsubscribe());
-  }
-
-  searchExtraitByDate(date: Date): ExtraitBancaire | null {
-    const searchDateStr = date.toISOString().slice(0, 10);
-
-    for (const extrait of this._selectedReleveBancaire!.extraits) {
-      const extraitDateStr = extrait.dateExtrait.toISOString().slice(0, 10);
-      if (extraitDateStr === searchDateStr) {
-        return extrait;
-      }
-    }
-    return null;
-  }
-
-  onEventClick_colored_month(month: string): void {
-    console.log('onEventClick');
-
-    const months = [
-      'janvier',
-      'février',
-      'mars',
-      'avril',
-      'mai',
-      'juin',
-      'juillet',
-      'août',
-      'septembre',
-      'octobre',
-      'novembre',
-      'décembre',
-    ];
-
-    const monthNumber = months.indexOf(month.toLowerCase());
-    if (monthNumber === -1) {
-      console.log('Invalid month:', month);
-      return;
-    }
-
-    if (this.selectedReleveBancaire && this.selectedReleveBancaire.extraits) {
-      const matchingExtrait = this.selectedReleveBancaire.extraits.find(
-        (extrait) => {
-          if (typeof extrait.dateExtrait === 'string') {
-            const extraitDate = new Date(extrait.dateExtrait);
-            return extraitDate.getMonth() === monthNumber;
-          }
-          return false;
-        }
-      );
-
-      if (matchingExtrait) {
-        this.selectedExtrait = matchingExtrait;
-        this.displayContent = true;
-      } else {
-        console.log('No matching extrait found for month:', month);
-      }
-    } else {
-      console.log('No selected releve or extrait available');
-    }
-  }
 
   getDistinctExtraitYears(): number[] {
     const distinctYears: number[] = [];
@@ -236,10 +91,34 @@ export class BankStatementTableDisplayComponent
     return distinctYears;
   }
 
+  onRIBSelect(event: any) {
+    console.log('onRIBSelect !!!!!!');
+    this.selectedRIB = event.value; // Mettez à jour le RIB sélectionné
+    const foundReleveBancaire = this.releves.find(
+      (releve) => releve.iban === this.selectedRIB
+    );
+
+    if (foundReleveBancaire) {
+      this.selectedReleveBancaire = foundReleveBancaire;
+      const distinctYears = this.getDistinctExtraitYears();
+      if (distinctYears.length > 0) {
+        this.selectedExtraitYear = distinctYears[0];
+        this.onExtraitYearChange({ value: distinctYears[0] });
+      }
+
+      // Mettez à jour le calendrier
+      setTimeout(() => this.updateCalendar(), 0);
+    } else {
+      this.selectedReleveBancaire = undefined;
+    }
+  }
+
   onChange(event: any) {
     this.isYearSelected = false;
     this.selectedSociete = event.value;
-    const foundReleveBancaire = this.releves.find(
+
+    // Filtrer les ReleveBancaires pour la Societe sélectionnée
+    const foundReleveBancaires = this.releves.filter(
       (releve: ReleveBancaire) =>
         (releve.id_societe as any)?.date ===
           (this.selectedSociete.id as any)?.date &&
@@ -247,8 +126,12 @@ export class BankStatementTableDisplayComponent
           (this.selectedSociete.id as any)?.timestamp
     );
 
-    if (foundReleveBancaire) {
-      this.selectedReleveBancaire = foundReleveBancaire;
+    if (foundReleveBancaires && foundReleveBancaires.length > 0) {
+      this.selectedReleveBancaire = foundReleveBancaires[0];
+
+      // Mettre à jour la liste des RIBs pour la Societe sélectionnée
+      this.ribList = foundReleveBancaires.map((releve) => releve.iban);
+
       const distinctYears = this.getDistinctExtraitYears();
       if (distinctYears.length > 0) {
         this.selectedExtraitYear = distinctYears[0];
@@ -259,49 +142,26 @@ export class BankStatementTableDisplayComponent
       setTimeout(() => this.updateCalendar(), 0);
     } else {
       this.selectedReleveBancaire = undefined;
+      this.ribList = []; // Réinitialiser la liste des RIBs si aucune Societe n'est sélectionnée
       this.isSocieteSelected = false;
     }
-  }
-  @ViewChildren('.month') months: QueryList<ElementRef>;
-  ngAfterViewInit(): void {
-    this.updateCalendar();
-    this.colorerCelluleMois(this.selectedYearExtraitDates);
 
-    // Run the code to update the title attribute after a delay to ensure that the month cells have been colored.
-    setTimeout(() => {
-      this.months.forEach((month) => {
-        const backgroundColor = window.getComputedStyle(
-          month.nativeElement
-        ).backgroundColor;
-        const monthText = month.nativeElement.innerText;
-
-        if (backgroundColor === 'rgb(255, 153, 0)') {
-          // equivalent of #ff9900
-          month.nativeElement.setAttribute(
-            'title',
-            `Cliquez ici pour plus de détails sur l'extrait de ${monthText}`
-          );
-        } else {
-          month.nativeElement.setAttribute('title', '');
-        }
-
-        this.renderer.listen(month.nativeElement, 'mouseenter', () => {
-          if (month.nativeElement.classList.contains('colored-month')) {
-            console.log(`mouseenter`);
-            this.renderer.addClass(month.nativeElement, 'hover-color');
-          }
-        });
-
-        this.renderer.listen(month.nativeElement, 'mouseleave', () => {
-          if (month.nativeElement.classList.contains('colored-month')) {
-            console.log(`mouseleave`);
-            this.renderer.removeClass(month.nativeElement, 'hover-color');
-          }
-        });
-      });
-    }, 0);
+    this.changeDetectorRef.detectChanges(); // Trigger change detection
   }
 
+  ribList: string[] = [];
+  selectedRIB: string; // Add this line
+  getRibsForSelectedSociete() {
+    // Assuming releves is your array of ReleveBancaire instances
+    console.log('getRibsForSelectedSociete');
+    const relevesForSociete = this.releves.filter(
+      (releve) => releve.id_societe === this.selectedSociete.id
+    );
+    this.ribList = relevesForSociete.map((releve) => releve.iban);
+    this.changeDetectorRef.detectChanges(); // trigger change detection
+  }
+
+  //************************************************************** */ mahomech de5linnnnn
   updateCalendar(): void {
     if (this.selectedReleveBancaire && !isNaN(this.selectedExtraitYear)) {
       setTimeout(() => {
@@ -324,6 +184,7 @@ export class BankStatementTableDisplayComponent
         this.colorerCelluleMois(this.selectedYearExtraitDates);
       }, 500);
     } else {
+      // Handle case when no releve is selected or selectedExtraitYear is NaN
     }
   }
 
@@ -348,7 +209,31 @@ export class BankStatementTableDisplayComponent
 
     return new Date(Number(year), monthNumber - 1, Number(day));
   }
-  // il y a un probeleme dans cette methode !!! a voir !!!!
+
+  onExtraitDateChange(event: any): void {
+    this.selectedDate = new Date(event.value);
+  }
+
+  getValeurSuivante() {
+    const distinctYears = this.getDistinctExtraitYears();
+    const currentIndex = distinctYears.indexOf(this.selectedExtraitYear);
+
+    if (currentIndex < distinctYears.length - 1) {
+      this.selectedExtraitYear = distinctYears[currentIndex + 1];
+      this.updateCalendar();
+    }
+  }
+
+  getValeurPrecedente() {
+    const distinctYears = this.getDistinctExtraitYears();
+    const currentIndex = distinctYears.indexOf(this.selectedExtraitYear);
+
+    if (currentIndex > 0) {
+      this.selectedExtraitYear = distinctYears[currentIndex - 1];
+      this.updateCalendar();
+    }
+  }
+  // il y a un problème dans cette méthode !!! a voir !!!!
   colorerCelluleMois(dates: string[]): void {
     const monthsToColor = dates.map((date) => {
       const [year, month] = this.convertFrenchDate(date)
@@ -445,27 +330,186 @@ export class BankStatementTableDisplayComponent
       this.isYearSelected = false;
     }
   }
+  onEventClick_colored_month(month: string): void {
+    console.log('onEventClick');
 
-  onExtraitDateChange(event: any): void {
-    this.selectedDate = new Date(event.value);
-  }
-  getValeurSuivante() {
-    const distinctYears = this.getDistinctExtraitYears();
-    const currentIndex = distinctYears.indexOf(this.selectedExtraitYear);
+    const months = [
+      'janvier',
+      'février',
+      'mars',
+      'avril',
+      'mai',
+      'juin',
+      'juillet',
+      'août',
+      'septembre',
+      'octobre',
+      'novembre',
+      'décembre',
+    ];
 
-    if (currentIndex < distinctYears.length - 1) {
-      this.selectedExtraitYear = distinctYears[currentIndex + 1];
-      this.updateCalendar();
+    const monthNumber = months.indexOf(month.toLowerCase());
+    if (monthNumber === -1) {
+      console.log('Invalid month:', month);
+      return;
+    }
+
+    if (this.selectedReleveBancaire && this.selectedReleveBancaire.extraits) {
+      const matchingExtrait = this.selectedReleveBancaire.extraits.find(
+        (extrait) => {
+          if (typeof extrait.dateExtrait === 'string') {
+            const extraitDate = new Date(extrait.dateExtrait);
+            return extraitDate.getMonth() === monthNumber;
+          }
+          return false;
+        }
+      );
+
+      if (matchingExtrait) {
+        this.selectedExtrait = matchingExtrait;
+        this.displayContent = true;
+      } else {
+        console.log('No matching extrait found for month:', month);
+      }
+    } else {
+      console.log('No selected releve or extrait available');
     }
   }
-
-  getValeurPrecedente() {
-    const distinctYears = this.getDistinctExtraitYears();
-    const currentIndex = distinctYears.indexOf(this.selectedExtraitYear);
-
-    if (currentIndex > 0) {
-      this.selectedExtraitYear = distinctYears[currentIndex - 1];
-      this.updateCalendar();
+  public onFileInputChange(event: any): void {
+    const file: File = event.target.files[0];
+    this.subscriptions.push(
+      this.bankStatementViewerService.uploadFile(file).subscribe(
+        (response: any) => {
+          console.log(response);
+        },
+        (errorResponse: HttpErrorResponse) => {
+          this.notificationService.notify(
+            NotificationType.ERROR,
+            errorResponse.error.message
+          );
+        }
+      )
+    );
+  }
+  formatDate(date: any): string {
+    if (date) {
+      return this.datePipe.transform(date, 'dd/MM/yyyy') || '';
     }
+    return '';
+  }
+
+  convertDate(dateString: string | null): string {
+    if (dateString) {
+      const date = new Date(dateString);
+      return format(date, 'dd MMMM yyyy', { locale: fr });
+    }
+    return '';
+  }
+
+  public getAllRelevesBancaires(): void {
+    this.subscriptions.push(
+      this.bankStatementViewerService.getAllRelevesBancaires().subscribe(
+        (response: ReleveBancaire[]) => {
+          this.releves = response;
+          console.log('**releves:', this.releves);
+        },
+        (errorResponse: HttpErrorResponse) => {
+          this.notificationService.notify(
+            NotificationType.ERROR,
+            errorResponse.error.message
+          );
+        }
+      )
+    );
+  }
+
+  public getAllSocietes(): void {
+    this.subscriptions.push(
+      this.societeService.getAllSocietes().subscribe(
+        (response: Societe[]) => {
+          this.societes = response;
+          //console.log('*****societes:', this.societes);
+        },
+        (errorResponse: HttpErrorResponse) => {
+          this.notificationService.notify(
+            NotificationType.ERROR,
+            errorResponse.error.message
+          );
+        }
+      )
+    );
+  }
+
+  ngOnInit(): void {
+    this.subscriptions.push(
+      this.bankStatementViewerService.getAllRelevesBancaires().subscribe(
+        (response: ReleveBancaire[]) => {
+          this.releves = response;
+          //console.log('**releves:', this.releves);
+
+          // Call getAllSocietes after fetching the releves data
+          this.getAllSocietes();
+        },
+        (errorResponse: HttpErrorResponse) => {
+          this.notificationService.notify(
+            NotificationType.ERROR,
+            errorResponse.error.message
+          );
+        }
+      )
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((sub) => sub.unsubscribe());
+  }
+  ngAfterViewInit(): void {
+    this.updateCalendar();
+    this.colorerCelluleMois(this.selectedYearExtraitDates);
+
+    // Run the code to update the title attribute after a delay to ensure that the month cells have been colored.
+    setTimeout(() => {
+      this.months.forEach((month) => {
+        const backgroundColor = window.getComputedStyle(
+          month.nativeElement
+        ).backgroundColor;
+        const monthText = month.nativeElement.innerText;
+
+        if (backgroundColor === 'rgb(255, 153, 0)') {
+          // equivalent of #ff9900
+          month.nativeElement.setAttribute(
+            'title',
+            `Cliquez ici pour plus de détails sur l'extrait de ${monthText}`
+          );
+        } else {
+          month.nativeElement.setAttribute('title', '');
+        }
+
+        this.renderer.listen(month.nativeElement, 'mouseenter', () => {
+          if (month.nativeElement.classList.contains('colored-month')) {
+            console.log(`mouseenter`);
+            this.renderer.addClass(month.nativeElement, 'hover-color');
+          }
+        });
+
+        this.renderer.listen(month.nativeElement, 'mouseleave', () => {
+          if (month.nativeElement.classList.contains('colored-month')) {
+            console.log(`mouseleave`);
+            this.renderer.removeClass(month.nativeElement, 'hover-color');
+          }
+        });
+      });
+    }, 0);
+  }
+  searchExtraitByDate(date: Date): ExtraitBancaire | null {
+    const searchDateStr = date.toISOString().slice(0, 10);
+
+    for (const extrait of this._selectedReleveBancaire!.extraits) {
+      const extraitDateStr = extrait.dateExtrait.toISOString().slice(0, 10);
+      if (extraitDateStr === searchDateStr) {
+        return extrait;
+      }
+    }
+    return null;
   }
 }

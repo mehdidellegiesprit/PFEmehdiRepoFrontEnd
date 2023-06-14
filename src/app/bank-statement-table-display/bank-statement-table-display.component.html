@@ -1,5 +1,46 @@
-<div class="custom-container">
-  <div style="display: flex; align-items: center; margin-left: 35px">
+<div style="display: flex; align-items: center; margin-left: 35px">
+  <mat-form-field appearance="fill" style="width: 300px">
+    <mat-label>Sélectionnez une société</mat-label>
+    <mat-select
+      [(value)]="selectedSociete"
+      (selectionChange)="onChange($event)"
+    >
+      <mat-option *ngFor="let societe of societes" [value]="societe">
+        {{ societe.nomSociete }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <!-- debu ahnee l new  -->
+
+  <!-- debu ahnee l new  -->
+
+  <mat-chip-list
+    *ngIf="selectedReleveBancaire && selectedRIB"
+    class="custom-chip-list"
+    style="margin-left: 30px; height: 50px"
+  >
+    <mat-chip>RIB : {{ selectedReleveBancaire.iban }} </mat-chip>
+  </mat-chip-list>
+</div>
+<mat-form-field
+  appearance="fill"
+  style="width: 300px"
+  *ngIf="ribList.length > 0"
+>
+  <mat-label>Sélectionnez un RIB</mat-label>
+
+  <mat-select [(value)]="selectedRIB" (selectionChange)="onRIBSelect($event)">
+    <!-- <mat-option [value]="null">Choisir !!!</mat-option> -->
+
+    <mat-option *ngFor="let rib of ribList" [value]="rib">
+      {{ rib }}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
+
+<div class="custom-container" *ngIf="selectedRIB">
+  <!-- <div style="display: flex; align-items: center; margin-left: 35px">
     <mat-form-field appearance="fill" style="width: 300px">
       <mat-label>Sélectionnez une société</mat-label>
       <mat-select
@@ -18,14 +59,13 @@
     >
       <mat-chip>RIB : {{ selectedReleveBancaire.iban }}</mat-chip>
     </mat-chip-list>
-  </div>
+  </div> -->
 
   <div
     class="calendar-container"
     style="display: flex; flex-direction: column; align-items: left"
     [hidden]="!isSocieteSelected"
   >
-   
     <div>
       <mat-label class="calendrier-interactif-label">
         Les extraits bancaires sont présentés à travers notre calendrier
@@ -76,18 +116,18 @@
           </button>
         </div>
 
-        <mat-card #month class="month colored-month">Janvier</mat-card>
-        <mat-card #month class="month colored-month">Février</mat-card>
-        <mat-card #month class="month colored-month">Mars</mat-card>
-        <mat-card #month class="month colored-month">Avril</mat-card>
-        <mat-card #month class="month colored-month">Mai</mat-card>
-        <mat-card #month class="month colored-month">Juin</mat-card>
-        <mat-card #month class="month colored-month">Juillet</mat-card>
-        <mat-card #month class="month colored-month">Août</mat-card>
-        <mat-card #month class="month colored-month">Septembre</mat-card>
-        <mat-card #month class="month colored-month">Octobre</mat-card>
-        <mat-card #month class="month colored-month">Novembre</mat-card>
-        <mat-card #month class="month colored-month">Décembre</mat-card>
+        <mat-card #month0 class="month colored-month">Janvier</mat-card>
+        <mat-card #month1 class="month colored-month">Février</mat-card>
+        <mat-card #month2 class="month colored-month">Mars</mat-card>
+        <mat-card #month3 class="month colored-month">Avril</mat-card>
+        <mat-card #month4 class="month colored-month">Mai</mat-card>
+        <mat-card #month5 class="month colored-month">Juin</mat-card>
+        <mat-card #month6 class="month colored-month">Juillet</mat-card>
+        <mat-card #month7 class="month colored-month">Août</mat-card>
+        <mat-card #month8 class="month colored-month">Septembre</mat-card>
+        <mat-card #month9 class="month colored-month">Octobre</mat-card>
+        <mat-card #month10 class="month colored-month">Novembre</mat-card>
+        <mat-card #month11 class="month colored-month">Décembre</mat-card>
       </div>
     </div>
   </div>
