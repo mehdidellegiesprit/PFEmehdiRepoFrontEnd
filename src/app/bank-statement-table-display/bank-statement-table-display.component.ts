@@ -182,7 +182,7 @@ export class BankStatementTableDisplayComponent
             ) || [];
 
         this.colorerCelluleMois(this.selectedYearExtraitDates);
-      }, 500);
+      }, 0);
     } else {
       // Handle case when no releve is selected or selectedExtraitYear is NaN
     }
