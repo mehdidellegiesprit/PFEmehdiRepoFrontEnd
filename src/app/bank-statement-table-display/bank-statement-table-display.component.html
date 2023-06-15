@@ -1,3 +1,4 @@
+<input type="file" (change)="onFileInputChange($event)" />
 <div
   style="
     display: flex;
@@ -173,14 +174,25 @@
               {{ formatDate(selectedExtrait.dateDuSoldeCrediteurDebutMois) }}
             </td>
             <td>
-              {{ selectedExtrait.creditDuSoldeCrediteurDebutMois }} &euro;
+              {{
+                selectedExtrait.creditDuSoldeCrediteurDebutMois
+                  | number : "1.2-2"
+              }}
             </td>
             <td>
               {{ formatDate(selectedExtrait.dateDuSoldeCrediteurFinMois) }}
             </td>
-            <td>{{ selectedExtrait.creditDuSoldeCrediteurFinMois }} &euro;</td>
-            <td>{{ selectedExtrait.totalMouvementsDebit }} &euro;</td>
-            <td>{{ selectedExtrait.totalMouvementsCredit }} &euro;</td>
+            <td>
+              {{
+                selectedExtrait.creditDuSoldeCrediteurFinMois | number : "1.2-2"
+              }}
+            </td>
+            <td>
+              {{ selectedExtrait.totalMouvementsDebit | number : "1.2-2" }}
+            </td>
+            <td>
+              {{ selectedExtrait.totalMouvementsCredit | number : "1.2-2" }}
+            </td>
           </tr>
         </table>
         <app-bank-statement-table
