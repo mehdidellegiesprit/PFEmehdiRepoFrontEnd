@@ -33,6 +33,9 @@ import { MatChipsModule } from '@angular/material/chips';
 import { FullCalendarModule } from '@fullcalendar/angular';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
+import { ModalFactureComponent } from './modal-facture/modal-facture.component';
+import { MatDialog } from '@angular/material/dialog';
+import { MatDialogModule } from '@angular/material/dialog';
 export function MSALInstanceFactory(): IPublicClientApplication {
   return new PublicClientApplication({
     auth: {
@@ -50,6 +53,7 @@ export function MSALInstanceFactory(): IPublicClientApplication {
     UserComponent,
     BankStatementTableDisplayComponent,
     BankStatementTableComponent,
+    ModalFactureComponent,
   ],
   imports: [
     NotificationModule,
@@ -66,6 +70,7 @@ export function MSALInstanceFactory(): IPublicClientApplication {
     FullCalendarModule,
     MatCardModule,
     MatButtonModule,
+    MatDialogModule,
   ],
   providers: [
     DatePipe,
@@ -79,6 +84,7 @@ export function MSALInstanceFactory(): IPublicClientApplication {
       useFactory: MSALInstanceFactory,
     },
     MsalService,
+    MatDialog,
   ],
   bootstrap: [AppComponent],
 })

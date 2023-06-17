@@ -1,0 +1,43 @@
+<!-- modal-facture.component.html -->
+
+<div class="modal-content">
+  <h2>Gestion des Factures</h2>
+
+  <!-- Section pour ajouter une facture -->
+  <mat-card class="facture-section">
+    <mat-card-title>Ajouter une Facture</mat-card-title>
+    <mat-card-content>
+      <form>
+        <!-- Insérez ici les champs de formulaire pour ajouter une facture -->
+        <button mat-raised-button color="primary" (click)="ajouterFacture()">Ajouter</button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Section pour supprimer une facture -->
+  <mat-card class="facture-section">
+    <mat-card-title>Supprimer une Facture</mat-card-title>
+    <mat-card-content>
+      <form>
+        <!-- Insérez ici les champs de formulaire pour supprimer une facture -->
+        <button mat-raised-button color="warn" (click)="supprimerFacture()">Supprimer</button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Section pour ajouter une note/commentaire -->
+  <mat-card class="facture-section">
+    <mat-card-title>Ajouter une Note</mat-card-title>
+    <mat-card-content>
+      <form>
+        <!-- Insérez ici les champs de formulaire pour ajouter une note -->
+        <button mat-raised-button color="accent" (click)="ajouterNote()">Ajouter Note</button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  <div class="modal-buttons">
+    <button mat-button color="primary" (click)="closeModal()">Fermer</button>
+    <button mat-button color="accent" (click)="saveChanges()">Enregistrer</button>
+  </div>
+</div>

@@ -142,6 +142,30 @@
                 <div *ngIf="element.credit === 0">Aucun credit</div>
               </td>
             </ng-container>
+            <!-- facture Column -->
+            <ng-container matColumnDef="facture">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                <span>Détails facture</span>
+              </th>
+              <td mat-cell *matCellDef="let element">
+                <button mat-button color="primary" (click)="openModal(element)">
+                  <mat-icon aria-hidden="false" aria-label="Facture Icon"
+                    >description</mat-icon
+                  >
+                  Actions
+                </button>
+              </td>
+            </ng-container>
+
+            <!-- valide Column -->
+            <ng-container matColumnDef="valide">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                <span>valide</span>
+              </th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.valide }}
+              </td>
+            </ng-container>
 
             <!-- Table content -->
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

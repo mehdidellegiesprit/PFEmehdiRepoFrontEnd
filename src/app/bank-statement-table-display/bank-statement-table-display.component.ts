@@ -99,6 +99,22 @@ export class BankStatementTableDisplayComponent
     );
 
     if (foundReleveBancaire) {
+      // debut nouveau attribut facture valid
+      console.log('***foundReleveBancaire***', foundReleveBancaire);
+      console.log(
+        '***facture***',
+        foundReleveBancaire.extraits[0].donneeExtraits[0].factures
+      );
+      console.log(
+        '***commentaire facture  : ',
+        foundReleveBancaire.extraits[0].donneeExtraits[0].commentairesFactures
+      );
+      console.log(
+        '***valide: ',
+        foundReleveBancaire.extraits[0].donneeExtraits[0].valide
+      );
+      // fin  debut nouveau attribut facture valid
+
       this.selectedReleveBancaire = foundReleveBancaire;
       const distinctYears = this.getDistinctExtraitYears();
       if (distinctYears.length > 0) {

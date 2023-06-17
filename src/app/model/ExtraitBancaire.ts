@@ -1,6 +1,7 @@
-import { DonneeExtrait } from "./DonneeExtrait";
+import { DonneeExtrait } from './DonneeExtrait';
 
 export class ExtraitBancaire {
+  uuid: string; // ajouter un champ pour stocker l'UUID
   dateExtrait: Date;
   dateDuSoldeCrediteurDebutMois: Date;
   creditDuSoldeCrediteurDebutMois: number;
@@ -10,6 +11,7 @@ export class ExtraitBancaire {
   dateDuSoldeCrediteurFinMois: Date;
   creditDuSoldeCrediteurFinMois: number;
   constructor(
+    uuid: string, // ajouter un champ pour stocker l'UUID
     dateExtrait: Date,
     dateDuSoldeCrediteurDebutMois: Date,
     creditDuSoldeCrediteurDebutMois: number,
@@ -19,6 +21,7 @@ export class ExtraitBancaire {
     dateDuSoldeCrediteurFinMois: Date,
     creditDuSoldeCrediteurFinMois: number
   ) {
+    this.uuid = uuid;
     this.dateExtrait = dateExtrait;
     this.dateDuSoldeCrediteurDebutMois = dateDuSoldeCrediteurDebutMois;
     this.creditDuSoldeCrediteurDebutMois = creditDuSoldeCrediteurDebutMois;

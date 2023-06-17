@@ -7,6 +7,7 @@ import {
   SimpleChanges,
   EventEmitter,
   Output,
+  TemplateRef,
 } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -16,7 +17,8 @@ import { DatePipe } from '@angular/common';
 import { v4 as uuidv4 } from 'uuid';
 import { MatIconModule, MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
-
+import { ModalFactureComponent } from '../modal-facture/modal-facture.component';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 @Component({
   selector: 'app-bank-statement-table',
   templateUrl: './bank-statement-table.component.html',
@@ -36,11 +38,74 @@ export class BankStatementTableComponent implements OnInit, OnChanges {
     'operations',
     'debit',
     'credit',
+    'facture',
+    'valide',
   ];
   buttons: { collapseId: string }[];
   activeButton: string | null = null;
   isIconUp: boolean = false;
   showFullText: { [key: number]: boolean } = {};
+  // modal attributs
+  // Déclarez la variable pour la modal
+  @ViewChild('modalTemplate') modalTemplate!: TemplateRef<any>;
+  dialogRef!: MatDialogRef<ModalFactureComponent>;
+
+  // Fonction pour ouvrir la modal
+
+  openModal(element: DonneeExtrait): void {
+    console.log('openModal', element);
+    this.dialogRef = this.dialog.open(ModalFactureComponent, {
+      width: '400px',
+      data: element, // Passer l'élément de données sélectionné à la modal
+    });
+  }
+  constructor(
+    private datePipe: DatePipe,
+    private matIconRegistry: MatIconRegistry,
+    private domSanitizer: DomSanitizer,
+    private dialog: MatDialog
+  ) {
+    this.dataSource = new MatTableDataSource<DonneeExtrait>(this.data);
+
+    // Ajoutez l'icône "expand_less" en ligne
+    this.matIconRegistry.addSvgIconLiteral(
+      'expand_less',
+      this.domSanitizer.bypassSecurityTrustHtml(
+        `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path d="M19 13H5v-2h14v2z"/>
+      </svg>`
+      )
+    );
+    this.matIconRegistry.addSvgIcon(
+      'expand_more',
+      this.domSanitizer.bypassSecurityTrustResourceUrl(
+        'chemin_vers_expand_more.svg'
+      )
+    );
+  }
+
+  ngOnInit(): void {
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+    this.buttons = this.generateButtons(); // Generate buttons based on data length
+    // Initialize showFullText for each data item to be false
+    this.data.forEach((_, index) => (this.showFullText[index] = false));
+
+    // Set activeButton to the id of the first (and only) button
+    this.activeButton = this.buttons[0].collapseId;
+    this.isIconUp = true;
+    this.titleButtonExtrait = 'Click to hide additional details';
+    this.setButtonTitle(this.activeButton, this.titleButtonExtrait);
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['data'].currentValue !== changes['data'].previousValue) {
+      this.dataSource.data = this.data;
+      // Initialize showFullText for each data item to be false
+      this.data.forEach((_, index) => (this.showFullText[index] = false));
+    }
+    console.log('data---', this.data);
+  }
 
   generateButtons(): { collapseId: string }[] {
     const button = {
@@ -86,52 +151,6 @@ export class BankStatementTableComponent implements OnInit, OnChanges {
       return this.datePipe.transform(date, 'dd/MM/yyyy') || '';
     }
     return '';
-  }
-
-  constructor(
-    private datePipe: DatePipe,
-    private matIconRegistry: MatIconRegistry,
-    private domSanitizer: DomSanitizer
-  ) {
-    this.dataSource = new MatTableDataSource<DonneeExtrait>(this.data);
-
-    // Ajoutez l'icône "expand_less" en ligne
-    this.matIconRegistry.addSvgIconLiteral(
-      'expand_less',
-      this.domSanitizer.bypassSecurityTrustHtml(
-        `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-        <path d="M19 13H5v-2h14v2z"/>
-      </svg>`
-      )
-    );
-    this.matIconRegistry.addSvgIcon(
-      'expand_more',
-      this.domSanitizer.bypassSecurityTrustResourceUrl(
-        'chemin_vers_expand_more.svg'
-      )
-    );
-  }
-
-  ngOnInit(): void {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-    this.buttons = this.generateButtons(); // Generate buttons based on data length
-    // Initialize showFullText for each data item to be false
-    this.data.forEach((_, index) => (this.showFullText[index] = false));
-
-    // Set activeButton to the id of the first (and only) button
-    this.activeButton = this.buttons[0].collapseId;
-    this.isIconUp = true;
-    this.titleButtonExtrait = 'Click to hide additional details';
-    this.setButtonTitle(this.activeButton, this.titleButtonExtrait);
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['data'].currentValue !== changes['data'].previousValue) {
-      this.dataSource.data = this.data;
-      // Initialize showFullText for each data item to be false
-      this.data.forEach((_, index) => (this.showFullText[index] = false));
-    }
   }
 
   ngAfterViewInit() {
