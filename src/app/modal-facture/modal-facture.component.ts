@@ -10,9 +10,10 @@ import { DonneeExtrait } from '../model/DonneeExtrait';
 @Injectable()
 export class ModalFactureComponent implements OnInit {
   factures: any[] = []; // Ici, remplissez cette liste avec vos données de facture.
-  displayedColumns: string[] = ['titre','commentaire', 'actions'];
+  displayedColumns: string[] = ['titre', 'commentaire', 'actions'];
   confirmationSuppressionFacture = false; // Nouvelle variable pour la confirmation de suppression
   factureASupprimer: any; // Nouvelle variable pour stocker la facture à supprimer
+  commentairesModifies: { [key: string]: boolean } = {};
 
   constructor(
     public dialogRef: MatDialogRef<ModalFactureComponent>,
@@ -25,6 +26,15 @@ export class ModalFactureComponent implements OnInit {
       { titre: 'Facture 2', commentaire: 'commentaire2' },
       { titre: 'Facture 3', commentaire: 'commentaire3' },
     ];
+  }
+
+  sauvegarderCommentaire(facture: any) {
+    console.log('modification de commentaire de la facture : ', facture);
+
+    // this.factureService.updateFacture(facture).subscribe(() => {
+    //   // la ligne delete est pour supprimer localement l'objet car il n y a besoin de faire le trace !
+    //   delete this.commentairesModifies[facture.titre];
+    // });
   }
 
   // Affiche la boîte de dialogue de confirmation de suppression

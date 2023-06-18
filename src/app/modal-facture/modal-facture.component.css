@@ -7,7 +7,7 @@
   flex-direction: column;
   gap: 20px;
   align-items: center;
-  justify-content: center; /* Ajout de cette ligne pour centrer le contenu verticalement */
+  justify-content: center;
 }
 
 .modal-title {
@@ -20,7 +20,8 @@
 }
 
 .facture-section table {
-  width: 100%;
+  width: 70%;
+  padding-left: 20px;
 }
 
 .facture-section .mat-cell:last-child,
@@ -28,14 +29,16 @@
   justify-content: flex-start;
   display: flex;
   align-items: center;
-  height: 80px; /* Définir une hauteur spécifique pour les cellules de la colonne "Actions" */
+  padding-left: 20px;
+
+  height: 80px;
 }
 
 .facture-section .mat-cell:first-child,
 .facture-section .mat-header-cell:first-child {
-  padding-top: 15px; /* Ajuster le padding pour la première ligne */
-  vertical-align: middle; /* Alignement vertical du contenu */
-  height: 50px; /* Définir une hauteur spécifique pour les cellules de la colonne "Titre" */
+  padding-top: 15px;
+  vertical-align: middle;
+  height: 50px;
 }
 
 .mat-elevation-z8 {
@@ -43,7 +46,7 @@
 }
 
 .mat-icon-button {
-  margin-right: 100px;
+  margin-right: 10px; /* Ajusté à 10px */
 }
 
 .custom-modal .mat-dialog-container {
@@ -66,44 +69,47 @@
 .facture-section .mat-cell,
 .facture-section .mat-header-cell {
   vertical-align: middle;
-  padding: 10px;
-  box-sizing: border-box; /* Ajout de cette ligne pour ajuster la boîte de contenu */
+  padding: 5px; /* Ajusté à 5px */
+  box-sizing: border-box;
 }
 
 .facture-section .mat-header-cell {
-  padding-bottom: 15px; /* Ajuster le padding, supprimer la marge */
-  vertical-align: middle; /* Ajouter cette ligne pour aligner verticalement le contenu */
+  padding-bottom: 15px;
+  vertical-align: middle;
 }
 
 .facture-section .mat-cell {
-  padding-bottom: 15px; /* Ajuster le padding, supprimer la marge */
-  vertical-align: middle; /* Ajouter cette ligne pour aligner verticalement le contenu */
+  padding-bottom: 10px; /* Ajusté à 10px */
+  vertical-align: middle;
 }
 
 .mat-icon-button:focus {
   outline: none;
 }
+
 .modal-buttons {
   display: flex;
-  justify-content: flex-end; /* Aligner le contenu à droite */
-  margin-top: 20px; /* Ajouter une marge supérieure de 20 pixels */
+  justify-content: flex-end;
+  margin-top: 20px;
 }
+
 .facture-section .mat-cell:last-child button[mat-icon-button][color="warn"] {
   background-color: transparent;
   box-shadow: none;
   border: none;
   padding: 0;
 }
+
 button.mat-icon-button {
   background-color: transparent;
   box-shadow: none;
 }
-.delete-button.mat-icon-button {
-  margin-left: 30px;
 
+.delete-button.mat-icon-button {
   background: none;
   box-shadow: none;
 }
+
 .facture-section .mat-cell:last-child .action-buttons {
   display: flex;
   align-items: center;
@@ -123,4 +129,31 @@ button.mat-icon-button {
 .facture-section .mat-cell:last-child .confirmation-container div {
   display: flex;
   gap: 10px;
+}
+
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  transition: transform 0.3s ease-in-out;
+  color: red;
+}
+
+.close-button:hover {
+  transform: scale(1.2);
+}
+
+.facture-section .mat-cell {
+  min-height: 130px;
+  padding-bottom: 10px; /* Ajusté à 10px */
+  vertical-align: middle;
+}
+.facture-section .mat-cell,
+.facture-section .mat-header-cell {
+  padding: 15px; /* essayez de définir à 0 */
+  box-sizing: border-box;
+}
+
+.mat-icon-button {
+  margin: 0px; /* essayez de définir à 0 */
 }

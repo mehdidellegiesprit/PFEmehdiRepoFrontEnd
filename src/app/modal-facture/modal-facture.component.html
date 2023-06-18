@@ -1,18 +1,35 @@
 <mat-card class="facture-section">
   <mat-card-content>
-    <h2 class="modal-title">Gestion des Factures</h2>
+    <div style="position: relative; padding-top: 40px; text-align: center">
+      <h2 class="modal-title">Gestion des Factures</h2>
+      <button mat-icon-button (click)="closeModal()" class="close-button">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
 
     <!-- Section pour afficher et gérer les factures -->
     <table mat-table [dataSource]="factures" class="mat-elevation-z8">
-      <!-- Titre de Facture Column -->
-      <ng-container matColumnDef="commentaire" class="narrow-column">
+      <!-- Commentaire Column -->
+      <ng-container matColumnDef="commentaire" class="wide-column">
         <th mat-header-cell *matHeaderCellDef class="header-cell">
           Commentaire
         </th>
         <td mat-cell *matCellDef="let facture" class="cell">
-          {{ facture.commentaire }}
+          <mat-form-field class="commentaire-field">
+            <textarea
+              matInput
+              [(ngModel)]="facture.commentaire"
+              (blur)="sauvegarderCommentaire(facture)"
+              (ngModelChange)="commentairesModifies[facture.titre] = true"
+            ></textarea>
+          </mat-form-field>
+          <mat-icon *ngIf="commentairesModifies[facture.titre]"
+            >autorenew</mat-icon
+          >
+          <mat-icon *ngIf="!commentairesModifies[facture.titre]">done</mat-icon>
         </td>
       </ng-container>
+
       <ng-container matColumnDef="titre" class="narrow-column">
         <th mat-header-cell *matHeaderCellDef class="header-cell">Titre</th>
         <td mat-cell *matCellDef="let facture" class="cell">
@@ -26,19 +43,11 @@
           <div class="action-buttons">
             <button
               mat-icon-button
-              color="primary"
-              (click)="ajouterCommentaire(facture)"
-            >
-              <mat-icon>add_comment</mat-icon> Ajouter Commentaire
-            </button>
-
-            <button
-              mat-icon-button
               color="warn"
               (click)="afficherConfirmationSuppression(facture)"
               class="delete-button"
             >
-              <mat-icon>delete</mat-icon> Supprimer
+              <mat-icon>delete</mat-icon>
             </button>
             <div
               class="confirmation-container"
@@ -75,3 +84,8 @@
     </table>
   </mat-card-content>
 </mat-card>
+
+ajout d'un commentaire
+<button mat-icon-button color="primary" (click)="ajouterCommentaire(facture)">
+  <mat-icon>add_comment</mat-icon> ajouter une facture
+</button>
