@@ -1,28 +1,126 @@
 .modal-content {
   background-color: #fefefe;
-  margin: 15% auto;
   padding: 20px;
   border: 1px solid #888;
-  width: 80%;
+  width: 100%;
   display: flex;
   flex-direction: column;
   gap: 20px;
+  align-items: center;
+  justify-content: center; /* Ajout de cette ligne pour centrer le contenu verticalement */
+}
+
+.modal-title {
+  text-align: center;
 }
 
 .facture-section {
   padding: 16px;
+  width: 100%;
 }
 
-.close {
-  color: #aaa;
-  float: right;
-  font-size: 28px;
-  font-weight: bold;
+.facture-section table {
+  width: 100%;
 }
 
-.close:hover,
-.close:focus {
-  color: black;
-  text-decoration: none;
-  cursor: pointer;
+.facture-section .mat-cell:last-child,
+.facture-section .mat-header-cell:last-child {
+  justify-content: flex-start;
+  display: flex;
+  align-items: center;
+  height: 80px; /* Définir une hauteur spécifique pour les cellules de la colonne "Actions" */
+}
+
+.facture-section .mat-cell:first-child,
+.facture-section .mat-header-cell:first-child {
+  padding-top: 15px; /* Ajuster le padding pour la première ligne */
+  vertical-align: middle; /* Alignement vertical du contenu */
+  height: 50px; /* Définir une hauteur spécifique pour les cellules de la colonne "Titre" */
+}
+
+.mat-elevation-z8 {
+  overflow: auto;
+}
+
+.mat-icon-button {
+  margin-right: 100px;
+}
+
+.custom-modal .mat-dialog-container {
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.custom-modal .mat-dialog-container.ng-dialog-animation-opened {
+  opacity: 1;
+}
+
+.wide-column {
+  width: 60%;
+}
+
+.narrow-column {
+  width: 40%;
+}
+
+.facture-section .mat-cell,
+.facture-section .mat-header-cell {
+  vertical-align: middle;
+  padding: 10px;
+  box-sizing: border-box; /* Ajout de cette ligne pour ajuster la boîte de contenu */
+}
+
+.facture-section .mat-header-cell {
+  padding-bottom: 15px; /* Ajuster le padding, supprimer la marge */
+  vertical-align: middle; /* Ajouter cette ligne pour aligner verticalement le contenu */
+}
+
+.facture-section .mat-cell {
+  padding-bottom: 15px; /* Ajuster le padding, supprimer la marge */
+  vertical-align: middle; /* Ajouter cette ligne pour aligner verticalement le contenu */
+}
+
+.mat-icon-button:focus {
+  outline: none;
+}
+.modal-buttons {
+  display: flex;
+  justify-content: flex-end; /* Aligner le contenu à droite */
+  margin-top: 20px; /* Ajouter une marge supérieure de 20 pixels */
+}
+.facture-section .mat-cell:last-child button[mat-icon-button][color="warn"] {
+  background-color: transparent;
+  box-shadow: none;
+  border: none;
+  padding: 0;
+}
+button.mat-icon-button {
+  background-color: transparent;
+  box-shadow: none;
+}
+.delete-button.mat-icon-button {
+  margin-left: 30px;
+
+  background: none;
+  box-shadow: none;
+}
+.facture-section .mat-cell:last-child .action-buttons {
+  display: flex;
+  align-items: center;
+}
+
+.facture-section .mat-cell:last-child .confirmation-container {
+  margin-top: 20px;
+  margin-left: 30px;
+  display: flex;
+  flex-direction: column;
+}
+
+.facture-section .mat-cell:last-child .confirmation-container p {
+  margin-bottom: 10px;
+}
+
+.facture-section .mat-cell:last-child .confirmation-container div {
+  display: flex;
+  gap: 10px;
 }
