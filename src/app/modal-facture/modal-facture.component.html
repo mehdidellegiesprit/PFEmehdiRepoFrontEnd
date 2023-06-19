@@ -1,91 +1,103 @@
-<mat-card class="facture-section">
-  <mat-card-content>
-    <div style="position: relative; padding-top: 40px; text-align: center">
-      <h2 class="modal-title">Gestion des Factures</h2>
-      <button mat-icon-button (click)="closeModal()" class="close-button">
-        <mat-icon>close</mat-icon>
-      </button>
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Gestion des Factures</title>
+    <link
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    />
+  </head>
+  <body>
+    <div class="card">
+      <div class="card-header">
+        <h2 class="modal-title">Gestion des Factures</h2>
+      </div>
+      <div class="card-body">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th scope="col">Titre</th>
+              <th scope="col">Commentaire</th>
+              <th scope="col">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let facture of factures">
+              <td>{{ facture.titre }}</td>
+              <td>
+                <div>
+                  <input
+                    type="text"
+                    class="form-control"
+                    [(ngModel)]="facture.commentaire"
+                    (ngModelChange)="sauvegarderCommentaire(facture)"
+                  />
+                  <div
+                    *ngIf="facture.enCoursDeModification"
+                    class="alert alert-warning mt-2"
+                    role="alert"
+                  >
+                    Modification en cours...
+                  </div>
+                </div>
+              </td>
+
+              <td class="action-cell">
+                <div
+                  *ngIf="facture.titre === factureASupprimer"
+                  class="confirmation-container"
+                >
+                  <p class="confirmation-message">
+                    Voulez-vous vraiment supprimer cette facture ?
+                  </p>
+                  <div class="confirmation-buttons">
+                    <button
+                      class="btn btn-danger btn-confirmation btn-cancel"
+                      (click)="confirmerSuppression()"
+                    >
+                      <i class="fas fa-check"></i> Oui
+                    </button>
+                    <button
+                      class="btn btn-primary btn-cancel"
+                      (click)="annulerSuppression()"
+                    >
+                      <i class="fas fa-times"></i> Non
+                    </button>
+                  </div>
+                </div>
+                <button
+                  *ngIf="facture.titre !== factureASupprimer"
+                  class="btn btn-danger action-button"
+                  (click)="afficherConfirmationSuppression(facture)"
+                >
+                  <i class="fas fa-trash-alt"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="action-container">
+          <button (click)="ajouterFacture()" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Ajouter une facture
+          </button>
+        </div>
+        <button
+          (click)="closeModal()"
+          class="btn btn-warning close-button float-right"
+        >
+          <i class="fas fa-times"></i> Fermer
+        </button>
+        <button
+          (click)="saveChanges()"
+          class="btn btn-success save-button float-right"
+        >
+          <i class="fas fa-save"></i> Enregistrer
+        </button>
+      </div>
     </div>
-
-    <!-- Section pour afficher et gérer les factures -->
-    <table mat-table [dataSource]="factures" class="mat-elevation-z8">
-      <!-- Commentaire Column -->
-      <ng-container matColumnDef="commentaire" class="wide-column">
-        <th mat-header-cell *matHeaderCellDef class="header-cell">
-          Commentaire
-        </th>
-        <td mat-cell *matCellDef="let facture" class="cell">
-          <mat-form-field class="commentaire-field">
-            <textarea
-              matInput
-              [(ngModel)]="facture.commentaire"
-              (blur)="sauvegarderCommentaire(facture)"
-              (ngModelChange)="commentairesModifies[facture.titre] = true"
-            ></textarea>
-          </mat-form-field>
-          <mat-icon *ngIf="commentairesModifies[facture.titre]"
-            >autorenew</mat-icon
-          >
-          <mat-icon *ngIf="!commentairesModifies[facture.titre]">done</mat-icon>
-        </td>
-      </ng-container>
-
-      <ng-container matColumnDef="titre" class="narrow-column">
-        <th mat-header-cell *matHeaderCellDef class="header-cell">Titre</th>
-        <td mat-cell *matCellDef="let facture" class="cell">
-          {{ facture.titre }}
-        </td>
-      </ng-container>
-      <!-- Actions Column -->
-      <ng-container matColumnDef="actions" class="wide-column">
-        <th mat-header-cell *matHeaderCellDef class="header-cell">Actions</th>
-        <td mat-cell *matCellDef="let facture" class="cell">
-          <div class="action-buttons">
-            <button
-              mat-icon-button
-              color="warn"
-              (click)="afficherConfirmationSuppression(facture)"
-              class="delete-button"
-            >
-              <mat-icon>delete</mat-icon>
-            </button>
-            <div
-              class="confirmation-container"
-              *ngIf="facture === factureASupprimer"
-            >
-              <p>Voulez-vous vraiment supprimer cette facture ?</p>
-              <div>
-                <button
-                  mat-button
-                  color="warn"
-                  (click)="confirmerSuppression()"
-                >
-                  Oui
-                </button>
-                <button
-                  mat-button
-                  color="primary"
-                  (click)="annulerSuppression()"
-                >
-                  Annuler
-                </button>
-              </div>
-            </div>
-          </div>
-        </td>
-      </ng-container>
-
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr
-        mat-row
-        *matRowDef="let row; columns: displayedColumns"
-        [ngClass]="{ 'first-row': row === factures[0] }"
-      ></tr>
-    </table>
-  </mat-card-content>
-</mat-card>
-
-ajout d'un commentaire
-<button mat-icon-button color="primary" (click)="ajouterCommentaire(facture)">
-  <mat-icon>add_comment</mat-icon> ajouter une facture
-</button>
+  </body>
+</html>

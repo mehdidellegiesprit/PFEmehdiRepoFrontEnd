@@ -1,159 +1,121 @@
-.modal-content {
-  background-color: #fefefe;
-  padding: 20px;
-  border: 1px solid #888;
-  width: 100%;
+body {
+  font-family: Arial, sans-serif;
+}
+
+.card {
+  margin: 2em auto;
+  border-radius: 15px;
+  box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.19), 0px 6px 6px rgba(0, 0, 0, 0.23);
+  position: relative;
+}
+
+.card-header {
   display: flex;
-  flex-direction: column;
-  gap: 20px;
+  justify-content: space-between;
   align-items: center;
-  justify-content: center;
 }
 
 .modal-title {
+  color: #343a40;
   text-align: center;
+  flex-grow: 1;
 }
 
-.facture-section {
-  padding: 16px;
+.card-body {
+  padding: 2em;
+}
+
+.table {
   width: 100%;
+  margin-top: 1em;
+  border-collapse: collapse;
 }
 
-.facture-section table {
-  width: 70%;
-  padding-left: 20px;
+.table th {
+  background-color: #007bff;
+  color: #fff;
+  text-align: left;
+  padding: 0.75em;
 }
 
-.facture-section .mat-cell:last-child,
-.facture-section .mat-header-cell:last-child {
-  justify-content: flex-start;
+.table td {
+  border-top: 1px solid #dee2e6;
+  padding: 0.75em;
+  vertical-align: middle;
+}
+
+.form-control {
+  width: 100%;
+  border: 1px solid #ced4da;
+  padding: 0.375em 0.75em;
+  border-radius: 0.25em;
+}
+
+.btn {
+  margin: 1em 0;
+  padding: 0.375em 0.75em;
+  border-radius: 0.25em;
+  font-size: 1em;
+  display: inline-block;
+}
+
+.btn-danger {
+  background-color: #dc3545;
+  color: #fff;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.action-cell .action-button {
+  margin: 0.5em 0;
+}
+
+.confirmation-message {
+  margin-right: 10px;
+}
+
+.confirmation-buttons {
   display: flex;
   align-items: center;
-  padding-left: 20px;
-
-  height: 80px;
-}
-
-.facture-section .mat-cell:first-child,
-.facture-section .mat-header-cell:first-child {
-  padding-top: 15px;
-  vertical-align: middle;
-  height: 50px;
-}
-
-.mat-elevation-z8 {
-  overflow: auto;
-}
-
-.mat-icon-button {
-  margin-right: 10px; /* Ajusté à 10px */
-}
-
-.custom-modal .mat-dialog-container {
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-
-.custom-modal .mat-dialog-container.ng-dialog-animation-opened {
-  opacity: 1;
-}
-
-.wide-column {
-  width: 60%;
-}
-
-.narrow-column {
-  width: 40%;
-}
-
-.facture-section .mat-cell,
-.facture-section .mat-header-cell {
-  vertical-align: middle;
-  padding: 5px; /* Ajusté à 5px */
-  box-sizing: border-box;
-}
-
-.facture-section .mat-header-cell {
-  padding-bottom: 15px;
-  vertical-align: middle;
-}
-
-.facture-section .mat-cell {
-  padding-bottom: 10px; /* Ajusté à 10px */
-  vertical-align: middle;
-}
-
-.mat-icon-button:focus {
-  outline: none;
-}
-
-.modal-buttons {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 20px;
-}
-
-.facture-section .mat-cell:last-child button[mat-icon-button][color="warn"] {
-  background-color: transparent;
-  box-shadow: none;
-  border: none;
-  padding: 0;
-}
-
-button.mat-icon-button {
-  background-color: transparent;
-  box-shadow: none;
-}
-
-.delete-button.mat-icon-button {
-  background: none;
-  box-shadow: none;
-}
-
-.facture-section .mat-cell:last-child .action-buttons {
-  display: flex;
-  align-items: center;
-}
-
-.facture-section .mat-cell:last-child .confirmation-container {
-  margin-top: 20px;
-  margin-left: 30px;
-  display: flex;
-  flex-direction: column;
-}
-
-.facture-section .mat-cell:last-child .confirmation-container p {
-  margin-bottom: 10px;
-}
-
-.facture-section .mat-cell:last-child .confirmation-container div {
-  display: flex;
-  gap: 10px;
 }
 
 .close-button {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  transition: transform 0.3s ease-in-out;
-  color: red;
+  background-color: #dc3545;
+  border: none;
 }
 
-.close-button:hover {
-  transform: scale(1.2);
+.fa-trash-alt {
+  font-size: 0.8em;
 }
 
-.facture-section .mat-cell {
-  min-height: 130px;
-  padding-bottom: 10px; /* Ajusté à 10px */
-  vertical-align: middle;
-}
-.facture-section .mat-cell,
-.facture-section .mat-header-cell {
-  padding: 15px; /* essayez de définir à 0 */
-  box-sizing: border-box;
+.fa-plus,
+.fa-times {
+  margin-right: 0.5em;
 }
 
-.mat-icon-button {
-  margin: 0px; /* essayez de définir à 0 */
+.confirmation-buttons button:not(:last-child) {
+  margin-right: 10px;
+}
+
+.close-button,
+.save-button {
+  margin-left: 10px;
+}
+
+.btn-confirmation,
+.btn-cancel {
+  width: 80px; /* Adjustez la largeur ici */
+}
+
+.save-button,
+.close-button {
+  width: 120px; /* Adjustez la largeur ici */
+}
+.alert {
+  margin-left: 10px;
+  padding: 6px;
+  font-size: 0.8em;
 }

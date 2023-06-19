@@ -9,11 +9,8 @@ import { DonneeExtrait } from '../model/DonneeExtrait';
 })
 @Injectable()
 export class ModalFactureComponent implements OnInit {
-  factures: any[] = []; // Ici, remplissez cette liste avec vos données de facture.
-  displayedColumns: string[] = ['titre', 'commentaire', 'actions'];
-  confirmationSuppressionFacture = false; // Nouvelle variable pour la confirmation de suppression
-  factureASupprimer: any; // Nouvelle variable pour stocker la facture à supprimer
-  commentairesModifies: { [key: string]: boolean } = {};
+  factures: any[] = [];
+  factureASupprimer: string | null = null;
 
   constructor(
     public dialogRef: MatDialogRef<ModalFactureComponent>,
@@ -22,49 +19,64 @@ export class ModalFactureComponent implements OnInit {
 
   ngOnInit(): void {
     this.factures = [
-      { titre: 'Facture 1', commentaire: 'commentaire1' },
-      { titre: 'Facture 2', commentaire: 'commentaire2' },
-      { titre: 'Facture 3', commentaire: 'commentaire3' },
+      {
+        titre: 'Facture 1',
+        commentaire: 'commentaire1',
+        enCoursDeModification: false,
+      },
+      {
+        titre: 'Facture 2',
+        commentaire: 'commentaire2',
+        enCoursDeModification: false,
+      },
+      {
+        titre: 'Facture 3',
+        commentaire: 'commentaire3',
+        enCoursDeModification: false,
+      },
     ];
   }
 
   sauvegarderCommentaire(facture: any) {
-    console.log('modification de commentaire de la facture : ', facture);
-
-    // this.factureService.updateFacture(facture).subscribe(() => {
-    //   // la ligne delete est pour supprimer localement l'objet car il n y a besoin de faire le trace !
-    //   delete this.commentairesModifies[facture.titre];
-    // });
+    console.log('modification de commentaire de la facture : ', facture.titre);
+    facture.enCoursDeModification = true;
+    // Simule un délai de traitement ou une requête réseau.
+    setTimeout(() => {
+      facture.enCoursDeModification = false;
+    }, 2000); // Délai de 2 secondes.
   }
 
-  // Affiche la boîte de dialogue de confirmation de suppression
   afficherConfirmationSuppression(facture: any) {
-    this.factureASupprimer = facture;
-    this.confirmationSuppressionFacture = true;
+    this.factureASupprimer = facture.titre;
   }
 
-  // Confirme la suppression de la facture
   confirmerSuppression() {
     console.log('Suppression de la facture : ', this.factureASupprimer);
-    // Logique de suppression réelle ici
 
-    // Réinitialisation des variables après la suppression
-    this.confirmationSuppressionFacture = false;
+    this.factures = this.factures.filter(
+      (facture) => facture.titre !== this.factureASupprimer
+    );
+
     this.factureASupprimer = null;
   }
 
-  // Annule la suppression de la facture
   annulerSuppression() {
-    this.confirmationSuppressionFacture = false;
     this.factureASupprimer = null;
   }
 
-  // Ajoute un commentaire à une facture existante.
-  ajouterCommentaire(facture: any) {
-    console.log("Ajout d'un commentaire à la facture: ", facture);
+  ajouterFacture() {
+    const nouvelleFacture = {
+      titre: `Facture ${this.factures.length + 1}`,
+      commentaire: '',
+      enCoursDeModification: false,
+    };
+    this.factures.push(nouvelleFacture);
   }
 
   closeModal(): void {
     this.dialogRef.close();
+  }
+  saveChanges() {
+    this.dialogRef.close(this.factures);
   }
 }
