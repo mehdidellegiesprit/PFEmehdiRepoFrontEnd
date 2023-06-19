@@ -1,5 +1,6 @@
 body {
   font-family: Arial, sans-serif;
+  transition: background-color 0.5s ease;
 }
 
 .card {
@@ -7,6 +8,12 @@ body {
   border-radius: 15px;
   box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.19), 0px 6px 6px rgba(0, 0, 0, 0.23);
   position: relative;
+  transition: box-shadow 0.3s ease;
+}
+
+.card:hover {
+  box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.29),
+    0px 6px 16px rgba(0, 0, 0, 0.33);
 }
 
 .card-header {
@@ -57,11 +64,20 @@ body {
   border-radius: 0.25em;
   font-size: 1em;
   display: inline-block;
+  transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+  background-color: #0069d9;
 }
 
 .btn-danger {
   background-color: #dc3545;
   color: #fff;
+}
+
+.btn-danger:hover {
+  background-color: #c82333;
 }
 
 .btn-primary {
@@ -83,7 +99,7 @@ body {
 }
 
 .close-button {
-  background-color: #dc3545; /* C'est un rouge */
+  background-color: #dc3545;
   border: none;
 }
 
@@ -107,24 +123,27 @@ body {
 
 .btn-confirmation,
 .btn-cancel {
-  width: 80px; /* Adjustez la largeur ici */
+  width: 80px;
 }
 
 .save-button,
 .close-button {
-  width: 120px; /* Adjustez la largeur ici */
+  width: 120px;
 }
+
 .alert {
   margin-left: 10px;
   padding: 6px;
   font-size: 0.8em;
 }
+
 .new-facture-container {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-top: 2em;
 }
+
 .new-facture-container .form-control {
   margin: 0 1em;
   flex-grow: 1;
