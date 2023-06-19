@@ -53,7 +53,7 @@ export class BankStatementTableComponent implements OnInit, OnChanges {
   // Fonction pour ouvrir la modal
 
   openModal(element: DonneeExtrait): void {
-    console.log('openModal', element);
+    //console.log('openModal', element);
     this.dialogRef = this.dialog.open(ModalFactureComponent, {
       // modifié pour utiliser une grande partie de l'écran
       width: '60%',

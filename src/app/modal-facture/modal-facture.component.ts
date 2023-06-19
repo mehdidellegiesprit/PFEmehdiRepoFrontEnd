@@ -21,6 +21,10 @@ export class ModalFactureComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    console.log(
+      'je suis la modale ***data transfereé a la modal ***:',
+      this.data
+    ); // affiche les données injectées
     this.factures = [
       {
         titre: 'Facture 1',
@@ -68,7 +72,7 @@ export class ModalFactureComponent implements OnInit {
   }
 
   ajouterFacture() {
-    console.log('ajouterFactureboutton');
+    console.log('ajouterFactureboutton', this.nouvelleFacture);
     this.ajoutEnCours = true;
     setTimeout(() => {
       this.ajoutEnCours = false;
