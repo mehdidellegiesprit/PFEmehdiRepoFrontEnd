@@ -68,6 +68,7 @@ export class ModalFactureComponent implements OnInit {
   }
 
   ajouterFacture() {
+    console.log('ajouterFactureboutton');
     this.ajoutEnCours = true;
     setTimeout(() => {
       this.ajoutEnCours = false;
