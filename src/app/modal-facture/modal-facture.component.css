@@ -83,7 +83,7 @@ body {
 }
 
 .close-button {
-  background-color: #dc3545;
+  background-color: #dc3545; /* C'est un rouge */
   border: none;
 }
 
@@ -118,4 +118,14 @@ body {
   margin-left: 10px;
   padding: 6px;
   font-size: 0.8em;
+}
+.new-facture-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 2em;
+}
+.new-facture-container .form-control {
+  margin: 0 1em;
+  flex-grow: 1;
 }

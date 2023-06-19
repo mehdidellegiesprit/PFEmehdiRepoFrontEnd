@@ -36,6 +36,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { ModalFactureComponent } from './modal-facture/modal-facture.component';
 import { MatDialog } from '@angular/material/dialog';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 export function MSALInstanceFactory(): IPublicClientApplication {
   return new PublicClientApplication({
     auth: {
@@ -71,6 +72,7 @@ export function MSALInstanceFactory(): IPublicClientApplication {
     MatCardModule,
     MatButtonModule,
     MatDialogModule,
+    MatSnackBarModule,
   ],
   providers: [
     DatePipe,

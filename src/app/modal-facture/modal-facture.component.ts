@@ -1,5 +1,6 @@
 import { Component, Injectable, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { DonneeExtrait } from '../model/DonneeExtrait';
 
 @Component({
@@ -11,10 +12,12 @@ import { DonneeExtrait } from '../model/DonneeExtrait';
 export class ModalFactureComponent implements OnInit {
   factures: any[] = [];
   factureASupprimer: string | null = null;
-
+  nouvelleFacture: any = { titre: '', commentaire: '' };
+  ajoutEnCours: boolean = false;
   constructor(
     public dialogRef: MatDialogRef<ModalFactureComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: DonneeExtrait
+    @Inject(MAT_DIALOG_DATA) public data: DonneeExtrait,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -65,17 +68,16 @@ export class ModalFactureComponent implements OnInit {
   }
 
   ajouterFacture() {
-    const nouvelleFacture = {
-      titre: `Facture ${this.factures.length + 1}`,
-      commentaire: '',
-      enCoursDeModification: false,
-    };
-    this.factures.push(nouvelleFacture);
+    this.ajoutEnCours = true;
+    setTimeout(() => {
+      this.ajoutEnCours = false;
+    }, 2000); // Délai de 2 secondes.
   }
 
   closeModal(): void {
     this.dialogRef.close();
   }
+
   saveChanges() {
     this.dialogRef.close(this.factures);
   }
