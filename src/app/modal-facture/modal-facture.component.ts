@@ -240,6 +240,9 @@ export class ModalFactureComponent implements OnInit, OnDestroy {
               // Détecter manuellement les changements après la mise à jour des données
               this.cdRef.detectChanges();
               this.creerFactures();
+
+              // Fermez la boîte de dialogue et renvoyez les données mises à jour
+              this.dialogRef.close(this.data);
             } else {
               console.log(
                 'DonneeExtrait est non existant dans la BD veuiller verifieé!!!!!!'

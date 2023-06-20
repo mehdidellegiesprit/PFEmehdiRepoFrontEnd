@@ -19,6 +19,7 @@ import { MatIconModule, MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ModalFactureComponent } from '../modal-facture/modal-facture.component';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { Observable } from 'rxjs';
 @Component({
   selector: 'app-bank-statement-table',
   templateUrl: './bank-statement-table.component.html',
@@ -53,13 +54,21 @@ export class BankStatementTableComponent implements OnInit, OnChanges {
   // Fonction pour ouvrir la modal
 
   openModal(element: DonneeExtrait): void {
-    //console.log('openModal', element);
-    this.dialogRef = this.dialog.open(ModalFactureComponent, {
-      // modifié pour utiliser une grande partie de l'écran
+    const dialogRef = this.dialog.open(ModalFactureComponent, {
       width: '60%',
       disableClose: true,
-      panelClass: 'custom-modal', // Ajouter une classe personnalisée
-      data: element, // Passer l'élément de données sélectionné à la modal
+      panelClass: 'custom-modal',
+      data: element,
+    });
+
+    dialogRef.afterClosed().subscribe((result: DonneeExtrait) => {
+      if (result) {
+        const index = this.data.findIndex((item) => item.uuid === result.uuid);
+        if (index !== -1) {
+          this.data[index] = result;
+          this.dataSource.data = this.data;
+        }
+      }
     });
   }
 
