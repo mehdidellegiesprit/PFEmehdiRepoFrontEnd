@@ -37,6 +37,12 @@ import { ModalFactureComponent } from './modal-facture/modal-facture.component';
 import { MatDialog } from '@angular/material/dialog';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { AngularFireModule } from '@angular/fire';
+import { AngularFireStorageModule } from '@angular/fire/storage';
+import { environment } from './environments/environments';
+
+
+
 export function MSALInstanceFactory(): IPublicClientApplication {
   return new PublicClientApplication({
     auth: {
@@ -73,6 +79,8 @@ export function MSALInstanceFactory(): IPublicClientApplication {
     MatButtonModule,
     MatDialogModule,
     MatSnackBarModule,
+    AngularFireStorageModule,
+    AngularFireModule.initializeApp(environment.firebaseConfig),
   ],
   providers: [
     DatePipe,

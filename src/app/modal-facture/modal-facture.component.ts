@@ -15,6 +15,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { NotificationService } from '../service/notification.service';
 import { NotificationType } from '../enum/notification-type.enum';
 import { ReleveBancaire } from '../model/ReleveBancaire';
+import { AngularFireStorage } from '@angular/fire/storage';
 
 @Component({
   selector: 'app-modal-facture',
@@ -29,6 +30,7 @@ export class ModalFactureComponent implements OnInit, OnDestroy {
   nouvelleFacture: any = { titre: '', commentaire: '' };
   ajoutEnCours: boolean = false;
   constructor(
+    private fireStorage: AngularFireStorage,
     private cdRef: ChangeDetectorRef,
     private notificationService: NotificationService,
     private bankStatementViewerService: BankStatementViewerService,
@@ -267,5 +269,15 @@ export class ModalFactureComponent implements OnInit, OnDestroy {
 
   annulerSuppression() {
     this.factureASupprimer = null;
+  }
+  async onFileChange(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      console.log('file', file);
+      const path = `yt/${file.name}`;
+      const uploadTask = await this.fireStorage.upload(path, file);
+      const url = await uploadTask.ref.getDownloadURL();
+      console.log('url', url);
+    }
   }
 }
