@@ -19,7 +19,12 @@ import { MatIconModule, MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ModalFactureComponent } from '../modal-facture/modal-facture.component';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
+import { MatCheckboxChange } from '@angular/material/checkbox';
+import { BankStatementViewerService } from '../service/bank-statement-viewer.service';
+import { HttpErrorResponse } from '@angular/common/http';
+import { NotificationService } from '../service/notification.service';
+import { NotificationType } from '../enum/notification-type.enum';
 @Component({
   selector: 'app-bank-statement-table',
   templateUrl: './bank-statement-table.component.html',
@@ -50,7 +55,7 @@ export class BankStatementTableComponent implements OnInit, OnChanges {
   // Déclarez la variable pour la modal
   @ViewChild('modalTemplate') modalTemplate!: TemplateRef<any>;
   dialogRef!: MatDialogRef<ModalFactureComponent>;
-
+  private subscriptions: Subscription[] = [];
   // Fonction pour ouvrir la modal
 
   openModal(element: DonneeExtrait): void {
@@ -76,7 +81,9 @@ export class BankStatementTableComponent implements OnInit, OnChanges {
     private datePipe: DatePipe,
     private matIconRegistry: MatIconRegistry,
     private domSanitizer: DomSanitizer,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private bankStatementViewerService: BankStatementViewerService,
+    private notificationService: NotificationService
   ) {
     this.dataSource = new MatTableDataSource<DonneeExtrait>(this.data);
 
@@ -210,5 +217,26 @@ export class BankStatementTableComponent implements OnInit, OnChanges {
 
   toggleShowFullText(index: number): void {
     this.showFullText[index] = !this.showFullText[index];
+  }
+  onCheckboxChange(event: any, element: any) {
+    element.valide = event.checked;
+    console.log(`Checkbox value: ${element.valide}`);
+    console.log(`Checkbox --element:`);
+    console.log(element);
+    this.subscriptions.push(
+      this.bankStatementViewerService
+        .modifierCommentaireFacture(element)
+        .subscribe(
+          (response: any) => {
+            console.log('done');
+          },
+          (errorResponse: HttpErrorResponse) => {
+            this.notificationService.notify(
+              NotificationType.ERROR,
+              errorResponse.error.message
+            );
+          }
+        )
+    );
   }
 }

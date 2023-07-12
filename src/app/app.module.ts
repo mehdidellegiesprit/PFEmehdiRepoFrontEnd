@@ -40,8 +40,10 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireStorageModule } from '@angular/fire/storage';
 import { environment } from './environments/environments';
-
-
+import {
+  MatCheckboxChange,
+  MatCheckboxModule,
+} from '@angular/material/checkbox';
 
 export function MSALInstanceFactory(): IPublicClientApplication {
   return new PublicClientApplication({
@@ -79,6 +81,7 @@ export function MSALInstanceFactory(): IPublicClientApplication {
     MatButtonModule,
     MatDialogModule,
     MatSnackBarModule,
+    MatCheckboxModule,
     AngularFireStorageModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
   ],

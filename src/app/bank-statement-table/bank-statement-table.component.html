@@ -28,15 +28,11 @@
           <div class="legend">
             <div style="display: flex; align-items: center">
               <span class="color-sample zero-debit"></span>
-              <span style="margin-left: 10px"
-                >: Opération de crédit (aucun débit)</span
-              >
+              <span style="margin-left: 10px">: Opération de crédit</span>
             </div>
             <div style="display: flex; align-items: center">
               <span class="color-sample non-zero-debit"></span>
-              <span style="margin-left: 10px"
-                >: Opération de débit (aucun crédit)</span
-              >
+              <span style="margin-left: 10px">: Opération de débit</span>
             </div>
           </div>
 
@@ -114,7 +110,7 @@
                 mat-sort-header
                 class="equal-width-cell"
               >
-                <span>Débit en euros &nbsp;&euro;</span>
+                <span>Débit en &nbsp;&euro;</span>
               </th>
               <td mat-cell *matCellDef="let element" class="equal-width-cell">
                 <div *ngIf="element.debit !== 0">
@@ -133,7 +129,7 @@
                 mat-sort-header
                 class="equal-width-cell"
               >
-                <span>Credit en euros &nbsp;&euro;</span>
+                <span>Credit en &nbsp;&euro;</span>
               </th>
               <td mat-cell *matCellDef="let element" class="equal-width-cell">
                 <div *ngIf="element.credit !== 0">
@@ -162,8 +158,22 @@
               <th mat-header-cell *matHeaderCellDef mat-sort-header>
                 <span>valide</span>
               </th>
-              <td mat-cell *matCellDef="let element">
-                {{ element.valide }}
+              <td mat-cell *matCellDef="let element" class="icon-cell">
+                <div class="checkbox-container">
+                  <mat-checkbox
+                    class="no-border"
+                    [checked]="element.valide"
+                    (change)="onCheckboxChange($event, element)"
+                  ></mat-checkbox>
+                  <div class="icon-container">
+                    <mat-icon class="validation-icon" *ngIf="element.valide"
+                      >check_circle</mat-icon
+                    >
+                    <mat-icon class="invalid-icon" *ngIf="!element.valide"
+                      >cancel</mat-icon
+                    >
+                  </div>
+                </div>
               </td>
             </ng-container>
 

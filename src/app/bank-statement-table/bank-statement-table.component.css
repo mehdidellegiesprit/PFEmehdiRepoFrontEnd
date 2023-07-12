@@ -105,3 +105,51 @@
 .row {
   border: none !important; /* Supprimer la bordure */
 }
+/* nowww checkbox valide */
+.validation-icon {
+  color: green; /* Couleur pour la validation réussie */
+  margin-right: 10px;
+}
+
+.invalid-icon {
+  color: red; /* Couleur pour l'invalidité ou l'erreur */
+  margin-right: 10px;
+}
+
+.icon-cell {
+  /* display: flex; */
+  justify-content: center;
+  align-items: center;
+}
+
+.checkbox-container {
+  display: flex;
+  /* justify-content: center; */
+  align-items: center;
+  margin-left: 10px; /* Ajoutez ici la valeur de la marge souhaitée entre la case à cocher et l'icône */
+  margin-right: 10px;
+}
+
+.icon-container {
+  margin-left: 10px; /* Ajoutez ici la valeur de l'espacement souhaité entre la case à cocher et l'icône */
+}
+
+.mat-checkbox-frame,
+.no-border .mat-checkbox-frame {
+  border: none !important;
+}
+
+.mat-checkbox-background,
+.no-border .mat-checkbox-background {
+  background-color: transparent !important;
+}
+.validation-icon,
+.invalid-icon {
+  font-size: 30px; /* Ajustez cette valeur pour modifier la taille de l'icône */
+  /* margin-right: 10px; */
+}
+
+.mat-checkbox-inner-container {
+  height: 30px; /* Ajustez cette valeur pour modifier la taille de la case à cocher */
+  width: 30px; /* Ajustez cette valeur pour modifier la taille de la case à cocher */
+}
