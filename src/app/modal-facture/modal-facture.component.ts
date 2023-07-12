@@ -16,6 +16,7 @@ import { NotificationService } from '../service/notification.service';
 import { NotificationType } from '../enum/notification-type.enum';
 import { ReleveBancaire } from '../model/ReleveBancaire';
 import { AngularFireStorage } from '@angular/fire/storage';
+import { v4 as uuidv4 } from 'uuid';
 
 @Component({
   selector: 'app-modal-facture',
@@ -93,34 +94,53 @@ export class ModalFactureComponent implements OnInit, OnDestroy {
   //     },
   //   ];
   // }
-  ajouterFacture() {
+  async ajouterFacture() {
     console.log('ajouterFactureboutton', this.nouvelleFacture);
     this.ajoutEnCours = true;
 
-    // Ajoutez le titre à la liste des factures
-    this.data.factures.push(this.nouvelleFacture.titre);
+    // Obtenez l'URL du fichier téléchargé
+    const url = await this.uploadFile();
+    if (url) {
+      this.nouvelleFacture.titre = url;
 
-    // Ajoutez le commentaire à l'objet commentairesFactures avec la clé étant le titre
-    this.data.commentairesFactures[this.nouvelleFacture.titre] =
-      this.nouvelleFacture.commentaire;
+      // Générez un titre unique pour la facture
+      const titreUnique = uuidv4();
 
-    // Ajoutez la nouvelle facture à la liste des factures dans le composant
-    this.factures.push({
-      titre: this.nouvelleFacture.titre,
-      commentaire: this.nouvelleFacture.commentaire,
-      enCoursDeModification: false,
-    });
+      // Ajoutez l'URL à l'associationTitreUrl avec la clé étant le titre unique
+      this.data.associationTitreUrl[titreUnique] = url;
 
-    this.nouvelleFacture = { titre: '', commentaire: '' }; // Réinitialisez l'objet nouvelleFacture
+      // Ajoutez le titre unique à la liste des factures
+      this.data.factures.push(titreUnique);
 
-    setTimeout(() => {
-      this.ajoutEnCours = false;
-    }, 2000); // Délai de 2 secondes.
+      // Ajoutez le commentaire à l'objet commentairesFactures avec la clé étant le titre unique
+      this.data.commentairesFactures[titreUnique] =
+        this.nouvelleFacture.commentaire;
 
-    // on appel le service pour qu'il fait l'ajout a la base de doneee !
-    this.saveFacture(this.data);
-    ///TODO this.data heya eli jebneha 3adineha par injection de dependance donc injem nekhdem beha khater feha les donnees lkol ma3adech nekhdem statique !
+      // Ajoutez la nouvelle facture à la liste des factures dans le composant
+      this.factures.push({
+        titre: titreUnique,
+        commentaire: this.nouvelleFacture.commentaire,
+        enCoursDeModification: false,
+      });
+
+      this.nouvelleFacture = { titre: '', commentaire: '' }; // Réinitialisez l'objet nouvelleFacture
+
+      setTimeout(() => {
+        this.ajoutEnCours = false;
+      }, 2000); // Délai de 2 secondes.
+
+      // on appel le service pour qu'il fait l'ajout a la base de doneee !
+      this.saveFacture(this.data);
+      let uploadStatus = document.getElementById('file-upload-status');
+      if (uploadStatus) {
+        uploadStatus.textContent = 'Aucun fichier sélectionné';
+        uploadStatus.style.display = 'none';
+      }
+    } else {
+      console.log('No file selected');
+    }
   }
+
   sauvegarderCommentaire(facture: any) {
     console.log('modification de commentaire de la facture : ', facture.titre);
     console.log(
@@ -192,11 +212,13 @@ export class ModalFactureComponent implements OnInit, OnDestroy {
     );
   }
   closeModal(): void {
-    this.dialogRef.close();
+    //this.dialogRef.close();
+    this.dialogRef.close(this.data);
   }
 
   saveChanges() {
     this.dialogRef.close(this.factures);
+    this.dialogRef.close(this.data);
   }
   afficherConfirmationSuppression(facture: any) {
     this.factureASupprimer = facture.titre;
@@ -217,8 +239,37 @@ export class ModalFactureComponent implements OnInit, OnDestroy {
     return null;
   }
 
+  deleteFileFromFirebaseStorage(url: string) {
+    const fileRef = this.fireStorage.refFromURL(url);
+    fileRef
+      .delete()
+      .toPromise()
+      .then(() => {
+        console.log('File successfully deleted from Firebase Storage');
+      })
+      .catch((error) => {
+        console.error('Error deleting file from Firebase Storage', error);
+      });
+  }
+  generateInvoiceName(uuid: string): string {
+    const uuidWithoutHyphens = uuid.replace(/-/g, '');
+    const uuidShort = uuidWithoutHyphens.substr(uuidWithoutHyphens.length - 3);
+    return `FAC-${uuidShort}`;
+  }
   confirmerSuppression() {
     console.log('Suppression de la facture : ', this.factureASupprimer);
+
+    // Supprimez le fichier de Firebase Storage
+    // Vérifiez que factureASupprimer n'est pas null
+    if (this.factureASupprimer) {
+      // Get the URL from associationTitreUrl
+      const url = this.data.associationTitreUrl[this.factureASupprimer];
+      // Supprimez le fichier de Firebase Storage
+      if (url) {
+        this.deleteFileFromFirebaseStorage(url);
+      }
+    }
+
     this.subscriptions.push(
       this.bankStatementViewerService
         .supprimerFacture(this.factureASupprimer, this.data)
@@ -244,7 +295,7 @@ export class ModalFactureComponent implements OnInit, OnDestroy {
               this.creerFactures();
 
               // Fermez la boîte de dialogue et renvoyez les données mises à jour
-              this.dialogRef.close(this.data);
+              //this.dialogRef.close(this.data);
             } else {
               console.log(
                 'DonneeExtrait est non existant dans la BD veuiller verifieé!!!!!!'
@@ -270,14 +321,87 @@ export class ModalFactureComponent implements OnInit, OnDestroy {
   annulerSuppression() {
     this.factureASupprimer = null;
   }
-  async onFileChange(event: any) {
+  // async onFileChange(event: any) {
+  //   const file = event.target.files[0];
+  //   if (file) {
+  //     console.log('file', file);
+  //     const path = `yt/${file.name}`;
+  //     const uploadTask = await this.fireStorage.upload(path, file);
+  //     const url = await uploadTask.ref.getDownloadURL();
+  //     console.log('url', url);
+  //   }
+  // }
+  // Dans votre composant, déclarez deux variables pour stocker le fichier et le chemin
+  selectedFile: File | null = null;
+  filePath: string | null = null;
+
+  onFileChange(event: any) {
     const file = event.target.files[0];
     if (file) {
       console.log('file', file);
-      const path = `yt/${file.name}`;
-      const uploadTask = await this.fireStorage.upload(path, file);
+      this.filePath = `yt/${file.name}`;
+      this.selectedFile = file;
+    }
+  }
+
+  // Créez une autre fonction pour l'envoi à Firebase
+  async uploadFile(): Promise<string | null> {
+    if (this.selectedFile && this.filePath) {
+      const uploadTask = await this.fireStorage.upload(
+        this.filePath,
+        this.selectedFile
+      );
       const url = await uploadTask.ref.getDownloadURL();
       console.log('url', url);
+      return url; // Retourne l'URL
+    } else {
+      console.log('No file selected');
+      return null;
+    }
+  }
+  triggerFileUpload() {
+    let fileUpload = document.getElementById('file-upload');
+    if (fileUpload) {
+      fileUpload.click();
+    }
+  }
+
+  handleFileChange(event: Event) {
+    let input = event.target as HTMLInputElement;
+
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
+      console.log('file', file);
+      this.filePath = `yt/${file.name}`;
+      this.selectedFile = file;
+
+      let filename =
+        file.name.length > 30 ? file.name.substring(0, 30) + '...' : file.name;
+      let uploadBtn = document.getElementById('upload-btn');
+      let uploadStatus = document.getElementById('file-upload-status');
+      if (uploadStatus) {
+        uploadStatus.textContent = filename; // Affiche le nom du fichier
+        uploadStatus.style.display = 'inline';
+      }
+    } else {
+      let uploadBtn = document.getElementById('upload-btn');
+      let uploadStatus = document.getElementById('file-upload-status');
+      if (uploadStatus) {
+        uploadStatus.textContent = 'Aucun fichier sélectionné';
+        uploadStatus.style.display = 'none';
+      }
+    }
+  }
+  displayPdfInNewTab(key: string) {
+    console.log(key);
+    const pdfUrl = this.data.associationTitreUrl[key];
+    console.log('fattoum', pdfUrl);
+
+    // Vérifiez si pdfUrl est non nulle avant de l'ouvrir
+    if (pdfUrl !== null) {
+      window.open(pdfUrl, '_blank');
+    } else {
+      console.error('PDF URL is null');
     }
   }
 }

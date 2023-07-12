@@ -17,89 +17,147 @@
         <h2 class="modal-title">Gestion des Factures</h2>
       </div>
       <div class="card-body">
-        <div class="new-facture-container">
-          <input
-            type="text"
-            class="form-control"
-            placeholder="Titre de la nouvelle facture"
-            [(ngModel)]="nouvelleFacture.titre"
-          />
+        <div
+          class="new-facture-container"
+          style="display: flex; align-items: center"
+        >
+          <div class="input-container">
+            <div class="file-upload">
+              <button
+                class="custom-input"
+                id="upload-btn"
+                (click)="triggerFileUpload()"
+                style="
+                  height: 40px;
+                  width: 200px;
+                  box-sizing: border-box;
+                  margin-top: 10px;
+                "
+              >
+                Choisir un fichier
+              </button>
+
+              <input
+                type="file"
+                id="file-upload"
+                style="display: none"
+                (change)="handleFileChange($event)"
+              />
+            </div>
+          </div>
+          <span id="file-upload-status" style="display: none; margin: 10px"
+            >Fichier chargé</span
+          >
+
           <input
             type="text"
             class="form-control"
             placeholder="Commentaire de la nouvelle facture"
             [(ngModel)]="nouvelleFacture.commentaire"
+            style="height: 40px; box-sizing: border-box; margin-left: 10px"
           />
-          <button (click)="ajouterFacture()" class="btn btn-primary">
+
+          <button
+            (click)="ajouterFacture()"
+            class="btn btn-primary"
+            style="height: 40px; box-sizing: border-box; margin-left: 10px"
+          >
             <i class="fas fa-plus"></i> Ajouter une facture
           </button>
+        </div>
+        <div>
+          <span id="file-upload-status" style="display: none"
+            >Fichier chargé</span
+          >
         </div>
         <div *ngIf="ajoutEnCours" class="alert alert-success mt-2" role="alert">
           Facture enregistrée avec succès!
         </div>
-
-        <table class="table table-striped">
-          <thead>
-            <tr>
-              <th scope="col">Titre</th>
-              <th scope="col">Commentaire</th>
-              <th scope="col">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let facture of factures">
-              <td>{{ facture.titre }}</td>
-              <td>
-                <div>
-                  <input
-                    type="text"
-                    class="form-control"
-                    [(ngModel)]="facture.commentaire"
-                    (ngModelChange)="sauvegarderCommentaire(facture)"
-                  />
-                  <div
-                    *ngIf="facture.enCoursDeModification"
-                    class="alert alert-warning mt-2"
-                    role="alert"
+        <div class="table-container">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th scope="col">Facture</th>
+                <th scope="col">Commentaire</th>
+                <th scope="col">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let facture of factures">
+                <td
+                  style="
+                    display: flex;
+                    flex-direction: column;
+                    align-items: left;
+                    justify-content: left;
+                  "
+                >
+                  <i
+                    class="fas fa-file-pdf"
+                    style="color: #ff0000; font-size: 40px; margin: 10px"
+                    (click)="displayPdfInNewTab(facture.titre)"
+                  ></i>
+                  <span
+                    style="font-size: 16px; color: #333"
+                    (click)="displayPdfInNewTab(facture.titre)"
                   >
-                    Modification en cours...
-                  </div>
-                </div>
-              </td>
-              <td class="action-cell">
-                <div
-                  *ngIf="facture.titre === factureASupprimer"
-                  class="confirmation-container"
-                >
-                  <p class="confirmation-message">
-                    Voulez-vous vraiment supprimer cette facture ?
-                  </p>
-                  <div class="confirmation-buttons">
-                    <button
-                      class="btn btn-danger btn-confirmation btn-cancel"
-                      (click)="confirmerSuppression()"
+                    {{ generateInvoiceName(facture.titre) }}
+                  </span>
+                </td>
+
+                <td>
+                  <div>
+                    <input
+                      type="text"
+                      class="form-control"
+                      [(ngModel)]="facture.commentaire"
+                      (ngModelChange)="sauvegarderCommentaire(facture)"
+                    />
+                    <div
+                      *ngIf="facture.enCoursDeModification"
+                      class="alert alert-warning mt-2"
+                      role="alert"
                     >
-                      <i class="fas fa-check"></i> Oui
-                    </button>
-                    <button
-                      class="btn btn-primary btn-cancel"
-                      (click)="annulerSuppression()"
-                    >
-                      <i class="fas fa-times"></i> Non
-                    </button>
+                      Modification en cours...
+                    </div>
                   </div>
-                </div>
-                <button
-                  *ngIf="facture.titre !== factureASupprimer"
-                  class="btn btn-danger action-button"
-                  (click)="afficherConfirmationSuppression(facture)"
-                >
-                  <i class="fas fa-trash-alt"></i>
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+                </td>
+                <td class="action-cell">
+                  <div
+                    *ngIf="facture.titre === factureASupprimer"
+                    class="confirmation-container"
+                  >
+                    <p class="confirmation-message">
+                      Voulez-vous vraiment supprimer cette facture ?
+                    </p>
+                    <div class="confirmation-buttons">
+                      <button
+                        class="btn btn-danger btn-confirmation btn-cancel"
+                        (click)="confirmerSuppression()"
+                      >
+                        <i class="fas fa-check"></i> Oui
+                      </button>
+                      <button
+                        class="btn btn-primary btn-cancel"
+                        (click)="annulerSuppression()"
+                      >
+                        <i class="fas fa-times"></i> Non
+                      </button>
+                    </div>
+                  </div>
+                  <button
+                    *ngIf="facture.titre !== factureASupprimer"
+                    class="btn btn-danger action-button"
+                    (click)="afficherConfirmationSuppression(facture)"
+                  >
+                    <i class="fas fa-trash-alt"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
         <button
           (click)="closeModal()"
           class="btn btn-warning close-button float-right"
@@ -114,8 +172,21 @@
         </button>
       </div>
     </div>
+    <script>
+      document
+        .getElementById("upload-btn")
+        .addEventListener("click", function () {
+          document.getElementById("file-upload").click();
+        });
+
+      document
+        .getElementById("file-upload")
+        .addEventListener("change", function () {
+          var filename = this.value.split("\\").pop();
+          document.getElementById("upload-btn").textContent = filename
+            ? filename
+            : "Choisir un fichier";
+        });
+    </script>
   </body>
 </html>
-dallon
-<h1>part 1 project</h1>
-<input type="file" (change)="onFileChange($event)">

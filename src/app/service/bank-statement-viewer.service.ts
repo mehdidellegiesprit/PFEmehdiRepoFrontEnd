@@ -52,6 +52,7 @@ export class BankStatementViewerService {
     data: DonneeExtrait
   ): Observable<any> {
     if (factureASupprimer === null) {
+      console.log('facture a supprimer **************: ', factureASupprimer);
       return throwError('La facture à supprimer est nulle.');
     }
     console.log(

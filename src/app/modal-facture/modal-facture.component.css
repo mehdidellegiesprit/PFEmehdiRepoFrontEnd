@@ -183,3 +183,20 @@ body {
   text-align: center;
   flex-grow: 1;
 }
+.input-container {
+  display: flex;
+  flex-direction: column;
+  width: 300px;
+}
+
+.custom-input {
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  outline: none;
+}
+.table-container {
+  max-height: 400px; /* ajustez cette valeur comme nécessaire */
+  overflow-y: auto;
+}
