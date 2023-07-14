@@ -391,22 +391,22 @@ export class BankStatementTableDisplayComponent
       console.log('No selected releve or extrait available');
     }
   }
-  public onFileInputChange(event: any): void {
-    const file: File = event.target.files[0];
-    this.subscriptions.push(
-      this.bankStatementViewerService.uploadFile(file).subscribe(
-        (response: any) => {
-          console.log(response);
-        },
-        (errorResponse: HttpErrorResponse) => {
-          this.notificationService.notify(
-            NotificationType.ERROR,
-            errorResponse.error.message
-          );
-        }
-      )
-    );
-  }
+  // public onFileInputChange(event: any): void {
+  //   const file: File = event.target.files[0];
+  //   this.subscriptions.push(
+  //     this.bankStatementViewerService.uploadFile(file).subscribe(
+  //       (response: any) => {
+  //         console.log(response);
+  //       },
+  //       (errorResponse: HttpErrorResponse) => {
+  //         this.notificationService.notify(
+  //           NotificationType.ERROR,
+  //           errorResponse.error.message
+  //         );
+  //       }
+  //     )
+  //   );
+  // }
   formatDate(date: any): string {
     if (date) {
       return this.datePipe.transform(date, 'dd/MM/yyyy') || '';

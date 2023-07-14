@@ -9,13 +9,15 @@ export class ReleveBancaire {
   nameFile: string;
   dataFileContent: string;
   open?: boolean; // Add the 'open' property
+  nom_societe: string;
   constructor(
     id: string,
     nomBank: string,
     id_societe: string,
     iban: string,
     nameFile: string,
-    dataFileContent: string
+    dataFileContent: string,
+    nom_societe: string
   ) {
     this.id = id;
     this.nomBank = nomBank;
@@ -24,5 +26,6 @@ export class ReleveBancaire {
     this.iban = iban;
     this.nameFile = nameFile;
     this.dataFileContent = dataFileContent;
+    this.nom_societe = nom_societe;
   }
 }

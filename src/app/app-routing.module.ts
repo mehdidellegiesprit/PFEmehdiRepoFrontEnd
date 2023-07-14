@@ -5,6 +5,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthenticationGuard } from './guard/authentication.guard';
 import { BankStatementTableDisplayComponent } from './bank-statement-table-display/bank-statement-table-display.component';
+import { BankStatementUploadComponent } from './bank-statement-upload/bank-statement-upload.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -19,11 +20,16 @@ const routes: Routes = [
     component: BankStatementTableDisplayComponent,
     //canActivate: [AuthenticationGuard],
   },
+  {
+    path: 'bankStatement/Upload',
+    component: BankStatementUploadComponent,
+    //canActivate: [AuthenticationGuard],
+  },
   { path: '**', redirectTo: '/login', pathMatch: 'full' },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
 export class AppRoutingModule {}

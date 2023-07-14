@@ -80,13 +80,22 @@
                 class="equal-width-cell"
               >
                 <div>
-                  <div>
-                    <span *ngIf="showFullText[i]">{{
-                      element.operations
-                    }}</span>
-                    <span *ngIf="!showFullText[i]">{{
-                      element.operations | slice : 0 : 35
-                    }}</span>
+                  <div *ngIf="showFullText[i]">
+                    <!-- utilisation de 'replace' pipe pour remplacer '***' par '<br/>' -->
+                    <span
+                      [innerHTML]="
+                        element.operations | replace : '***' : '<br/>'
+                      "
+                    ></span>
+                  </div>
+                  <div *ngIf="!showFullText[i]">
+                    <span
+                      [innerHTML]="
+                        element.operations
+                          | slice : 0 : 35
+                          | replace : '***' : '<br/>'
+                      "
+                    ></span>
                   </div>
                   <button
                     (click)="toggleShowFullText(i)"

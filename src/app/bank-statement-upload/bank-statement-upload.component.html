@@ -1,0 +1,44 @@
+<p>bank-statement-upload works!</p>
+<input type="file" (change)="onFileInputChange($event)" />
+<div *ngIf="releveBancaire">
+  <h2>nomBank:{{ releveBancaire.nomBank }}</h2>
+  <p>IBAN: {{ releveBancaire.iban }}</p>
+  <p>Nom societe: {{ releveBancaire.nom_societe }}</p>
+
+  <div *ngFor="let extrait of releveBancaire.extraits">
+    <!-- <h3>Extrait Bancaire (UUID: {{ extrait.uuid }})</h3> -->
+    <p>Date d'extrait: {{ extrait.dateExtrait | date }}</p>
+    <p>Total mouvements débit: {{ extrait.totalMouvementsDebit }}</p>
+    <p>Total mouvements crédit: {{ extrait.totalMouvementsCredit }}</p>
+    <p>
+      dateDuSoldeCrediteurDebutMois:
+      {{ extrait.dateDuSoldeCrediteurDebutMois | date }}
+    </p>
+    <p>
+      creditDuSoldeCrediteurDebutMois:
+      {{ extrait.creditDuSoldeCrediteurDebutMois }}
+    </p>
+    <p>
+      dateDuSoldeCrediteurFinMois:
+      {{ extrait.dateDuSoldeCrediteurFinMois | date }}
+    </p>
+    <p>
+      creditDuSoldeCrediteurFinMois:
+      {{ extrait.creditDuSoldeCrediteurFinMois }}
+    </p>
+
+    <p></p>
+    ************************************************************************
+    <div *ngFor="let donnee of extrait.donneeExtraits">
+      <!-- <h4>Donnée Extrait (UUID: {{ donnee.uuid }})</h4> -->
+      <p>dateDonneeExtrait : {{ donnee.dateDonneeExtrait | date }}</p>
+      <p>
+        dateValeurDonneeExtrait: {{ donnee.dateValeurDonneeExtrait | date }}
+      </p>
+
+      <p>Opérations: {{ donnee.operations }}</p>
+      <p>Débit: {{ donnee.debit }}</p>
+      <p>Crédit: {{ donnee.credit }}</p>
+    </div>
+  </div>
+</div>

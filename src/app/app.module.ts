@@ -1,7 +1,7 @@
 import { MaterialModule } from './material-module';
 import { UserService } from './service/user.service';
 import { AuthenticationService } from './service/authentication.service';
-import { NgModule } from '@angular/core';
+import { LOCALE_ID, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -44,6 +44,12 @@ import {
   MatCheckboxChange,
   MatCheckboxModule,
 } from '@angular/material/checkbox';
+import { ReplacePipe } from './pipe/replace.pipe';
+
+import localeFr from '@angular/common/locales/fr';
+import { registerLocaleData } from '@angular/common';
+import { BankStatementUploadComponent } from './bank-statement-upload/bank-statement-upload.component';
+registerLocaleData(localeFr, 'fr-FR');
 
 export function MSALInstanceFactory(): IPublicClientApplication {
   return new PublicClientApplication({
@@ -63,6 +69,8 @@ export function MSALInstanceFactory(): IPublicClientApplication {
     BankStatementTableDisplayComponent,
     BankStatementTableComponent,
     ModalFactureComponent,
+    BankStatementUploadComponent,
+    ReplacePipe,
   ],
   imports: [
     NotificationModule,
@@ -98,6 +106,7 @@ export function MSALInstanceFactory(): IPublicClientApplication {
     },
     MsalService,
     MatDialog,
+    { provide: LOCALE_ID, useValue: 'fr-FR' },
   ],
   bootstrap: [AppComponent],
 })
