@@ -1,44 +1,140 @@
 <p>bank-statement-upload works!</p>
 <input type="file" (change)="onFileInputChange($event)" />
-<div *ngIf="releveBancaire">
-  <h2>nomBank:{{ releveBancaire.nomBank }}</h2>
-  <p>IBAN: {{ releveBancaire.iban }}</p>
-  <p>Nom societe: {{ releveBancaire.nom_societe }}</p>
 
-  <div *ngFor="let extrait of releveBancaire.extraits">
-    <!-- <h3>Extrait Bancaire (UUID: {{ extrait.uuid }})</h3> -->
-    <p>Date d'extrait: {{ extrait.dateExtrait | date }}</p>
-    <p>Total mouvements débit: {{ extrait.totalMouvementsDebit }}</p>
-    <p>Total mouvements crédit: {{ extrait.totalMouvementsCredit }}</p>
+<form
+  #releveBancaireForm="ngForm"
+  (ngSubmit)="onConfirmAll(releveBancaireForm.value)"
+>
+  <div *ngIf="releveBancaire">
     <p>
-      dateDuSoldeCrediteurDebutMois:
-      {{ extrait.dateDuSoldeCrediteurDebutMois | date }}
+      nomBank:
+      <input type="text" name="nomBank" [(ngModel)]="releveBancaire.nomBank" />
     </p>
     <p>
-      creditDuSoldeCrediteurDebutMois:
-      {{ extrait.creditDuSoldeCrediteurDebutMois }}
+      IBAN:
+      <input type="text" name="iban" [(ngModel)]="releveBancaire.iban" />
     </p>
     <p>
-      dateDuSoldeCrediteurFinMois:
-      {{ extrait.dateDuSoldeCrediteurFinMois | date }}
-    </p>
-    <p>
-      creditDuSoldeCrediteurFinMois:
-      {{ extrait.creditDuSoldeCrediteurFinMois }}
+      Nom societe:
+      <input
+        type="text"
+        name="nom_societe"
+        [(ngModel)]="releveBancaire.nom_societe"
+      />
     </p>
 
-    <p></p>
-    ************************************************************************
-    <div *ngFor="let donnee of extrait.donneeExtraits">
-      <!-- <h4>Donnée Extrait (UUID: {{ donnee.uuid }})</h4> -->
-      <p>dateDonneeExtrait : {{ donnee.dateDonneeExtrait | date }}</p>
+    <div *ngFor="let extrait of releveBancaire.extraits; let i = index">
+      <h3>Extrait {{ i + 1 }}</h3>
+
       <p>
-        dateValeurDonneeExtrait: {{ donnee.dateValeurDonneeExtrait | date }}
+        Date d'extrait:
+        <input
+          type="date"
+          name="dateExtrait{{ i }}"
+          [(ngModel)]="extrait.dateExtrait"
+        />
+      </p>
+      <p>
+        Total mouvements débit:
+        <input
+          type="text"
+          name="totalMouvementsDebit{{ i }}"
+          [(ngModel)]="extrait.totalMouvementsDebit"
+        />
+      </p>
+      <p>
+        Total mouvements crédit:
+        <input
+          type="text"
+          name="totalMouvementsCredit{{ i }}"
+          [(ngModel)]="extrait.totalMouvementsCredit"
+        />
+      </p>
+      <p>
+        Date du solde créditeur début mois:
+        <input
+          type="date"
+          name="dateDuSoldeCrediteurDebutMois{{ i }}"
+          [(ngModel)]="extrait.dateDuSoldeCrediteurDebutMois"
+        />
+      </p>
+      <p>
+        Crédit du solde créditeur début mois:
+        <input
+          type="text"
+          name="creditDuSoldeCrediteurDebutMois{{ i }}"
+          [(ngModel)]="extrait.creditDuSoldeCrediteurDebutMois"
+        />
+      </p>
+      <p>
+        Date du solde créditeur fin mois:
+        <input
+          type="date"
+          name="dateDuSoldeCrediteurFinMois{{ i }}"
+          [(ngModel)]="extrait.dateDuSoldeCrediteurFinMois"
+        />
+      </p>
+      <p>
+        Crédit du solde créditeur fin mois:
+        <input
+          type="text"
+          name="creditDuSoldeCrediteurFinMois{{ i }}"
+          [(ngModel)]="extrait.creditDuSoldeCrediteurFinMois"
+        />
       </p>
 
-      <p>Opérations: {{ donnee.operations }}</p>
-      <p>Débit: {{ donnee.debit }}</p>
-      <p>Crédit: {{ donnee.credit }}</p>
+      <h4>Données</h4>
+      <table>
+        <tr>
+          <th>Date donnée extrait</th>
+          <th>Date valeur donnée extrait</th>
+          <th>Opérations</th>
+          <th>Débit</th>
+          <th>Crédit</th>
+        </tr>
+        <tr *ngFor="let donnee of extrait.donneeExtraits; let j = index">
+          <td>
+            <input
+              type="date"
+              name="dateDonneeExtrait{{ i }}{{ j }}"
+              [(ngModel)]="donnee.dateDonneeExtrait"
+            />
+          </td>
+          <td>
+            <input
+              type="date"
+              name="dateValeurDonneeExtrait{{ i }}{{ j }}"
+              [(ngModel)]="donnee.dateValeurDonneeExtrait"
+            />
+          </td>
+          <td>
+            <textarea
+              name="operations{{ i }}{{ j }}"
+              [value]="donnee.operations | replace : '***' : '\n'"
+              (input)="handleInputChange($event, i, j)"
+              style="white-space: pre-wrap"
+              rows="4"
+              cols="32"
+            ></textarea>
+          </td>
+
+          <td>
+            <input
+              type="text"
+              name="debit{{ i }}{{ j }}"
+              [(ngModel)]="donnee.debit"
+            />
+          </td>
+          <td>
+            <input
+              type="text"
+              name="credit{{ i }}{{ j }}"
+              [(ngModel)]="donnee.credit"
+            />
+          </td>
+        </tr>
+      </table>
     </div>
+    <button type="submit">Confirmer</button>
   </div>
-</div>
+</form>
