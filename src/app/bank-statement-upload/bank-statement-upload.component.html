@@ -25,7 +25,7 @@
 
     <div *ngFor="let extrait of releveBancaire.extraits; let i = index">
       <h3>Extrait {{ i + 1 }}</h3>
-
+      <!-- a tester -->
       <p>
         Date d'extrait:
         <input
@@ -83,6 +83,7 @@
         />
       </p>
 
+      <!-- a tester -->
       <h4>Données</h4>
       <table>
         <tr>
@@ -95,20 +96,27 @@
         <tr *ngFor="let donnee of extrait.donneeExtraits; let j = index">
           <td>
             <input
+              *ngIf="donnee.editing"
               type="date"
               name="dateDonneeExtrait{{ i }}{{ j }}"
               [(ngModel)]="donnee.dateDonneeExtrait"
             />
+            <span *ngIf="!donnee.editing">{{ donnee.dateDonneeExtrait }}</span>
           </td>
           <td>
             <input
+              *ngIf="donnee.editing"
               type="date"
               name="dateValeurDonneeExtrait{{ i }}{{ j }}"
               [(ngModel)]="donnee.dateValeurDonneeExtrait"
             />
+            <span *ngIf="!donnee.editing">{{
+              donnee.dateValeurDonneeExtrait
+            }}</span>
           </td>
-          <td>
+          <td style="width: auto">
             <textarea
+              *ngIf="donnee.editing"
               name="operations{{ i }}{{ j }}"
               [value]="donnee.operations | replace : '***' : '\n'"
               (input)="handleInputChange($event, i, j)"
@@ -116,21 +124,52 @@
               rows="4"
               cols="32"
             ></textarea>
+            <ng-container *ngIf="!donnee.editing">
+              <span
+                *ngIf="!donnee.voirPlus"
+                [innerHTML]="(donnee.operations | split : '***' : 0) || ''"
+              ></span>
+              <span
+                *ngIf="donnee.voirPlus"
+                [innerHTML]="donnee.operations | replace : '***' : '<br/>'"
+              ></span>
+              <a
+                href="#"
+                (click)="
+                  donnee.voirPlus = !donnee.voirPlus; $event.preventDefault()
+                "
+                style="color: blue; text-decoration: underline; cursor: pointer"
+              >
+                {{ donnee.voirPlus ? "Voir moins" : "Voir plus" }}
+              </a>
+            </ng-container>
           </td>
 
           <td>
             <input
+              *ngIf="donnee.editing"
               type="text"
               name="debit{{ i }}{{ j }}"
               [(ngModel)]="donnee.debit"
             />
+            <span *ngIf="!donnee.editing">{{ donnee.debit }}</span>
           </td>
           <td>
             <input
+              *ngIf="donnee.editing"
               type="text"
               name="credit{{ i }}{{ j }}"
               [(ngModel)]="donnee.credit"
             />
+            <span *ngIf="!donnee.editing">{{ donnee.credit }}</span>
+          </td>
+          <td>
+            <button *ngIf="!donnee.editing" (click)="editRow(i, j)">
+              Editer
+            </button>
+            <button *ngIf="donnee.editing" (click)="saveRow(i, j)">
+              Sauvegarder
+            </button>
           </td>
         </tr>
       </table>

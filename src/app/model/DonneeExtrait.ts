@@ -1,16 +1,18 @@
 export class DonneeExtrait {
-  uuid: string; // ajouter un champ pour stocker l'UUID
+  uuid: string;
   dateDonneeExtrait: Date;
   dateValeurDonneeExtrait: Date;
   operations: string;
   debit: number;
   credit: number;
-  factures: string[]; // Nouveau champ
-  commentairesFactures: { [key: string]: string }; // Nouveau champ
-  valide: boolean; // Nouveau champ
-  associationTitreUrl: { [key: string]: string | null }; // Nouveau champ
+  factures: string[];
+  commentairesFactures: { [key: string]: string };
+  valide: boolean;
+  associationTitreUrl: { [key: string]: string | null };
+  editing?: boolean; // Ajoutez cette ligne pour définir la propriété 'editing'
+  voirPlus: boolean;
   constructor(
-    uuid: string, // ajouter un champ pour stocker l'UUID
+    uuid: string,
     dateDonneeExtrait: Date,
     dateValeurDonneeExtrait: Date,
     operations: string,
@@ -19,7 +21,8 @@ export class DonneeExtrait {
     factures?: string[],
     commentairesFactures?: { [key: string]: string },
     associationTitreUrl?: { [key: string]: string | null },
-    valide?: boolean
+    valide?: boolean,
+    editing?: boolean // Ajoutez cette ligne pour le constructeur
   ) {
     this.uuid = uuid;
     this.dateDonneeExtrait = dateDonneeExtrait;
@@ -31,5 +34,6 @@ export class DonneeExtrait {
     this.commentairesFactures = commentairesFactures || {};
     this.associationTitreUrl = associationTitreUrl || {};
     this.valide = valide || false;
+    this.editing = editing || false; // Ajoutez cette ligne pour initialiser 'editing'
   }
 }

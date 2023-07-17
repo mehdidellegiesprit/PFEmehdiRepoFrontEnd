@@ -113,4 +113,15 @@ export class BankStatementUploadComponent implements OnInit, OnDestroy {
     //   }
     // );
   }
+  public editRow(i: number, j: number): void {
+    this.releveBancaire.extraits[i].donneeExtraits[j].editing = true;
+    console.log('editRow');
+  }
+
+  public saveRow(i: number, j: number): void {
+    this.releveBancaire.extraits[i].donneeExtraits[j].editing = false;
+    // Ici, vous pourriez sauvegarder les modifications dans la base de données ou ailleurs
+    console.log('saveRow');
+    console.log(this.releveBancaire);
+  }
 }
