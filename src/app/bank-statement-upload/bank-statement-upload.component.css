@@ -1,3 +1,182 @@
+body {
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  color: #333;
+  background-color: #f5f5f5;
+  margin: 0;
+  padding: 0;
+}
+
+form {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #ffffff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+}
+
+input[type="text"],
+input[type="date"],
+textarea {
+  font-size: 16px;
+  color: #333;
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 4px;
+  width: 100%;
+}
+
+input[type="file"] {
+  padding: 10px;
+}
+
+button {
+  background-color: #3498db;
+  color: #ffffff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  background-color: #2980b9;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 16px;
+  border-bottom: 1px solid #ddd;
+}
+
+th {
+  background-color: #3498db;
+  color: white;
+}
+
+a {
+  color: #3498db;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
 textarea {
   white-space: pre-wrap;
+  height: auto;
+  min-height: 50px;
+}
+
+/* Add some space around each section of the form */
+form > div:not(:last-child) {
+  margin-bottom: 20px;
+}
+
+/* Style the confirmation button separately */
+form button[type="submit"] {
+  background-color: #2ecc71;
+  margin-top: 20px;
+}
+
+form button[type="submit"]:hover {
+  background-color: #27ae60;
+}
+
+h3,
+h4 {
+  margin-top: 0;
+}
+
+tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+tr:hover {
+  background-color: #ddd;
+}
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.title {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.input-group {
+  margin-bottom: 10px;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.input-group input[type="text"],
+.input-group input[type="date"] {
+  width: 100%;
+}
+
+.submit-btn {
+  display: block;
+  width: 100%;
+}
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.title {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.file-upload {
+  display: block;
+  margin-bottom: 20px;
+}
+
+.input-group {
+  margin-bottom: 10px;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.input-group input[type="text"],
+.input-group input[type="date"] {
+  width: 100%;
+}
+
+.extrait-group {
+  margin-bottom: 20px;
+}
+
+.extrait-title {
+  margin-top: 20px;
+}
+
+.donnee-title {
+  margin-top: 20px;
+}
+
+.donnee-table {
+  width: 100%;
+  /* Ajoutez d'autres styles pour votre table ici */
+}
+
+.submit-btn {
+  display: block;
+  width: 100%;
 }
