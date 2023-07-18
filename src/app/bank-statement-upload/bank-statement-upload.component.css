@@ -1,182 +1,247 @@
+:root {
+  --font-family: "Helvetica Neue", Arial, sans-serif;
+  --color-primary: #2f80ed;
+  --color-secondary: #828282;
+  --color-dark: #333333;
+  --color-light: #f2f2f2;
+  --color-white: #ffffff;
+  --color-shadow: rgba(0, 0, 0, 0.15);
+  --color-input-border: #bdbdbd;
+}
+
+* {
+  box-sizing: border-box;
+  font-family: var(--font-family);
+}
+
 body {
-  font-family: "Helvetica Neue", Arial, sans-serif;
-  color: #333;
-  background-color: #f5f5f5;
+  color: var(--color-dark);
+  background-color: var(--color-light);
   margin: 0;
   padding: 0;
 }
 
-form {
+.container {
   max-width: 800px;
-  margin: 20px auto;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   padding: 20px;
-  background-color: #ffffff;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
 }
 
-input[type="text"],
-input[type="date"],
-textarea {
-  font-size: 16px;
-  color: #333;
-  border: 1px solid #ccc;
-  padding: 10px;
-  border-radius: 4px;
-  width: 100%;
+.form-group {
+  margin-bottom: 20px;
 }
 
-input[type="file"] {
-  padding: 10px;
+.label {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 1rem;
+  color: var(--color-secondary);
 }
 
+input,
+textarea,
 button {
-  background-color: #3498db;
-  color: #ffffff;
+  border: 1px solid #cccccc;
+  border-radius: 5px;
+  padding: 10px;
+  font-size: 14px;
+}
+
+.form-control {
+  width: 100%;
+  max-width: 400px;
+  padding: 10px;
+  border: 1px solid #000000;
+  border-radius: 4px;
+  font-size: 1rem;
+  color: var(--color-dark);
+  display: block;
+  margin: 0 auto;
+  transition: border-color 0.3s ease;
+}
+
+.form-control:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+.form-control:active {
+  border-color: #28a745;
+}
+
+.form-control[type="date"],
+.form-control[type="text"] {
+  height: auto;
+  min-height: 50px;
+}
+
+.textarea {
+  white-space: pre-wrap;
+  height: auto;
+  min-height: 50px;
+}
+
+form {
+  max-width: 70%;
+  margin: 0 auto;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.btn-primary {
+  width: 100%;
   padding: 10px 20px;
+  color: var(--color-white);
+  background-color: var(--color-primary);
   border: none;
   border-radius: 4px;
-  font-size: 16px;
+  font-size: 1rem;
   transition: all 0.3s ease;
+  cursor: pointer;
 }
 
-button:hover {
-  background-color: #2980b9;
-}
-
-table {
-  border-collapse: collapse;
-  width: 100%;
-}
-
-th,
-td {
-  text-align: left;
-  padding: 16px;
-  border-bottom: 1px solid #ddd;
-}
-
-th {
-  background-color: #3498db;
-  color: white;
+.btn-primary:hover {
+  background-color: #2c69d1;
 }
 
 a {
-  color: #3498db;
+  color: var(--color-primary);
   text-decoration: none;
+  transition: color 0.3s ease;
 }
 
 a:hover {
   text-decoration: underline;
 }
 
-textarea {
-  white-space: pre-wrap;
-  height: auto;
-  min-height: 50px;
-}
-
-/* Add some space around each section of the form */
-form > div:not(:last-child) {
-  margin-bottom: 20px;
-}
-
-/* Style the confirmation button separately */
-form button[type="submit"] {
-  background-color: #2ecc71;
+.text-center {
   margin-top: 20px;
+  text-align: center;
 }
 
-form button[type="submit"]:hover {
-  background-color: #27ae60;
+/* pour l'input file qui upload le fichier  */
+.custom-file-upload {
+  position: relative;
+  display: inline-block;
+  font-family: Arial;
 }
 
-h3,
-h4 {
-  margin-top: 0;
+.custom-file-upload-label {
+  padding: 10px 20px;
+  color: white;
+  background-color: #007bff;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
-tr:nth-child(even) {
+.custom-file-upload-label:hover {
+  background-color: #0056b3;
+  transform: scale(1.05);
+}
+
+.input-file {
+  display: none;
+}
+
+.custom-file-upload-label {
+  margin: 20px;
+}
+
+/* Styles généraux du tableau */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+/* Style des cellules de la table */
+.table th,
+.table td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: left;
+}
+
+/* Style pour l'en-tête de la table */
+.table th {
+  background-color: var(--color-primary);
+  color: var(--color-white);
+}
+
+/* Style pour les lignes de la table */
+.table tr:nth-child(even) {
   background-color: #f2f2f2;
 }
 
-tr:hover {
-  background-color: #ddd;
-}
-.container {
-  max-width: 800px;
-  margin: 0 auto;
-}
-
-.title {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.input-group {
-  margin-bottom: 10px;
+/* Style pour les boutons d'édition */
+.table button {
+  background-color: #007bffa7;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 3px 3px 5px 0px rgba(0, 0, 0, 0.15);
 }
 
-.input-group label {
-  display: block;
-  margin-bottom: 5px;
+.table button:hover {
+  background-color: #0056b3;
+  color: #ffffff;
+  box-shadow: 3px 3px 5px 0px rgba(0, 0, 0, 0.3);
 }
 
-.input-group input[type="text"],
-.input-group input[type="date"] {
-  width: 100%;
+.table button:active {
+  background-color: #003d73;
+  color: #bbbbbb;
+  box-shadow: none;
 }
 
-.submit-btn {
-  display: block;
-  width: 100%;
-}
-.container {
-  max-width: 800px;
-  margin: 0 auto;
+button i {
+  margin-right: 10px;
+  transition: color 0.3s ease;
 }
 
-.title {
-  text-align: center;
-  margin-bottom: 20px;
+button i:hover {
+  color: #ffffff;
 }
 
-.file-upload {
-  display: block;
-  margin-bottom: 20px;
+button i:active {
+  color: #bbbbbb;
+}
+/* boutton confimer  */
+.container-confirmer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* height: 100vh;  */
+  /* Ceci est juste un exemple, ajustez cette valeur selon vos besoins */
 }
 
-.input-group {
-  margin-bottom: 10px;
+.btn-edit {
+  font-size: 20px;
+  color: #ffffff;
+  background-color: #007bff;
+  border-color: #007bff;
+  border-radius: 5px;
+  padding: 10px 15px;
+  width: 150px;
+  height: 50px;
+  transition: background-color 0.5s ease;
 }
 
-.input-group label {
-  display: block;
-  margin-bottom: 5px;
+.btn-edit:hover {
+  background-color: #0056b3;
+  border-color: #0056b3;
+  color: #ffffff;
+  transition: background-color 0.5s ease;
 }
 
-.input-group input[type="text"],
-.input-group input[type="date"] {
-  width: 100%;
-}
-
-.extrait-group {
-  margin-bottom: 20px;
-}
-
-.extrait-title {
-  margin-top: 20px;
-}
-
-.donnee-title {
-  margin-top: 20px;
-}
-
-.donnee-table {
-  width: 100%;
-  /* Ajoutez d'autres styles pour votre table ici */
-}
-
-.submit-btn {
-  display: block;
-  width: 100%;
+.btn-edit:focus {
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.5);
 }
