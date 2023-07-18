@@ -1,0 +1,28 @@
+.custom-dialog {
+  background-color: #f8f9fa;
+  color: #495057;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.custom-dialog h2 {
+  color: #6c757d;
+}
+
+.custom-dialog button {
+  margin: 10px;
+  margin-bottom: 30px; /* Vous pouvez ajuster cette valeur en fonction de vos besoins */
+}
+
+.custom-dialog button:first-child {
+  background-color: #28a745;
+  color: white;
+}
+
+.custom-dialog button:last-child {
+  background-color: #dc3545;
+  color: white;
+}
+.mat-dialog-container {
+  transform: translate(-50%, -50%);
+}

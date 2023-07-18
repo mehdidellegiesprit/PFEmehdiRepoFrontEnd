@@ -9,6 +9,7 @@ import { Observable, throwError } from 'rxjs';
 import { User } from '../model/user';
 import { environment } from 'src/environments/environment';
 import { DonneeExtrait } from '../model/DonneeExtrait';
+import { ReleveBancaire } from '../model/ReleveBancaire';
 
 @Injectable({
   providedIn: 'root',
@@ -66,5 +67,12 @@ export class BankStatementViewerService {
       data: data,
     };
     return this.http.post<any>(url, body);
+  }
+  public ajouterReleverBancaire(data: ReleveBancaire): Observable<any> {
+    console.log('je suis la methode : ajouterReleverBancaire!!!', data);
+    return this.http.post<any>(
+      `${this.host}/gestiondesextrais/v1/releve/add`,
+      data
+    );
   }
 }

@@ -50,6 +50,7 @@ import localeFr from '@angular/common/locales/fr';
 import { registerLocaleData } from '@angular/common';
 import { BankStatementUploadComponent } from './bank-statement-upload/bank-statement-upload.component';
 import { SplitPipe } from './pipe/split.pipe';
+import { ConfirmationDialogComponent } from './confirmation-dialog/confirmation-dialog.component';
 registerLocaleData(localeFr, 'fr-FR');
 
 export function MSALInstanceFactory(): IPublicClientApplication {
@@ -73,6 +74,7 @@ export function MSALInstanceFactory(): IPublicClientApplication {
     BankStatementUploadComponent,
     ReplacePipe,
     SplitPipe,
+    ConfirmationDialogComponent,
   ],
   imports: [
     NotificationModule,

@@ -9,7 +9,6 @@
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-      integrity="sha512-dT7G2UYQJI4DQxv0eaDi2FQLnUQTqRRr3y+O4ih1IPsHweaLoJRHs19bqJQ8jEgzhMw9Z0+qw6HsYvbp6nmk8g=="
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     />
@@ -27,299 +26,338 @@
         (change)="onFileInputChange($event)"
       />
     </div>
-    <form
-      #releveBancaireForm="ngForm"
-      (ngSubmit)="onConfirmAll(releveBancaireForm.value)"
-    >
-      <div *ngIf="releveBancaire">
-        <div class="form-group row">
-          <label for="nomBank" class="col-sm-2 col-form-label"
-            >Nom de la banque:</label
-          >
-          <div class="col-sm-10">
-            <input
-              class="form-control"
-              type="text"
-              id="nomBank"
-              name="nomBank"
-              [(ngModel)]="releveBancaire.nomBank"
-              required
-            />
-          </div>
+
+    <div *ngIf="isLoading" class="loading-indicator">
+      <div class="spinner"></div>
+    </div>
+    <div *ngIf="releveBancaire" class="formulaire">
+      <form
+        #releveBancaireForm="ngForm"
+        (ngSubmit)="onConfirmAll(releveBancaireForm.value)"
+        [ngClass]="{ 'border-class': fileUploaded }"
+      >
+        <div style="text-align: center">
+          <h1>Formulaire de confirmation d'un Relevé Bancaire</h1>
         </div>
-        <div class="form-group row">
-          <label for="iban" class="col-sm-2 col-form-label">IBAN:</label>
-          <div class="col-sm-10">
-            <input
-              class="form-control"
-              type="text"
-              id="iban"
-              name="iban"
-              [(ngModel)]="releveBancaire.iban"
-              required
-            />
-          </div>
-        </div>
-        <div class="form-group row">
-          <label for="nom_societe" class="col-sm-2 col-form-label"
-            >Nom de la société:</label
-          >
-          <div class="col-sm-10">
-            <input
-              class="form-control"
-              type="text"
-              id="nom_societe"
-              name="nom_societe"
-              [(ngModel)]="releveBancaire.nom_societe"
-              required
-            />
-          </div>
-        </div>
-
-        <div *ngFor="let extrait of releveBancaire.extraits; let i = index">
-          <h2 class="text-center">
-            Extrait du {{ extrait.dateExtrait | date : "dd/MM/yyyy" }}
-          </h2>
-
+        <div *ngIf="releveBancaire">
           <div class="form-group row">
-            <label for="dateExtrait{{ i }}" class="col-sm-2 col-form-label"
-              >Date d'extrait:</label
-            >
-            <div class="col-sm-10">
-              <input
-                class="form-control"
-                type="date"
-                id="dateExtrait{{ i }}"
-                name="dateExtrait{{ i }}"
-                [(ngModel)]="extrait.dateExtrait"
-                required
-              />
-            </div>
-          </div>
-
-          <div class="form-group row">
-            <label
-              for="dateDuSoldeCrediteurDebutMois{{ i }}"
-              class="col-sm-2 col-form-label"
-              >Date du solde créditeur début mois:</label
-            >
-            <div class="col-sm-10">
-              <input
-                class="form-control"
-                type="date"
-                id="dateDuSoldeCrediteurDebutMois{{ i }}"
-                name="dateDuSoldeCrediteurDebutMois{{ i }}"
-                [(ngModel)]="extrait.dateDuSoldeCrediteurDebutMois"
-                required
-              />
-            </div>
-          </div>
-
-          <div class="form-group row">
-            <label
-              for="creditDuSoldeCrediteurDebutMois{{ i }}"
-              class="col-sm-2 col-form-label"
-              >Crédit du solde créditeur début mois:</label
+            <label for="nomBank" class="col-sm-2 col-form-label"
+              >Nom de la banque:</label
             >
             <div class="col-sm-10">
               <input
                 class="form-control"
                 type="text"
-                id="creditDuSoldeCrediteurDebutMois{{ i }}"
-                name="creditDuSoldeCrediteurDebutMois{{ i }}"
-                [(ngModel)]="extrait.creditDuSoldeCrediteurDebutMois"
+                id="nomBank"
+                name="nomBank"
+                [(ngModel)]="releveBancaire.nomBank"
                 required
               />
             </div>
           </div>
-
           <div class="form-group row">
-            <label
-              for="dateDuSoldeCrediteurFinMois{{ i }}"
-              class="col-sm-2 col-form-label"
-              >Date du solde créditeur fin mois:</label
-            >
+            <label for="iban" class="col-sm-2 col-form-label">IBAN:</label>
             <div class="col-sm-10">
               <input
                 class="form-control"
-                type="date"
-                id="dateDuSoldeCrediteurFinMois{{ i }}"
-                name="dateDuSoldeCrediteurFinMois{{ i }}"
-                [(ngModel)]="extrait.dateDuSoldeCrediteurFinMois"
+                type="text"
+                id="iban"
+                name="iban"
+                [(ngModel)]="releveBancaire.iban"
                 required
               />
             </div>
           </div>
-
           <div class="form-group row">
-            <label
-              for="creditDuSoldeCrediteurFinMois{{ i }}"
-              class="col-sm-2 col-form-label"
-              >Crédit du solde créditeur fin mois:</label
+            <label for="nom_societe" class="col-sm-2 col-form-label"
+              >Nom de la société:</label
             >
             <div class="col-sm-10">
               <input
                 class="form-control"
                 type="text"
-                id="creditDuSoldeCrediteurFinMois{{ i }}"
-                name="creditDuSoldeCrediteurFinMois{{ i }}"
-                [(ngModel)]="extrait.creditDuSoldeCrediteurFinMois"
-                required
-              />
-            </div>
-          </div>
-          <div class="form-group row">
-            <label
-              for="totalMouvementsDebit{{ i }}"
-              class="col-sm-2 col-form-label"
-              >Total mouvements débit:</label
-            >
-            <div class="col-sm-10">
-              <input
-                class="form-control"
-                type="text"
-                id="totalMouvementsDebit{{ i }}"
-                name="totalMouvementsDebit{{ i }}"
-                [(ngModel)]="extrait.totalMouvementsDebit"
+                id="nom_societe"
+                name="nom_societe"
+                [(ngModel)]="releveBancaire.nom_societe"
                 required
               />
             </div>
           </div>
 
-          <div class="form-group row">
-            <label
-              for="totalMouvementsCredit{{ i }}"
-              class="col-sm-2 col-form-label"
-              >Total mouvements crédit:</label
-            >
-            <div class="col-sm-10">
-              <input
-                class="form-control"
-                type="text"
-                id="totalMouvementsCredit{{ i }}"
-                name="totalMouvementsCredit{{ i }}"
-                [(ngModel)]="extrait.totalMouvementsCredit"
-                required
-              />
-            </div>
-          </div>
-          <h2 class="text-center">Tableau des opérations bancaires</h2>
-          <p>
-            Ce tableau présente un résumé de toutes vos opérations bancaires
-            pour la période sélectionnée.
-          </p>
-          <table class="table table-striped">
-            <tr>
-              <th>Date</th>
-              <th>Date valeur</th>
-              <th>Opérations</th>
-              <th>Débit</th>
-              <th>Crédit</th>
-            </tr>
-            <tr *ngFor="let donnee of extrait.donneeExtraits; let j = index">
-              <td>
+          <div *ngFor="let extrait of releveBancaire.extraits; let i = index">
+            <h2 class="text-center">
+              Extrait du {{ extrait.dateExtrait | date : "dd/MM/yyyy" }}
+            </h2>
+
+            <div class="form-group row">
+              <label for="dateExtrait{{ i }}" class="col-sm-2 col-form-label"
+                >Date d'extrait:</label
+              >
+              <div class="col-sm-10">
                 <input
-                  *ngIf="donnee.editing"
+                  class="form-control"
                   type="date"
-                  id="dateDonneeExtrait{{ i }}{{ j }}"
-                  name="dateDonneeExtrait{{ i }}{{ j }}"
-                  [(ngModel)]="donnee.dateDonneeExtrait"
+                  id="dateExtrait{{ i }}"
+                  name="dateExtrait{{ i }}"
+                  [(ngModel)]="extrait.dateExtrait"
                   required
                 />
-                <span *ngIf="!donnee.editing">{{
-                  donnee.dateDonneeExtrait
-                }}</span>
-              </td>
-              <td>
-                <input
-                  *ngIf="donnee.editing"
-                  type="date"
-                  id="dateValeurDonneeExtrait{{ i }}{{ j }}"
-                  name="dateValeurDonneeExtrait{{ i }}{{ j }}"
-                  [(ngModel)]="donnee.dateValeurDonneeExtrait"
-                  required
-                />
-                <span *ngIf="!donnee.editing">{{
-                  donnee.dateValeurDonneeExtrait
-                }}</span>
-              </td>
-              <td style="width: auto">
-                <textarea
-                  *ngIf="donnee.editing"
-                  name="operations{{ i }}{{ j }}"
-                  [value]="donnee.operations | replace : '***' : '\n'"
-                  (input)="handleInputChange($event, i, j)"
-                  required
-                  style="white-space: pre-wrap"
-                  rows="4"
-                  cols="32"
-                ></textarea>
-                <ng-container *ngIf="!donnee.editing">
-                  <span
-                    *ngIf="!donnee.voirPlus"
-                    [innerHTML]="(donnee.operations | split : '***' : 0) || ''"
-                  ></span>
-                  <span
-                    *ngIf="donnee.voirPlus"
-                    [innerHTML]="donnee.operations | replace : '***' : '<br/>'"
-                  ></span>
-                  <a
-                    href="#"
-                    (click)="
-                      donnee.voirPlus = !donnee.voirPlus;
-                      $event.preventDefault()
-                    "
-                    style="
-                      color: blue;
-                      text-decoration: underline;
-                      cursor: pointer;
-                    "
-                  >
-                    {{ donnee.voirPlus ? "Voir moins" : "Voir plus" }}
-                  </a>
-                </ng-container>
-              </td>
+              </div>
+            </div>
 
-              <td>
+            <div class="form-group row">
+              <label
+                for="dateDuSoldeCrediteurDebutMois{{ i }}"
+                class="col-sm-2 col-form-label"
+                >Date du solde créditeur début mois:</label
+              >
+              <div class="col-sm-10">
                 <input
-                  *ngIf="donnee.editing"
-                  type="text"
-                  name="debit{{ i }}{{ j }}"
-                  [(ngModel)]="donnee.debit"
+                  class="form-control"
+                  type="date"
+                  id="dateDuSoldeCrediteurDebutMois{{ i }}"
+                  name="dateDuSoldeCrediteurDebutMois{{ i }}"
+                  [(ngModel)]="extrait.dateDuSoldeCrediteurDebutMois"
                   required
                 />
-                <span *ngIf="!donnee.editing">{{ donnee.debit }}</span>
-              </td>
-              <td>
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label
+                for="creditDuSoldeCrediteurDebutMois{{ i }}"
+                class="col-sm-2 col-form-label"
+                >Crédit du solde créditeur début mois:</label
+              >
+              <div class="col-sm-10">
                 <input
-                  *ngIf="donnee.editing"
+                  class="form-control"
                   type="text"
-                  name="credit{{ i }}{{ j }}"
-                  [(ngModel)]="donnee.credit"
+                  id="creditDuSoldeCrediteurDebutMois{{ i }}"
+                  name="creditDuSoldeCrediteurDebutMois{{ i }}"
+                  [(ngModel)]="extrait.creditDuSoldeCrediteurDebutMois"
                   required
                 />
-                <span *ngIf="!donnee.editing">{{ donnee.credit }}</span>
-              </td>
-              <td>
-                <button *ngIf="!donnee.editing" (click)="editRow(i, j)">
-                  <i class="fal fa-edit" style="color: #00ffff"></i>
-                  Editer
-                </button>
-                <button *ngIf="donnee.editing" (click)="saveRow(i, j)">
-                  <i class="fas fa-edit fa-pulse" style="color: #00ffff"></i>
-                  Sauvegarder
-                </button>
-              </td>
-            </tr>
-          </table>
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label
+                for="dateDuSoldeCrediteurFinMois{{ i }}"
+                class="col-sm-2 col-form-label"
+                >Date du solde créditeur fin mois:</label
+              >
+              <div class="col-sm-10">
+                <input
+                  class="form-control"
+                  type="date"
+                  id="dateDuSoldeCrediteurFinMois{{ i }}"
+                  name="dateDuSoldeCrediteurFinMois{{ i }}"
+                  [(ngModel)]="extrait.dateDuSoldeCrediteurFinMois"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label
+                for="creditDuSoldeCrediteurFinMois{{ i }}"
+                class="col-sm-2 col-form-label"
+                >Crédit du solde créditeur fin mois:</label
+              >
+              <div class="col-sm-10">
+                <input
+                  class="form-control"
+                  type="text"
+                  id="creditDuSoldeCrediteurFinMois{{ i }}"
+                  name="creditDuSoldeCrediteurFinMois{{ i }}"
+                  [(ngModel)]="extrait.creditDuSoldeCrediteurFinMois"
+                  required
+                />
+              </div>
+            </div>
+            <div class="form-group row">
+              <label
+                for="totalMouvementsDebit{{ i }}"
+                class="col-sm-2 col-form-label"
+                >Total mouvements débit:</label
+              >
+              <div class="col-sm-10">
+                <input
+                  class="form-control"
+                  type="text"
+                  id="totalMouvementsDebit{{ i }}"
+                  name="totalMouvementsDebit{{ i }}"
+                  [(ngModel)]="extrait.totalMouvementsDebit"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label
+                for="totalMouvementsCredit{{ i }}"
+                class="col-sm-2 col-form-label"
+                >Total mouvements crédit:</label
+              >
+              <div class="col-sm-10">
+                <input
+                  class="form-control"
+                  type="text"
+                  id="totalMouvementsCredit{{ i }}"
+                  name="totalMouvementsCredit{{ i }}"
+                  [(ngModel)]="extrait.totalMouvementsCredit"
+                  required
+                />
+              </div>
+            </div>
+            <h2 class="text-center">Tableau des opérations bancaires</h2>
+            <p>
+              Ce tableau présente un résumé de toutes vos opérations bancaires
+              pour la période sélectionnée.
+            </p>
+            <table class="table table-striped">
+              <tr>
+                <th>Date</th>
+                <th>Date valeur</th>
+                <th>Opérations</th>
+                <th>Débit</th>
+                <th>Crédit</th>
+              </tr>
+              <tr *ngFor="let donnee of extrait.donneeExtraits; let j = index">
+                <td>
+                  <input
+                    *ngIf="donnee.editing"
+                    type="date"
+                    id="dateDonneeExtrait{{ i }}{{ j }}"
+                    name="dateDonneeExtrait{{ i }}{{ j }}"
+                    [(ngModel)]="donnee.dateDonneeExtrait"
+                    required
+                  />
+                  <span *ngIf="!donnee.editing">{{
+                    donnee.dateDonneeExtrait
+                  }}</span>
+                </td>
+                <td>
+                  <input
+                    *ngIf="donnee.editing"
+                    type="date"
+                    id="dateValeurDonneeExtrait{{ i }}{{ j }}"
+                    name="dateValeurDonneeExtrait{{ i }}{{ j }}"
+                    [(ngModel)]="donnee.dateValeurDonneeExtrait"
+                    required
+                  />
+                  <span *ngIf="!donnee.editing">{{
+                    donnee.dateValeurDonneeExtrait
+                  }}</span>
+                </td>
+                <td style="width: auto">
+                  <textarea
+                    *ngIf="donnee.editing"
+                    name="operations{{ i }}{{ j }}"
+                    [value]="donnee.operations | replace : '***' : '\n'"
+                    (input)="handleInputChange($event, i, j)"
+                    required
+                    style="white-space: pre-wrap"
+                    rows="4"
+                    cols="32"
+                  ></textarea>
+                  <ng-container *ngIf="!donnee.editing">
+                    <span
+                      *ngIf="!donnee.voirPlus"
+                      [innerHTML]="
+                        (donnee.operations | split : '***' : 0) || ''
+                      "
+                    ></span>
+                    <span
+                      *ngIf="donnee.voirPlus"
+                      [innerHTML]="
+                        donnee.operations | replace : '***' : '<br/>'
+                      "
+                    ></span>
+                    <a
+                      href="#"
+                      (click)="
+                        donnee.voirPlus = !donnee.voirPlus;
+                        $event.preventDefault()
+                      "
+                      style="
+                        color: blue;
+                        text-decoration: underline;
+                        cursor: pointer;
+                      "
+                    >
+                      {{ donnee.voirPlus ? "Voir moins" : "Voir plus" }}
+                    </a>
+                  </ng-container>
+                </td>
+
+                <td>
+                  <input
+                    *ngIf="donnee.editing"
+                    type="text"
+                    name="debit{{ i }}{{ j }}"
+                    [(ngModel)]="donnee.debit"
+                    required
+                  />
+                  <span *ngIf="!donnee.editing">{{ donnee.debit }}</span>
+                </td>
+                <td>
+                  <input
+                    *ngIf="donnee.editing"
+                    type="text"
+                    name="credit{{ i }}{{ j }}"
+                    [(ngModel)]="donnee.credit"
+                    required
+                  />
+                  <span *ngIf="!donnee.editing">{{ donnee.credit }}</span>
+                </td>
+                <td>
+                  <button *ngIf="!donnee.editing" (click)="editRow(i, j)">
+                    <i class="fal fa-edit" style="color: #00ffff"></i>
+                    Editer
+                  </button>
+                  <button *ngIf="donnee.editing" (click)="saveRow(i, j)">
+                    <i class="fas fa-edit fa-pulse" style="color: #00ffff"></i>
+                    Sauvegarder
+                  </button>
+                </td>
+              </tr>
+            </table>
+          </div>
+          <div class="container-confirmer">
+            <button
+              (click)="
+                openConfirmationDialog(
+                  onConfirmAll.bind(this),
+                  'Voulez-vous vraiment confirmer toutes les modifications ?'
+                );
+                $event.preventDefault()
+              "
+              class="btn btn-primary btn-edit"
+              style="margin-right: 20px"
+            >
+              <i class="fas fa-check"></i>
+              Confirmer
+            </button>
+
+            <button
+              (click)="
+                openConfirmationDialog(
+                  cancelAll.bind(this),
+                  'Voulez-vous vraiment annuler toutes les modifications ?'
+                );
+                $event.preventDefault()
+              "
+              class="btn btn-edit"
+              style="background-color: red"
+            >
+              <i class="fas fa-times"></i>
+              Annuler
+            </button>
+          </div>
         </div>
-        <div class="container-confirmer">
-          <button type="submit" class="btn btn-primary btn-edit">
-            <i class="fas fa-check"></i>
-            Confirmer
-          </button>
-        </div>
-      </div>
-    </form>
+      </form>
+    </div>
   </body>
 </html>

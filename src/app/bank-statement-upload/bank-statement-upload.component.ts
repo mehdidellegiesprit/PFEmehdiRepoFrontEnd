@@ -6,6 +6,8 @@ import { NotificationType } from '../enum/notification-type.enum';
 import { NotificationService } from '../service/notification.service';
 import { ReleveBancaire } from '../model/ReleveBancaire';
 import { DatePipe } from '@angular/common';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'app-bank-statement-upload',
@@ -15,12 +17,16 @@ import { DatePipe } from '@angular/common';
 export class BankStatementUploadComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription[] = [];
   public releveBancaire: ReleveBancaire;
+  public originalReleveBancaire: ReleveBancaire;
   public showFullText: boolean[][] = [];
+  public fileUploaded: boolean = false;
+  public isLoading: boolean = false; // Ajout de la propriété
 
   constructor(
     private bankStatementViewerService: BankStatementViewerService,
     private notificationService: NotificationService,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    public dialog: MatDialog
   ) {}
 
   ngOnDestroy(): void {
@@ -38,13 +44,20 @@ export class BankStatementUploadComponent implements OnInit, OnDestroy {
   }
 
   public onFileInputChange(event: any): void {
+    console.log('monnnn');
+    this.fileUploaded = true;
     const file: File = event.target.files[0];
+    console.log('file', file);
+
+    // On active le spinner de chargement
+    this.isLoading = true;
     this.subscriptions.push(
       this.bankStatementViewerService.uploadFile(file).subscribe(
         (response: any) => {
           this.releveBancaire = response;
-          this.releveBancaire.dataFileContent = 'chaine vide ';
-
+          //this.releveBancaire.dataFileContent = 'chaine vide ';
+          // sauvegarder le relevé bancaire original
+          this.originalReleveBancaire = JSON.parse(JSON.stringify(response));
           // Initialisation de showFullText
           this.showFullText = new Array(this.releveBancaire.extraits.length)
             .fill(true)
@@ -85,34 +98,21 @@ export class BankStatementUploadComponent implements OnInit, OnDestroy {
           );
           console.log('response=', this.releveBancaire);
           console.log('done brooooo');
+          // On désactive le spinner de chargement une fois le traitement terminé
+          this.isLoading = false;
         },
         (errorResponse: HttpErrorResponse) => {
           this.notificationService.notify(
             NotificationType.ERROR,
             errorResponse.error.message
           );
+          // On désactive également le spinner de chargement en cas d'erreur
+          this.isLoading = false;
         }
       )
     );
   }
 
-  public onConfirmAll(data: any): void {
-    console.log('onConfirmAll');
-    console.log(this.releveBancaire);
-    // Utilisez votre service pour envoyer `data` au serveur...
-    // Remplacez avec la fonction réelle de votre service
-    // this.bankStatementViewerService.updateData(data).subscribe(
-    //   (response: any) => {
-    //     // Vous pouvez afficher une notification de réussite ici
-    //   },
-    //   (errorResponse: HttpErrorResponse) => {
-    //     this.notificationService.notify(
-    //       NotificationType.ERROR,
-    //       errorResponse.error.message
-    //     );
-    //   }
-    // );
-  }
   public editRow(i: number, j: number): void {
     this.releveBancaire.extraits[i].donneeExtraits[j].editing = true;
     console.log('editRow');
@@ -123,5 +123,49 @@ export class BankStatementUploadComponent implements OnInit, OnDestroy {
     // Ici, vous pourriez sauvegarder les modifications dans la base de données ou ailleurs
     console.log('saveRow');
     console.log(this.releveBancaire);
+  }
+  public cancelAll(): void {
+    console.log('cancelAll was called******');
+    this.releveBancaire = JSON.parse(
+      JSON.stringify(this.originalReleveBancaire)
+    );
+    console.log('Toutes les modifications ont été annulées.');
+  }
+
+  public onConfirmAll(obj: any): void {
+    console.log('onConfirmAll was called');
+    console.log(this.releveBancaire);
+    this.bankStatementViewerService
+      .ajouterReleverBancaire(this.releveBancaire)
+      .subscribe(
+        (response: any) => {
+          // Vous pouvez afficher une notification de réussite ici
+          console.log('nowww!!!! meee response = ', response);
+        },
+        (errorResponse: HttpErrorResponse) => {
+          this.notificationService.notify(
+            NotificationType.ERROR,
+            errorResponse.error.message
+          );
+        }
+      );
+  }
+  openConfirmationDialog(action: Function, message: string) {
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '20%',
+      height: 'auto',
+      data: message,
+      position: {
+        top: '15%',
+        left: '35%',
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        console.log('Yes clicked');
+        action();
+      }
+    });
   }
 }
