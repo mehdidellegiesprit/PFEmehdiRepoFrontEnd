@@ -8,6 +8,7 @@ import { ReleveBancaire } from '../model/ReleveBancaire';
 import { DatePipe } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
+import { SocieteService } from '../service/societe.service';
 
 @Component({
   selector: 'app-bank-statement-upload',
@@ -23,6 +24,7 @@ export class BankStatementUploadComponent implements OnInit, OnDestroy {
   public isLoading: boolean = false; // Ajout de la propriété
 
   constructor(
+    private societeService: SocieteService,
     private bankStatementViewerService: BankStatementViewerService,
     private notificationService: NotificationService,
     private datePipe: DatePipe,
@@ -135,6 +137,7 @@ export class BankStatementUploadComponent implements OnInit, OnDestroy {
   public onConfirmAll(obj: any): void {
     console.log('onConfirmAll was called');
     console.log(this.releveBancaire);
+    console.log('front end pour lajout dune socoete');
     this.bankStatementViewerService
       .ajouterReleverBancaire(this.releveBancaire)
       .subscribe(
