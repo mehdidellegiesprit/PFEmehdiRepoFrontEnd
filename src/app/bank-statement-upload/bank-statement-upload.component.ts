@@ -44,6 +44,9 @@ export class BankStatementUploadComponent implements OnInit, OnDestroy {
       donnee.operations = target.value;
     }
   }
+  public toDate(dateStr: string): Date {
+    return new Date(dateStr);
+  }
 
   public onFileInputChange(event: any): void {
     console.log('monnnn');
@@ -56,15 +59,18 @@ export class BankStatementUploadComponent implements OnInit, OnDestroy {
     this.subscriptions.push(
       this.bankStatementViewerService.uploadFile(file).subscribe(
         (response: any) => {
+          // Sauvegarder le relevé bancaire original avant transformation
+          this.originalReleveBancaire = JSON.parse(JSON.stringify(response));
+
           this.releveBancaire = response;
           //this.releveBancaire.dataFileContent = 'chaine vide ';
-          // sauvegarder le relevé bancaire original
-          this.originalReleveBancaire = JSON.parse(JSON.stringify(response));
+
           // Initialisation de showFullText
           this.showFullText = new Array(this.releveBancaire.extraits.length)
             .fill(true)
             .map(() => []);
 
+          // Maintenant on peut transformer les dates
           this.releveBancaire.extraits = this.releveBancaire.extraits.map(
             (extrait: any, i: number) => {
               extrait.dateExtrait = this.datePipe.transform(

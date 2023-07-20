@@ -133,7 +133,8 @@
                   type="date"
                   id="dateExtrait{{ i }}"
                   name="dateExtrait{{ i }}"
-                  [(ngModel)]="extrait.dateExtrait"
+                  [ngModel]="extrait.dateExtrait | date : 'yyyy-MM-dd'"
+                  (ngModelChange)="extrait.dateExtrait = $event"
                   required
                 />
               </div>
@@ -151,7 +152,12 @@
                   type="date"
                   id="dateDuSoldeCrediteurDebutMois{{ i }}"
                   name="dateDuSoldeCrediteurDebutMois{{ i }}"
-                  [(ngModel)]="extrait.dateDuSoldeCrediteurDebutMois"
+                  [ngModel]="
+                    extrait.dateDuSoldeCrediteurDebutMois | date : 'yyyy-MM-dd'
+                  "
+                  (ngModelChange)="
+                    extrait.dateDuSoldeCrediteurDebutMois = $event
+                  "
                   required
                 />
               </div>
@@ -187,7 +193,12 @@
                   type="date"
                   id="dateDuSoldeCrediteurFinMois{{ i }}"
                   name="dateDuSoldeCrediteurFinMois{{ i }}"
-                  [(ngModel)]="extrait.dateDuSoldeCrediteurFinMois"
+                  [ngModel]="
+                    extrait.dateDuSoldeCrediteurFinMois | date : 'yyyy-MM-dd'
+                  "
+                  (ngModelChange)="
+                    extrait.dateDuSoldeCrediteurFinMois = toDate($event)
+                  "
                   required
                 />
               </div>
