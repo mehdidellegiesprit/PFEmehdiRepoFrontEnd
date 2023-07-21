@@ -144,6 +144,11 @@ export class BankStatementUploadComponent implements OnInit, OnDestroy {
     console.log('onConfirmAll was called');
     console.log(this.releveBancaire);
     console.log('front end pour lajout dune socoete');
+
+
+
+
+    
     this.bankStatementViewerService
       .ajouterReleverBancaire(this.releveBancaire)
       .subscribe(
