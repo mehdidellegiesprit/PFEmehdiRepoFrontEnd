@@ -280,7 +280,7 @@
                     required
                   />
                   <span *ngIf="!donnee.editing">{{
-                    donnee.dateDonneeExtrait
+                    donnee.dateDonneeExtrait | date : "yyyy-MM-dd"
                   }}</span>
                 </td>
                 <td>
@@ -293,7 +293,7 @@
                     required
                   />
                   <span *ngIf="!donnee.editing">{{
-                    donnee.dateValeurDonneeExtrait
+                    donnee.dateValeurDonneeExtrait | date : "yyyy-MM-dd"
                   }}</span>
                 </td>
                 <td style="width: auto">

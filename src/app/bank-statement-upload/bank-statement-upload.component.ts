@@ -145,10 +145,6 @@ export class BankStatementUploadComponent implements OnInit, OnDestroy {
     console.log(this.releveBancaire);
     console.log('front end pour lajout dune socoete');
 
-
-
-
-    
     this.bankStatementViewerService
       .ajouterReleverBancaire(this.releveBancaire)
       .subscribe(
