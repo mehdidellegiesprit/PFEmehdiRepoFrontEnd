@@ -196,6 +196,8 @@
             </td>
           </tr>
         </table>
+        <button (click)="exportexcel()">Export to Excel</button>
+
         <app-bank-statement-table
           [data]="selectedExtrait.donneeExtraits"
           [formattedDateExtrait]="

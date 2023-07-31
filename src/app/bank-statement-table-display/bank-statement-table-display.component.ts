@@ -24,6 +24,8 @@ import { SocieteService } from '../service/societe.service';
 import { Societe } from '../model/Societe';
 import { ExtraitBancaire } from '../model/ExtraitBancaire';
 import { FullCalendarComponent } from '@fullcalendar/angular';
+import * as XLSX from 'xlsx';
+import { DonneeExtrait } from '../model/DonneeExtrait';
 
 @Component({
   selector: 'app-bank-statement-table-display',
@@ -527,5 +529,29 @@ export class BankStatementTableDisplayComponent
       }
     }
     return null;
+  }
+  exportexcel() {
+    const dataToExport = this.selectedExtrait.donneeExtraits.map(
+      (row: DonneeExtrait) => {
+        return {
+          dateDonneeExtrait: new Date(row.dateDonneeExtrait).toLocaleDateString(
+            'fr-FR'
+          ),
+          dateValeurDonneeExtrait: new Date(
+            row.dateValeurDonneeExtrait
+          ).toLocaleDateString('fr-FR'),
+          operations: row.operations.replace(/\*\*\*/g, '\n'), // Remplace "***" par "\n"
+          debit: row.debit,
+          credit: row.credit,
+        };
+      }
+    );
+
+    const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(dataToExport, {
+      cellStyles: true,
+    });
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+    XLSX.writeFile(wb, 'export.xlsx');
   }
 }
