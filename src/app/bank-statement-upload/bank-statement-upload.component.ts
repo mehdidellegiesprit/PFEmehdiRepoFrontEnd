@@ -9,6 +9,7 @@ import { DatePipe } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
 import { SocieteService } from '../service/societe.service';
+import Swal, { SweetAlertIcon } from 'sweetalert2';
 
 @Component({
   selector: 'app-bank-statement-upload',
@@ -22,6 +23,7 @@ export class BankStatementUploadComponent implements OnInit, OnDestroy {
   public showFullText: boolean[][] = [];
   public fileUploaded: boolean = false;
   public isLoading: boolean = false; // Ajout de la propriété
+  public showError: boolean[][] = [];
 
   constructor(
     private societeService: SocieteService,
@@ -70,6 +72,15 @@ export class BankStatementUploadComponent implements OnInit, OnDestroy {
             .fill(true)
             .map(() => []);
 
+          // Initialisation de showError
+          this.showError = new Array(this.releveBancaire.extraits.length)
+            .fill(false)
+            .map(() =>
+              new Array(
+                this.releveBancaire.extraits[0].donneeExtraits.length
+              ).fill(false)
+            );
+
           // Maintenant on peut transformer les dates
           this.releveBancaire.extraits = this.releveBancaire.extraits.map(
             (extrait: any, i: number) => {
@@ -104,6 +115,7 @@ export class BankStatementUploadComponent implements OnInit, OnDestroy {
               return extrait;
             }
           );
+
           console.log('response=', this.releveBancaire);
           console.log('done brooooo');
           // On désactive le spinner de chargement une fois le traitement terminé
@@ -127,11 +139,24 @@ export class BankStatementUploadComponent implements OnInit, OnDestroy {
   }
 
   public saveRow(i: number, j: number): void {
-    this.releveBancaire.extraits[i].donneeExtraits[j].editing = false;
-    // Ici, vous pourriez sauvegarder les modifications dans la base de données ou ailleurs
+    const donnee = this.releveBancaire.extraits[i].donneeExtraits[j];
+
+    const debit = Number(donnee.debit);
+    const credit = Number(donnee.credit);
+
+    if (debit === 0 && credit === 0) {
+      // Afficher une erreur et retourner pour arrêter le processus de sauvegarde
+      this.showError[i][j] = true;
+      return;
+    }
+
+    this.showError[i][j] = false; // reset the error flag if the inputs are valid
+    donnee.editing = false;
+    // Continuez avec le processus de sauvegarde
     console.log('saveRow');
     console.log(this.releveBancaire);
   }
+
   public cancelAll(): void {
     console.log('cancelAll was called******');
     this.releveBancaire = JSON.parse(
@@ -160,6 +185,38 @@ export class BankStatementUploadComponent implements OnInit, OnDestroy {
         }
       );
   }
+
+  async showInformation(message: string) {
+    console.log('showInformation', message);
+
+    let title = 'Information';
+    let text = message;
+    let icon: SweetAlertIcon = 'info';
+
+    if (
+      message ===
+      "Voulez-vous vraiment confirmer l enregistrement du Relevé bancaire ?"
+    ) {
+      title = "Confirmer l'enregistrement";
+      text = 'En confirmant, Le Releve Bancaire sera sauvegardées dans la BD !';
+      icon = 'warning';
+    } else if (
+      message === 'Voulez-vous vraiment annuler toutes les modifications ?'
+    ) {
+      title = 'Annulation de modifications';
+      text = "Vous êtes sur le point d'annuler toutes les modifications!.";
+      icon = 'error';
+    }
+
+    await Swal.fire({
+      title: title,
+      text: text,
+      icon: icon,
+      confirmButtonColor: '#3085d6',
+      confirmButtonText: 'OK',
+    });
+  }
+
   openConfirmationDialog(action: Function, message: string) {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       width: '20%',
@@ -174,7 +231,14 @@ export class BankStatementUploadComponent implements OnInit, OnDestroy {
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         console.log('Yes clicked');
-        action();
+        this.showInformation(message)
+          .then(() => {
+            console.log('SweetAlert confirmé');
+            action();
+          })
+          .catch(() => {
+            console.log("Erreur lors de l'exécution de SweetAlert");
+          });
       }
     });
   }

@@ -40,38 +40,7 @@
           <h1>Formulaire de confirmation d'un Relevé Bancaire</h1>
         </div>
         <!-- a supprimer bro -->
-
-        <div class="container-confirmer">
-          <button
-            (click)="
-              openConfirmationDialog(
-                onConfirmAll.bind(this),
-                'Voulez-vous vraiment confirmer toutes les modifications ?'
-              );
-              $event.preventDefault()
-            "
-            class="btn btn-primary btn-edit"
-            style="margin-right: 20px"
-          >
-            <i class="fas fa-check"></i>
-            Confirmer &nbsp;&nbsp;
-          </button>
-
-          <button
-            (click)="
-              openConfirmationDialog(
-                cancelAll.bind(this),
-                'Voulez-vous vraiment annuler toutes les modifications ?'
-              );
-              $event.preventDefault()
-            "
-            class="btn btn-edit"
-            style="background-color: red"
-          >
-            <i class="fas fa-times"></i>
-            Annuler
-          </button>
-        </div>
+        <!-- ceci les bouttons -->
         <!-- a supprimer bro  -->
         <div *ngIf="releveBancaire">
           <div class="form-group row">
@@ -79,42 +48,83 @@
               >Nom de la banque:</label
             >
             <div class="col-sm-10">
-              <input
-                class="form-control"
-                type="text"
-                id="nomBank"
-                name="nomBank"
-                [(ngModel)]="releveBancaire.nomBank"
-                required
-              />
+              <div>
+                <input
+                  class="form-control"
+                  type="text"
+                  id="nomBank"
+                  name="nomBank"
+                  [(ngModel)]="releveBancaire.nomBank"
+                  required
+                  #nomBankRef="ngModel"
+                />
+                <div
+                  *ngIf="
+                    nomBankRef.errors &&
+                    nomBankRef.errors['required'] &&
+                    nomBankRef.touched
+                  "
+                  class="text-danger error-message"
+                >
+                  Le nom de la banque est obligatoire.
+                </div>
+              </div>
             </div>
           </div>
+
           <div class="form-group row">
             <label for="iban" class="col-sm-2 col-form-label">IBAN:</label>
             <div class="col-sm-10">
-              <input
-                class="form-control"
-                type="text"
-                id="iban"
-                name="iban"
-                [(ngModel)]="releveBancaire.iban"
-                required
-              />
+              <div>
+                <input
+                  class="form-control"
+                  type="text"
+                  id="iban"
+                  name="iban"
+                  [(ngModel)]="releveBancaire.iban"
+                  required
+                  #ibanRef="ngModel"
+                />
+                <div
+                  *ngIf="
+                    ibanRef.errors &&
+                    ibanRef.errors['required'] &&
+                    ibanRef.touched
+                  "
+                  class="text-danger error-message"
+                >
+                  Le champ IBAN est obligatoire.
+                </div>
+              </div>
             </div>
           </div>
+
           <div class="form-group row">
             <label for="nom_societe" class="col-sm-2 col-form-label"
               >Nom de la société:</label
             >
             <div class="col-sm-10">
-              <input
-                class="form-control"
-                type="text"
-                id="nom_societe"
-                name="nom_societe"
-                [(ngModel)]="releveBancaire.nom_societe"
-                required
-              />
+              <div>
+                <input
+                  class="form-control"
+                  type="text"
+                  id="nom_societe"
+                  name="nom_societe"
+                  [(ngModel)]="releveBancaire.nom_societe"
+                  required
+                  #nomSocieteRef="ngModel"
+                />
+                <div
+                  *ngIf="
+                    nomSocieteRef.errors &&
+                    nomSocieteRef.errors['required'] &&
+                    nomSocieteRef.touched
+                  "
+                  class="text-danger error-message"
+                >
+                  Le nom de la société est obligatoire.
+                </div>
+              </div>
             </div>
           </div>
 
@@ -128,15 +138,28 @@
                 >Date d'extrait:</label
               >
               <div class="col-sm-10">
-                <input
-                  class="form-control"
-                  type="date"
-                  id="dateExtrait{{ i }}"
-                  name="dateExtrait{{ i }}"
-                  [ngModel]="extrait.dateExtrait | date : 'yyyy-MM-dd'"
-                  (ngModelChange)="extrait.dateExtrait = $event"
-                  required
-                />
+                <div>
+                  <input
+                    class="form-control"
+                    type="date"
+                    id="dateExtrait{{ i }}"
+                    name="dateExtrait{{ i }}"
+                    [ngModel]="extrait.dateExtrait | date : 'yyyy-MM-dd'"
+                    (ngModelChange)="extrait.dateExtrait = $event"
+                    required
+                    #dateExtraitRef="ngModel"
+                  />
+                  <div
+                    *ngIf="
+                      dateExtraitRef.errors &&
+                      dateExtraitRef.errors['required'] &&
+                      dateExtraitRef.touched
+                    "
+                    class="text-danger error-message"
+                  >
+                    La date d'extrait est obligatoire.
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -144,25 +167,39 @@
               <label
                 for="dateDuSoldeCrediteurDebutMois{{ i }}"
                 class="col-sm-2 col-form-label"
-                >Date du solde créditeur début mois:</label
               >
+                Date du solde créditeur début mois:
+              </label>
               <div class="col-sm-10">
-                <input
-                  class="form-control"
-                  type="date"
-                  id="dateDuSoldeCrediteurDebutMois{{ i }}"
-                  name="dateDuSoldeCrediteurDebutMois{{ i }}"
-                  [ngModel]="
-                    extrait.dateDuSoldeCrediteurDebutMois | date : 'yyyy-MM-dd'
-                  "
-                  (ngModelChange)="
-                    extrait.dateDuSoldeCrediteurDebutMois = $event
-                  "
-                  required
-                />
+                <div>
+                  <input
+                    class="form-control"
+                    type="date"
+                    id="dateDuSoldeCrediteurDebutMois{{ i }}"
+                    name="dateDuSoldeCrediteurDebutMois{{ i }}"
+                    [ngModel]="
+                      extrait.dateDuSoldeCrediteurDebutMois
+                        | date : 'yyyy-MM-dd'
+                    "
+                    (ngModelChange)="
+                      extrait.dateDuSoldeCrediteurDebutMois = $event
+                    "
+                    required
+                    #soldeCrediteurRef="ngModel"
+                  />
+                  <div
+                    *ngIf="
+                      soldeCrediteurRef.errors &&
+                      soldeCrediteurRef.errors['required'] &&
+                      soldeCrediteurRef.touched
+                    "
+                    class="text-danger error-message"
+                  >
+                    La date du solde créditeur début mois est obligatoire.
+                  </div>
+                </div>
               </div>
             </div>
-
             <div class="form-group row">
               <label
                 for="creditDuSoldeCrediteurDebutMois{{ i }}"
@@ -170,14 +207,27 @@
                 >Crédit du solde créditeur début mois:</label
               >
               <div class="col-sm-10">
-                <input
-                  class="form-control"
-                  type="text"
-                  id="creditDuSoldeCrediteurDebutMois{{ i }}"
-                  name="creditDuSoldeCrediteurDebutMois{{ i }}"
-                  [(ngModel)]="extrait.creditDuSoldeCrediteurDebutMois"
-                  required
-                />
+                <div>
+                  <input
+                    class="form-control"
+                    type="text"
+                    id="creditDuSoldeCrediteurDebutMois{{ i }}"
+                    name="creditDuSoldeCrediteurDebutMois{{ i }}"
+                    [(ngModel)]="extrait.creditDuSoldeCrediteurDebutMois"
+                    required
+                    #creditDebutRef="ngModel"
+                  />
+                  <div
+                    *ngIf="
+                      creditDebutRef.errors &&
+                      creditDebutRef.errors['required'] &&
+                      creditDebutRef.touched
+                    "
+                    class="text-danger error-message"
+                  >
+                    Le crédit du solde créditeur début mois est obligatoire.
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -188,19 +238,32 @@
                 >Date du solde créditeur fin mois:</label
               >
               <div class="col-sm-10">
-                <input
-                  class="form-control"
-                  type="date"
-                  id="dateDuSoldeCrediteurFinMois{{ i }}"
-                  name="dateDuSoldeCrediteurFinMois{{ i }}"
-                  [ngModel]="
-                    extrait.dateDuSoldeCrediteurFinMois | date : 'yyyy-MM-dd'
-                  "
-                  (ngModelChange)="
-                    extrait.dateDuSoldeCrediteurFinMois = toDate($event)
-                  "
-                  required
-                />
+                <div>
+                  <input
+                    class="form-control"
+                    type="date"
+                    id="dateDuSoldeCrediteurFinMois{{ i }}"
+                    name="dateDuSoldeCrediteurFinMois{{ i }}"
+                    [ngModel]="
+                      extrait.dateDuSoldeCrediteurFinMois | date : 'yyyy-MM-dd'
+                    "
+                    (ngModelChange)="
+                      extrait.dateDuSoldeCrediteurFinMois = toDate($event)
+                    "
+                    required
+                    #dateFinRef="ngModel"
+                  />
+                  <div
+                    *ngIf="
+                      dateFinRef.errors &&
+                      dateFinRef.errors['required'] &&
+                      dateFinRef.touched
+                    "
+                    class="text-danger error-message"
+                  >
+                    La date du solde créditeur fin mois est obligatoire.
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -211,16 +274,30 @@
                 >Crédit du solde créditeur fin mois:</label
               >
               <div class="col-sm-10">
-                <input
-                  class="form-control"
-                  type="text"
-                  id="creditDuSoldeCrediteurFinMois{{ i }}"
-                  name="creditDuSoldeCrediteurFinMois{{ i }}"
-                  [(ngModel)]="extrait.creditDuSoldeCrediteurFinMois"
-                  required
-                />
+                <div>
+                  <input
+                    class="form-control"
+                    type="text"
+                    id="creditDuSoldeCrediteurFinMois{{ i }}"
+                    name="creditDuSoldeCrediteurFinMois{{ i }}"
+                    [(ngModel)]="extrait.creditDuSoldeCrediteurFinMois"
+                    required
+                    #creditFinRef="ngModel"
+                  />
+                  <div
+                    *ngIf="
+                      creditFinRef.errors &&
+                      creditFinRef.errors['required'] &&
+                      creditFinRef.touched
+                    "
+                    class="text-danger error-message"
+                  >
+                    Le crédit du solde créditeur fin mois est obligatoire.
+                  </div>
+                </div>
               </div>
             </div>
+
             <div class="form-group row">
               <label
                 for="totalMouvementsDebit{{ i }}"
@@ -228,14 +305,27 @@
                 >Total mouvements débit:</label
               >
               <div class="col-sm-10">
-                <input
-                  class="form-control"
-                  type="text"
-                  id="totalMouvementsDebit{{ i }}"
-                  name="totalMouvementsDebit{{ i }}"
-                  [(ngModel)]="extrait.totalMouvementsDebit"
-                  required
-                />
+                <div>
+                  <input
+                    class="form-control"
+                    type="text"
+                    id="totalMouvementsDebit{{ i }}"
+                    name="totalMouvementsDebit{{ i }}"
+                    [(ngModel)]="extrait.totalMouvementsDebit"
+                    required
+                    #totalDebitRef="ngModel"
+                  />
+                  <div
+                    *ngIf="
+                      totalDebitRef.errors &&
+                      totalDebitRef.errors['required'] &&
+                      totalDebitRef.touched
+                    "
+                    class="text-danger error-message"
+                  >
+                    Le total des mouvements débit est obligatoire.
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -246,16 +336,30 @@
                 >Total mouvements crédit:</label
               >
               <div class="col-sm-10">
-                <input
-                  class="form-control"
-                  type="text"
-                  id="totalMouvementsCredit{{ i }}"
-                  name="totalMouvementsCredit{{ i }}"
-                  [(ngModel)]="extrait.totalMouvementsCredit"
-                  required
-                />
+                <div>
+                  <input
+                    class="form-control"
+                    type="text"
+                    id="totalMouvementsCredit{{ i }}"
+                    name="totalMouvementsCredit{{ i }}"
+                    [(ngModel)]="extrait.totalMouvementsCredit"
+                    required
+                    #totalCreditRef="ngModel"
+                  />
+                  <div
+                    *ngIf="
+                      totalCreditRef.errors &&
+                      totalCreditRef.errors['required'] &&
+                      totalCreditRef.touched
+                    "
+                    class="text-danger error-message"
+                  >
+                    Le total des mouvements crédit est obligatoire.
+                  </div>
+                </div>
               </div>
             </div>
+
             <h2 class="text-center">Tableau des opérations bancaires</h2>
             <p>
               Ce tableau présente un résumé de toutes vos opérations bancaires
@@ -346,6 +450,10 @@
                     required
                   />
                   <span *ngIf="!donnee.editing">{{ donnee.debit }}</span>
+                  <span *ngIf="showError[i][j]" class="error-message">
+                    Le débit et le crédit ne peuvent pas être tous les deux 0 en
+                    même temps!
+                  </span>
                 </td>
                 <td>
                   <input
@@ -356,7 +464,12 @@
                     required
                   />
                   <span *ngIf="!donnee.editing">{{ donnee.credit }}</span>
+                  <span *ngIf="showError[i][j]" class="error-message">
+                    Le débit et le crédit ne peuvent pas être tous les deux 0 en
+                    même temps!
+                  </span>
                 </td>
+
                 <td>
                   <button *ngIf="!donnee.editing" (click)="editRow(i, j)">
                     <i class="fal fa-edit" style="color: #00ffff"></i>
@@ -370,20 +483,21 @@
               </tr>
             </table>
           </div>
-          <!-- <div class="container-confirmer">
+          <div class="container-confirmer">
             <button
               (click)="
                 openConfirmationDialog(
                   onConfirmAll.bind(this),
-                  'Voulez-vous vraiment confirmer toutes les modifications ?'
+                  'Voulez-vous vraiment confirmer l enregistrement du Relevé bancaire ?'
                 );
                 $event.preventDefault()
               "
               class="btn btn-primary btn-edit"
               style="margin-right: 20px"
+              [disabled]="releveBancaireForm.invalid"
             >
               <i class="fas fa-check"></i>
-              Confirmer
+              Confirmer &nbsp;&nbsp;
             </button>
 
             <button
@@ -400,7 +514,7 @@
               <i class="fas fa-times"></i>
               Annuler
             </button>
-          </div> -->
+          </div>
         </div>
       </form>
     </div>
