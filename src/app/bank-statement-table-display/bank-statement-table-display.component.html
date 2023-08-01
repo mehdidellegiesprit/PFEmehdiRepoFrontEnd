@@ -196,7 +196,10 @@
             </td>
           </tr>
         </table>
-        <button (click)="exportexcel()">Export to Excel</button>
+        <!-- <button (click)="exportexcel()">Export to Excel</button> -->
+        <button mat-raised-button color="primary" (click)="openDialog()">
+          Ouvrir le filtre
+        </button>
 
         <app-bank-statement-table
           [data]="selectedExtrait.donneeExtraits"

@@ -1,0 +1,84 @@
+<h1 mat-dialog-title>Filtres</h1>
+
+<div mat-dialog-content>
+  <h2>Date</h2>
+  <mat-form-field appearance="fill">
+    <mat-label>Choisir une plage de dates</mat-label>
+    <mat-date-range-input [rangePicker]="picker">
+      <input
+        matStartDate
+        placeholder="Date de début"
+        [(ngModel)]="data.startDate"
+      />
+      <input matEndDate placeholder="Date de fin" [(ngModel)]="data.endDate" />
+    </mat-date-range-input>
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-date-range-picker #picker></mat-date-range-picker>
+  </mat-form-field>
+
+  <h2>Date valeur</h2>
+  <mat-form-field appearance="fill">
+    <mat-label>Choisir une plage de dates de valeur</mat-label>
+    <mat-date-range-input [rangePicker]="picker2">
+      <input
+        matStartDate
+        placeholder="Date de début de valeur"
+        [(ngModel)]="data.startDateValeur"
+      />
+      <input
+        matEndDate
+        placeholder="Date de fin de valeur"
+        [(ngModel)]="data.endDateValeur"
+      />
+    </mat-date-range-input>
+    <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+    <mat-date-range-picker #picker2></mat-date-range-picker>
+  </mat-form-field>
+
+  <h2>Débit</h2>
+  <mat-label>Débit minimum</mat-label>
+  <mat-slider
+    [(ngModel)]="data.minDebit"
+    min="0"
+    max="10000"
+    step="10"
+  ></mat-slider>
+
+  <mat-label>Débit maximum</mat-label>
+  <mat-slider
+    [(ngModel)]="data.maxDebit"
+    min="0"
+    max="10000"
+    step="10"
+  ></mat-slider>
+
+  <h2>Crédit</h2>
+  <mat-label>Crédit minimum</mat-label>
+  <mat-slider
+    [(ngModel)]="data.minCredit"
+    min="0"
+    max="10000"
+    step="10"
+  ></mat-slider>
+
+  <mat-label>Crédit maximum</mat-label>
+  <mat-slider
+    [(ngModel)]="data.maxCredit"
+    min="0"
+    max="10000"
+    step="10"
+  ></mat-slider>
+
+  <h2>Opération</h2>
+  <mat-form-field>
+    <mat-label>Entrer une opération</mat-label>
+    <input matInput [(ngModel)]="data.operation" placeholder="Opération" />
+  </mat-form-field>
+</div>
+
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">Annuler</button>
+  <button mat-button [mat-dialog-close]="data" cdkFocusInitial>
+    Appliquer
+  </button>
+</div>

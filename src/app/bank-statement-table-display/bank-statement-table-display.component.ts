@@ -26,6 +26,11 @@ import { ExtraitBancaire } from '../model/ExtraitBancaire';
 import { FullCalendarComponent } from '@fullcalendar/angular';
 import * as XLSX from 'xlsx';
 import { DonneeExtrait } from '../model/DonneeExtrait';
+import {
+  DialogData,
+  FilterDialogComponent,
+} from '../filter-dialog/filter-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-bank-statement-table-display',
@@ -74,7 +79,8 @@ export class BankStatementTableDisplayComponent
     private societeService: SocieteService,
     private renderer: Renderer2,
     private el: ElementRef,
-    private changeDetectorRef: ChangeDetectorRef
+    private changeDetectorRef: ChangeDetectorRef,
+    public dialog: MatDialog
   ) {}
 
   getDistinctExtraitYears(): number[] {
@@ -530,19 +536,20 @@ export class BankStatementTableDisplayComponent
     }
     return null;
   }
-  exportexcel() {
+
+  exportexcel(): void {
     const dataToExport = this.selectedExtrait.donneeExtraits.map(
       (row: DonneeExtrait) => {
         return {
-          dateDonneeExtrait: new Date(row.dateDonneeExtrait).toLocaleDateString(
+          'date extrait': new Date(row.dateDonneeExtrait).toLocaleDateString(
             'fr-FR'
           ),
-          dateValeurDonneeExtrait: new Date(
+          'date valeur extrait': new Date(
             row.dateValeurDonneeExtrait
           ).toLocaleDateString('fr-FR'),
-          operations: row.operations.replace(/\*\*\*/g, '\n'), // Remplace "***" par "\n"
-          debit: row.debit,
-          credit: row.credit,
+          opérations: row.operations.replace(/\*\*\*/g, '\n'),
+          '                         débit (€)': row.debit,
+          '                        crédit (€)': row.credit,
         };
       }
     );
@@ -550,8 +557,59 @@ export class BankStatementTableDisplayComponent
     const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(dataToExport, {
       cellStyles: true,
     });
+
+    // Ajustement automatique de la largeur des colonnes
+    const wscols = [
+      { wch: 20 }, // 'dateDonneeExtrait' column
+      { wch: 20 }, // 'dateValeurDonneeExtrait' column
+      { wch: 60 }, // 'operations' column
+      { wch: 20 }, // 'debit' column
+      { wch: 20 }, // 'credit' column
+    ];
+
+    ws['!cols'] = wscols;
+
     const wb: XLSX.WorkBook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-    XLSX.writeFile(wb, 'export.xlsx');
+
+    // Obtenir la date et l'heure actuelles
+    const date = new Date();
+    const year = date.getFullYear();
+    const month = ('0' + (date.getMonth() + 1)).slice(-2); // Ajout d'un zéro initial si nécessaire
+    const day = ('0' + date.getDate()).slice(-2); // Ajout d'un zéro initial si nécessaire
+    const hours = ('0' + date.getHours()).slice(-2); // Ajout d'un zéro initial si nécessaire
+    const minutes = ('0' + date.getMinutes()).slice(-2); // Ajout d'un zéro initial si nécessaire
+    const seconds = ('0' + date.getSeconds()).slice(-2); // Ajout d'un zéro initial si nécessaire
+
+    // Créer un nom de fichier unique en utilisant la date et l'heure actuelles
+    const filename = `export_${year}-${month}-${day}_${hours}-${minutes}-${seconds}.xlsx`;
+
+    XLSX.writeFile(wb, filename);
+  }
+
+  openDialog(): void {
+    const dialogRef = this.dialog.open<FilterDialogComponent, DialogData>(
+      FilterDialogComponent,
+      {
+        width: '80%',
+        height: '70%', // la boîte de dialogue prendra 80% de la hauteur de l'écran
+        data: {
+          startDate: new Date(),
+          endDate: new Date(),
+          startDateValeur: new Date(),
+          endDateValeur: new Date(),
+          minDebit: 0,
+          maxDebit: 0,
+          minCredit: 0,
+          maxCredit: 0,
+          operation: '', // valeur par défaut pour operation
+        },
+      }
+    );
+
+    dialogRef.afterClosed().subscribe((result) => {
+      console.log('La fenêtre modale a été fermée');
+      // Utilisez "result" pour appliquer les filtres
+    });
   }
 }

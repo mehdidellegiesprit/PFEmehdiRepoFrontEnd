@@ -4,8 +4,10 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatDatepickerModule } from '@angular/material/datepicker'; // Nouveau
-import { MatNativeDateModule } from '@angular/material/core'; // Nouveau
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatSliderModule } from '@angular/material/slider'; // Nouveau
+import { MatCheckboxModule } from '@angular/material/checkbox'; // Nouveau
 
 @NgModule({
   exports: [
@@ -14,8 +16,10 @@ import { MatNativeDateModule } from '@angular/material/core'; // Nouveau
     MatSortModule,
     MatFormFieldModule,
     MatInputModule,
-    MatDatepickerModule, // Nouveau
-    MatNativeDateModule, // Nouveau
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatSliderModule, // Nouveau
+    MatCheckboxModule, // Nouveau
   ],
 })
 export class MaterialModule {}

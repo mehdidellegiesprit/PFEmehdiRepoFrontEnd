@@ -51,6 +51,11 @@ import { registerLocaleData } from '@angular/common';
 import { BankStatementUploadComponent } from './bank-statement-upload/bank-statement-upload.component';
 import { SplitPipe } from './pipe/split.pipe';
 import { ConfirmationDialogComponent } from './confirmation-dialog/confirmation-dialog.component';
+import { FilterDialogComponent } from './filter-dialog/filter-dialog.component';
+import { MatSliderModule } from '@angular/material/slider';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+
 registerLocaleData(localeFr, 'fr-FR');
 
 export function MSALInstanceFactory(): IPublicClientApplication {
@@ -75,6 +80,7 @@ export function MSALInstanceFactory(): IPublicClientApplication {
     ReplacePipe,
     SplitPipe,
     ConfirmationDialogComponent,
+    FilterDialogComponent,
   ],
   imports: [
     NotificationModule,
@@ -96,6 +102,9 @@ export function MSALInstanceFactory(): IPublicClientApplication {
     MatCheckboxModule,
     AngularFireStorageModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
+    MatSliderModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
   ],
   providers: [
     DatePipe,
