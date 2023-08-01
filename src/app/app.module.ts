@@ -55,6 +55,7 @@ import { FilterDialogComponent } from './filter-dialog/filter-dialog.component';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import { Ng5SliderModule } from 'ng5-slider';
 
 registerLocaleData(localeFr, 'fr-FR');
 
@@ -105,6 +106,7 @@ export function MSALInstanceFactory(): IPublicClientApplication {
     MatSliderModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    Ng5SliderModule,
   ],
   providers: [
     DatePipe,

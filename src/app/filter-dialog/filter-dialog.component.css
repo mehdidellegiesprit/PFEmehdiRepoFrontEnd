@@ -1,0 +1,90 @@
+.dialog-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.filter-section {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.filter-input,
+.slider-container {
+  width: 60%;
+  margin-left: 20px;
+}
+
+.filter-label {
+  width: 20%;
+}
+
+.slider-container .ng5-slider {
+  height: 36px;
+}
+
+.mat-dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.mat-dialog-actions button {
+  margin-left: 10px;
+}
+
+::ng-deep .ng5-slider .ng5-slider-bar {
+  background-color: #e0e0e0;
+  height: 10px;
+  border-radius: 5px;
+}
+
+::ng-deep .ng5-slider .ng5-slider-pointer {
+  width: 1em;
+  height: 1em;
+  background-color: #007bff;
+  border: none;
+}
+
+::ng-deep .ng5-slider .ng5-slider-tick {
+  background-color: #007bff;
+  height: 10px;
+  width: 2px;
+}
+
+::ng-deep .ng5-slider .ng5-slider-selection {
+  background-color: #007bff;
+}
+
+::ng-deep .ng5-slider .ng5-slider-limit {
+  color: #007bff;
+}
+
+::ng-deep .ng5-slider .ng5-slider-legend {
+  width: 100%;
+  font-size: 0.8em;
+  box-sizing: border-box;
+  padding: 0 1em;
+  color: #007bff;
+}
+
+::ng-deep .ng5-slider .ng5-slider-legend .ng5-slider-legend-value {
+  display: inline-block;
+  width: 3em;
+}
+
+::ng-deep .ng5-slider .ng5-slider-legend .ng5-slider-legend-value.first {
+  text-align: left;
+}
+
+::ng-deep .ng5-slider .ng5-slider-legend .ng5-slider-legend-value.last {
+  text-align: right;
+}
+
+.slider-container {
+  padding: 20px 0;
+}

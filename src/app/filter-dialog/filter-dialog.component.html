@@ -1,79 +1,85 @@
 <h1 mat-dialog-title>Filtres</h1>
 
-<div mat-dialog-content>
-  <h2>Date</h2>
-  <mat-form-field appearance="fill">
-    <mat-label>Choisir une plage de dates</mat-label>
-    <mat-date-range-input [rangePicker]="picker">
+<div mat-dialog-content class="dialog-container">
+  <div class="filter-section">
+    <label class="filter-label">Date</label>
+    <mat-form-field appearance="fill" class="filter-input">
+      <mat-label>Choisir une plage de dates</mat-label>
+      <mat-date-range-input [rangePicker]="picker">
+        <input
+          matStartDate
+          placeholder="Date de début"
+          [(ngModel)]="data.startDate"
+        />
+        <input
+          matEndDate
+          placeholder="Date de fin"
+          [(ngModel)]="data.endDate"
+        />
+      </mat-date-range-input>
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-date-range-picker #picker></mat-date-range-picker>
+    </mat-form-field>
+  </div>
+
+  <div class="filter-section">
+    <label class="filter-label">Date valeur</label>
+    <mat-form-field appearance="fill" class="filter-input">
+      <mat-label>Choisir une plage de dates de valeur</mat-label>
+      <mat-date-range-input [rangePicker]="picker2">
+        <input
+          matStartDate
+          placeholder="Date de début de valeur"
+          [(ngModel)]="data.startDateValeur"
+        />
+        <input
+          matEndDate
+          placeholder="Date de fin de valeur"
+          [(ngModel)]="data.endDateValeur"
+        />
+      </mat-date-range-input>
+      <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+      <mat-date-range-picker #picker2></mat-date-range-picker>
+    </mat-form-field>
+  </div>
+
+  <div class="filter-section">
+    <label class="filter-label" for="debit-slider">Débit</label>
+    <div class="slider-container">
+      <ng5-slider
+        id="debit-slider"
+        [(value)]="data.minDebit"
+        [(highValue)]="data.maxDebit"
+        [options]="options"
+      >
+      </ng5-slider>
+    </div>
+  </div>
+
+  <div class="filter-section">
+    <label class="filter-label" for="credit-slider">Crédit</label>
+    <div class="slider-container">
+      <ng5-slider
+        id="credit-slider"
+        [(value)]="data.minCredit"
+        [(highValue)]="data.maxCredit"
+        [options]="options"
+      >
+      </ng5-slider>
+    </div>
+  </div>
+
+  <div class="filter-section">
+    <label class="filter-label">Opération</label>
+    <mat-form-field class="filter-input">
+      <mat-label>Entrer des mots clés</mat-label>
       <input
-        matStartDate
-        placeholder="Date de début"
-        [(ngModel)]="data.startDate"
+        matInput
+        [(ngModel)]="data.operation"
+        placeholder="Entrer des mots clés"
       />
-      <input matEndDate placeholder="Date de fin" [(ngModel)]="data.endDate" />
-    </mat-date-range-input>
-    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-    <mat-date-range-picker #picker></mat-date-range-picker>
-  </mat-form-field>
-
-  <h2>Date valeur</h2>
-  <mat-form-field appearance="fill">
-    <mat-label>Choisir une plage de dates de valeur</mat-label>
-    <mat-date-range-input [rangePicker]="picker2">
-      <input
-        matStartDate
-        placeholder="Date de début de valeur"
-        [(ngModel)]="data.startDateValeur"
-      />
-      <input
-        matEndDate
-        placeholder="Date de fin de valeur"
-        [(ngModel)]="data.endDateValeur"
-      />
-    </mat-date-range-input>
-    <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-    <mat-date-range-picker #picker2></mat-date-range-picker>
-  </mat-form-field>
-
-  <h2>Débit</h2>
-  <mat-label>Débit minimum</mat-label>
-  <mat-slider
-    [(ngModel)]="data.minDebit"
-    min="0"
-    max="10000"
-    step="10"
-  ></mat-slider>
-
-  <mat-label>Débit maximum</mat-label>
-  <mat-slider
-    [(ngModel)]="data.maxDebit"
-    min="0"
-    max="10000"
-    step="10"
-  ></mat-slider>
-
-  <h2>Crédit</h2>
-  <mat-label>Crédit minimum</mat-label>
-  <mat-slider
-    [(ngModel)]="data.minCredit"
-    min="0"
-    max="10000"
-    step="10"
-  ></mat-slider>
-
-  <mat-label>Crédit maximum</mat-label>
-  <mat-slider
-    [(ngModel)]="data.maxCredit"
-    min="0"
-    max="10000"
-    step="10"
-  ></mat-slider>
-
-  <h2>Opération</h2>
-  <mat-form-field>
-    <mat-label>Entrer une opération</mat-label>
-    <input matInput [(ngModel)]="data.operation" placeholder="Opération" />
-  </mat-form-field>
+    </mat-form-field>
+  </div>
 </div>
 
 <div mat-dialog-actions>
