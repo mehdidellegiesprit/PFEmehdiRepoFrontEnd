@@ -588,24 +588,49 @@ export class BankStatementTableDisplayComponent
   }
 
   openDialog(): void {
-    const dialogRef = this.dialog.open<FilterDialogComponent, DialogData>(
-      FilterDialogComponent,
-      {
-        width: '80%',
-        height: '70%', // la boîte de dialogue prendra 80% de la hauteur de l'écran
-        data: {
-          startDate: new Date(),
-          endDate: new Date(),
-          startDateValeur: new Date(),
-          endDateValeur: new Date(),
-          minDebit: 0,
-          maxDebit: 0,
-          minCredit: 0,
-          maxCredit: 0,
-          operation: '', // valeur par défaut pour operation
-        },
-      }
-    );
+    let data = {
+      startDate: null as Date | null,
+      endDate: null as Date | null,
+      startDateValeur: null as Date | null,
+      endDateValeur: null as Date | null,
+      debitMin: 0,
+      debitMax: 0,
+      creditMin: 0,
+      creditMax: 0,
+      operation: '',
+    };
+
+    if (this.selectedExtrait) {
+      data = {
+        startDate: this.selectedExtrait.dateDuSoldeCrediteurDebutMois,
+        endDate: this.selectedExtrait.dateDuSoldeCrediteurFinMois,
+        startDateValeur:
+          this.selectedExtrait.donneeExtraits[0].dateValeurDonneeExtrait,
+        endDateValeur:
+          this.selectedExtrait.donneeExtraits[
+            this.selectedExtrait.donneeExtraits.length - 1
+          ].dateValeurDonneeExtrait,
+        debitMin: Math.min(
+          ...this.selectedExtrait.donneeExtraits.map((de) => de.debit)
+        ),
+        debitMax: Math.max(
+          ...this.selectedExtrait.donneeExtraits.map((de) => de.debit)
+        ),
+        creditMin: Math.min(
+          ...this.selectedExtrait.donneeExtraits.map((de) => de.credit)
+        ),
+        creditMax: Math.max(
+          ...this.selectedExtrait.donneeExtraits.map((de) => de.credit)
+        ),
+        operation: '',
+      };
+    }
+
+    const dialogRef = this.dialog.open(FilterDialogComponent, {
+      width: '45%',
+      height: '50%',
+      data: data,
+    });
 
     dialogRef.afterClosed().subscribe((result) => {
       console.log('La fenêtre modale a été fermée');

@@ -44,42 +44,89 @@
   </div>
 
   <div class="filter-section">
-    <label class="filter-label" for="debit-slider">Débit</label>
-    <div class="slider-container">
-      <ng5-slider
-        id="debit-slider"
-        [(value)]="data.minDebit"
-        [(highValue)]="data.maxDebit"
-        [options]="options"
+    <label class="filter-label">Débit</label>
+    <div
+      class="filter-inputs"
+      style="display: flex; justify-content: space-between"
+    >
+      <mat-form-field
+        appearance="fill"
+        class="filter-input"
+        style="flex: 1; margin-right: 10px"
       >
-      </ng5-slider>
+        <mat-label>Minimum</mat-label>
+        <input
+          matInput
+          [(ngModel)]="data.debitMin"
+          type="number"
+          placeholder="Entrer le montant minimum"
+        />
+      </mat-form-field>
+      <mat-form-field
+        appearance="fill"
+        class="filter-input"
+        style="flex: 1; margin-left: 10px"
+      >
+        <mat-label>Maximum</mat-label>
+        <input
+          matInput
+          [(ngModel)]="data.debitMax"
+          type="number"
+          placeholder="Entrer le montant maximum"
+        />
+      </mat-form-field>
     </div>
   </div>
 
   <div class="filter-section">
-    <label class="filter-label" for="credit-slider">Crédit</label>
-    <div class="slider-container">
-      <ng5-slider
-        id="credit-slider"
-        [(value)]="data.minCredit"
-        [(highValue)]="data.maxCredit"
-        [options]="options"
+    <label class="filter-label">Crédit</label>
+    <div
+      class="filter-inputs"
+      style="display: flex; justify-content: space-between"
+    >
+      <mat-form-field
+        appearance="fill"
+        class="filter-input"
+        style="flex: 1; margin-right: 10px"
       >
-      </ng5-slider>
+        <mat-label>Minimum</mat-label>
+        <input
+          matInput
+          [(ngModel)]="data.creditMin"
+          type="number"
+          placeholder="Entrer le montant minimum"
+        />
+      </mat-form-field>
+      <mat-form-field
+        appearance="fill"
+        class="filter-input"
+        style="flex: 1; margin-left: 10px"
+      >
+        <mat-label>Maximum</mat-label>
+        <input
+          matInput
+          [(ngModel)]="data.creditMax"
+          type="number"
+          placeholder="Entrer le montant maximum"
+        />
+      </mat-form-field>
     </div>
   </div>
-
+  <!-- Ajout du bloc pour les opérations -->
   <div class="filter-section">
-    <label class="filter-label">Opération</label>
-    <mat-form-field class="filter-input">
+    <label class="filter-label">Opérations</label>
+    <mat-form-field appearance="fill" class="filter-input">
       <mat-label>Entrer des mots clés</mat-label>
       <input
         matInput
         [(ngModel)]="data.operation"
+        type="text"
         placeholder="Entrer des mots clés"
       />
     </mat-form-field>
   </div>
+
+  <!-- Le reste de votre HTML ... -->
 </div>
 
 <div mat-dialog-actions>
