@@ -537,34 +537,187 @@ export class BankStatementTableDisplayComponent
     return null;
   }
 
-  exportexcel(): void {
-    const dataToExport = this.selectedExtrait.donneeExtraits.map(
-      (row: DonneeExtrait) => {
-        return {
-          'date extrait': new Date(row.dateDonneeExtrait).toLocaleDateString(
-            'fr-FR'
-          ),
-          'date valeur extrait': new Date(
-            row.dateValeurDonneeExtrait
-          ).toLocaleDateString('fr-FR'),
-          opérations: row.operations.replace(/\*\*\*/g, '\n'),
-          '                         débit (€)': row.debit,
-          '                        crédit (€)': row.credit,
-        };
-      }
+  exportexcel(filters: any): void {
+    console.log(
+      'Initial data.length:',
+      this.selectedExtrait.donneeExtraits.length
     );
 
-    const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(dataToExport, {
+    let dataToExport: DonneeExtrait[] = [
+      ...this.selectedExtrait.donneeExtraits,
+    ];
+
+    // Convertir les filtres en instances de Date si nécessaire
+    const startDate =
+      filters.startDate !== undefined
+        ? new Date(
+            filters.startDate instanceof Date
+              ? filters.startDate
+              : new Date(filters.startDate)
+          ).setHours(0, 0, 0, 0)
+        : null;
+    const endDate =
+      filters.endDate !== undefined
+        ? new Date(
+            filters.endDate instanceof Date
+              ? filters.endDate
+              : new Date(filters.endDate)
+          ).setHours(24, 0, 0, 0) // change to 24
+        : null;
+
+    const startDateValeur =
+      filters.startDateValeur !== undefined
+        ? new Date(
+            filters.startDateValeur instanceof Date
+              ? filters.startDateValeur
+              : new Date(filters.startDateValeur)
+          ).setHours(0, 0, 0, 0)
+        : null;
+    const endDateValeur =
+      filters.endDateValeur !== undefined
+        ? new Date(
+            filters.endDateValeur instanceof Date
+              ? filters.endDateValeur
+              : new Date(filters.endDateValeur)
+          ).setHours(23, 59, 59, 999)
+        : null;
+
+    // Ajouter ces lignes pour afficher les dates converties
+    console.log('startDate:', startDate);
+    console.log('endDate:', endDate);
+    console.log('startDateValeur:', startDateValeur);
+    console.log('endDateValeur:', endDateValeur);
+    // Appliquer les filtres en fonction des valeurs de `filters`
+
+    if (startDate !== null) {
+      dataToExport = dataToExport.filter(
+        (row: DonneeExtrait) =>
+          new Date(row.dateDonneeExtrait).setHours(0, 0, 0, 0) >= startDate
+      );
+    }
+    console.log('startDate----startDate.length :', dataToExport.length);
+
+    if (endDate !== null) {
+      dataToExport = dataToExport.filter(
+        (row: DonneeExtrait) =>
+          new Date(row.dateDonneeExtrait).setHours(23, 59, 59, 999) <= endDate
+      );
+    }
+    console.log('endDate----endDate.length :', dataToExport.length);
+
+    if (startDateValeur !== null) {
+      dataToExport = dataToExport.filter((row: DonneeExtrait) => {
+        const rowDate = new Date(row.dateValeurDonneeExtrait);
+        const filterDate = new Date(startDateValeur);
+        const isInRange =
+          new Date(
+            rowDate.getFullYear(),
+            rowDate.getMonth(),
+            rowDate.getDate()
+          ) >=
+          new Date(
+            filterDate.getFullYear(),
+            filterDate.getMonth(),
+            filterDate.getDate()
+          );
+        if (!isInRange) {
+          console.log(
+            'Dropped by startDateValeur: ',
+            row.uuid,
+            'rowDate: ',
+            rowDate,
+            'filterDate: ',
+            filterDate
+          );
+        }
+        return isInRange;
+      });
+    }
+    // Do the same for endDateValeur
+
+    console.log(
+      'startDateValeur----dataToExport.length :',
+      dataToExport.length
+    );
+
+    if (endDateValeur !== null) {
+      dataToExport = dataToExport.filter((row: DonneeExtrait) => {
+        const rowDate = new Date(row.dateValeurDonneeExtrait);
+        const filterDate = new Date(endDateValeur);
+        return (
+          new Date(
+            rowDate.getFullYear(),
+            rowDate.getMonth(),
+            rowDate.getDate()
+          ) <=
+          new Date(
+            filterDate.getFullYear(),
+            filterDate.getMonth(),
+            filterDate.getDate()
+          )
+        );
+      });
+    }
+
+    console.log('endDateValeur----dataToExport.length :', dataToExport.length);
+
+    if (filters.debitMin) {
+      dataToExport = dataToExport.filter(
+        (row: DonneeExtrait) => row.debit >= filters.debitMin
+      );
+    }
+
+    if (filters.debitMax) {
+      dataToExport = dataToExport.filter(
+        (row: DonneeExtrait) => row.debit <= filters.debitMax
+      );
+    }
+
+    if (filters.creditMin) {
+      dataToExport = dataToExport.filter(
+        (row: DonneeExtrait) => row.credit >= filters.creditMin
+      );
+    }
+
+    if (filters.creditMax) {
+      dataToExport = dataToExport.filter(
+        (row: DonneeExtrait) => row.credit <= filters.creditMax
+      );
+    }
+
+    if (filters.operation) {
+      const operationFilterLowercase = filters.operation.toLowerCase();
+      dataToExport = dataToExport.filter((row: DonneeExtrait) =>
+        row.operations.toLowerCase().includes(operationFilterLowercase)
+      );
+    }
+    console.log('dataToExport.length :', dataToExport.length);
+
+    // Après avoir appliqué les filtres, mappez les données pour l'exportation
+    const mappedData = dataToExport.map((row: DonneeExtrait) => {
+      return {
+        'date extrait': new Date(row.dateDonneeExtrait).toLocaleDateString(
+          'fr-FR'
+        ),
+        'date valeur extrait': new Date(
+          row.dateValeurDonneeExtrait
+        ).toLocaleDateString('fr-FR'),
+        opérations: row.operations.replace(/\*\*\*/g, '\n'),
+        'débit (€)': row.debit,
+        'crédit (€)': row.credit,
+      };
+    });
+
+    const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(mappedData, {
       cellStyles: true,
     });
 
-    // Ajustement automatique de la largeur des colonnes
     const wscols = [
-      { wch: 20 }, // 'dateDonneeExtrait' column
-      { wch: 20 }, // 'dateValeurDonneeExtrait' column
-      { wch: 60 }, // 'operations' column
-      { wch: 20 }, // 'debit' column
-      { wch: 20 }, // 'credit' column
+      { wch: 20 },
+      { wch: 20 },
+      { wch: 60 },
+      { wch: 20 },
+      { wch: 20 },
     ];
 
     ws['!cols'] = wscols;
@@ -572,19 +725,30 @@ export class BankStatementTableDisplayComponent
     const wb: XLSX.WorkBook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
 
-    // Obtenir la date et l'heure actuelles
     const date = new Date();
     const year = date.getFullYear();
-    const month = ('0' + (date.getMonth() + 1)).slice(-2); // Ajout d'un zéro initial si nécessaire
-    const day = ('0' + date.getDate()).slice(-2); // Ajout d'un zéro initial si nécessaire
-    const hours = ('0' + date.getHours()).slice(-2); // Ajout d'un zéro initial si nécessaire
-    const minutes = ('0' + date.getMinutes()).slice(-2); // Ajout d'un zéro initial si nécessaire
-    const seconds = ('0' + date.getSeconds()).slice(-2); // Ajout d'un zéro initial si nécessaire
+    const month = ('0' + (date.getMonth() + 1)).slice(-2);
+    const day = ('0' + date.getDate()).slice(-2);
+    const hours = ('0' + date.getHours()).slice(-2);
+    const minutes = ('0' + date.getMinutes()).slice(-2);
+    const seconds = ('0' + date.getSeconds()).slice(-2);
 
-    // Créer un nom de fichier unique en utilisant la date et l'heure actuelles
     const filename = `export_${year}-${month}-${day}_${hours}-${minutes}-${seconds}.xlsx`;
 
     XLSX.writeFile(wb, filename);
+  }
+
+  // Helper method for date comparison
+  areDatesEqual(date1: Date, date2: Date): boolean {
+    if (!(date1 instanceof Date) || !(date2 instanceof Date)) {
+      throw new TypeError('Both arguments must be instances of Date');
+    }
+
+    return (
+      date1.getFullYear() === date2.getFullYear() &&
+      date1.getMonth() === date2.getMonth() &&
+      date1.getDate() === date2.getDate()
+    );
   }
 
   openDialog(): void {
@@ -601,15 +765,30 @@ export class BankStatementTableDisplayComponent
     };
 
     if (this.selectedExtrait) {
+      const sortedDonneeExtraits = [
+        ...this.selectedExtrait.donneeExtraits,
+      ].sort(
+        (a, b) =>
+          new Date(a.dateValeurDonneeExtrait).getTime() -
+          new Date(b.dateValeurDonneeExtrait).getTime()
+      );
+      const sortedDonneeExtraitsDate = [
+        ...this.selectedExtrait.donneeExtraits,
+      ].sort(
+        (a, b) =>
+          new Date(a.dateDonneeExtrait).getTime() -
+          new Date(b.dateDonneeExtrait).getTime()
+      );
+
       data = {
-        startDate: this.selectedExtrait.dateDuSoldeCrediteurDebutMois,
-        endDate: this.selectedExtrait.dateDuSoldeCrediteurFinMois,
-        startDateValeur:
-          this.selectedExtrait.donneeExtraits[0].dateValeurDonneeExtrait,
+        startDate: sortedDonneeExtraitsDate[0].dateDonneeExtrait,
+        endDate:
+          sortedDonneeExtraitsDate[sortedDonneeExtraitsDate.length - 1]
+            .dateDonneeExtrait,
+        startDateValeur: sortedDonneeExtraits[0].dateValeurDonneeExtrait,
         endDateValeur:
-          this.selectedExtrait.donneeExtraits[
-            this.selectedExtrait.donneeExtraits.length - 1
-          ].dateValeurDonneeExtrait,
+          sortedDonneeExtraits[sortedDonneeExtraits.length - 1]
+            .dateValeurDonneeExtrait,
         debitMin: Math.min(
           ...this.selectedExtrait.donneeExtraits.map((de) => de.debit)
         ),
@@ -633,8 +812,14 @@ export class BankStatementTableDisplayComponent
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      console.log('La fenêtre modale a été fermée');
-      // Utilisez "result" pour appliquer les filtres
+      if (result) {
+        console.log('La fenêtre modale a été fermée');
+        console.log('Appliquer clicked');
+
+        // On vérifie d'abord si le résultat est défini, ce qui signifie que l'utilisateur a cliqué sur "Appliquer"
+        // Ensuite, on utilise le résultat pour filtrer les données avant de les exporter
+        this.exportexcel(result);
+      }
     });
   }
 }
