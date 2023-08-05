@@ -537,6 +537,19 @@ export class BankStatementTableDisplayComponent
     return null;
   }
 
+  // Helper method for date comparison
+  areDatesEqual(date1: Date, date2: Date): boolean {
+    if (!(date1 instanceof Date) || !(date2 instanceof Date)) {
+      throw new TypeError('Both arguments must be instances of Date');
+    }
+
+    return (
+      date1.getFullYear() === date2.getFullYear() &&
+      date1.getMonth() === date2.getMonth() &&
+      date1.getDate() === date2.getDate()
+    );
+  }
+
   exportexcel(filters: any): void {
     console.log(
       'Initial data.length:',
@@ -738,19 +751,6 @@ export class BankStatementTableDisplayComponent
     XLSX.writeFile(wb, filename);
   }
 
-  // Helper method for date comparison
-  areDatesEqual(date1: Date, date2: Date): boolean {
-    if (!(date1 instanceof Date) || !(date2 instanceof Date)) {
-      throw new TypeError('Both arguments must be instances of Date');
-    }
-
-    return (
-      date1.getFullYear() === date2.getFullYear() &&
-      date1.getMonth() === date2.getMonth() &&
-      date1.getDate() === date2.getDate()
-    );
-  }
-
   openDialog(): void {
     let data = {
       startDate: null as Date | null,
@@ -811,15 +811,15 @@ export class BankStatementTableDisplayComponent
       data: data,
     });
 
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        console.log('La fenêtre modale a été fermée');
-        console.log('Appliquer clicked');
+    // Abonnement à l'événement personnalisé "apply" du composant de dialogue
+    dialogRef.componentInstance.apply.subscribe((result: DialogData) => {
+      console.log('Appliquer clicked');
+      this.exportexcel(result);
+    });
 
-        // On vérifie d'abord si le résultat est défini, ce qui signifie que l'utilisateur a cliqué sur "Appliquer"
-        // Ensuite, on utilise le résultat pour filtrer les données avant de les exporter
-        this.exportexcel(result);
-      }
+    // Si vous souhaitez également faire quelque chose lorsque la boîte de dialogue est fermée (par exemple, en cliquant sur un bouton "Annuler")
+    dialogRef.afterClosed().subscribe(() => {
+      console.log('La fenêtre modale a été fermée');
     });
   }
 }

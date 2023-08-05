@@ -56,6 +56,7 @@ import { MatSliderModule } from '@angular/material/slider';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { Ng5SliderModule } from 'ng5-slider';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 registerLocaleData(localeFr, 'fr-FR');
 
@@ -107,6 +108,7 @@ export function MSALInstanceFactory(): IPublicClientApplication {
     MatDatepickerModule,
     MatNativeDateModule,
     Ng5SliderModule,
+    DragDropModule,
   ],
   providers: [
     DatePipe,
