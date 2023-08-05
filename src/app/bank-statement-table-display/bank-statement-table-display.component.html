@@ -197,10 +197,40 @@
           </tr>
         </table>
         <!-- <button (click)="exportexcel()">Export to Excel</button> -->
-        <button mat-raised-button color="primary" (click)="openDialog()">
-          Ouvrir le filtre
-        </button>
-
+        <!-- Pour aligner le bouton à droite avec une marge -->
+        <div style="margin-bottom: 30px; margin-top: 30px">
+          <button
+            mat-raised-button
+            [ngStyle]="{ 'background-color': '#217346', color: '#ffffff' }"
+            (click)="openDialog()"
+            style="float: right"
+          >
+            <mat-icon aria-hidden="false" aria-label="Example home icon"
+              >table_chart</mat-icon
+            >
+            Exporter en Excel
+          </button>
+        </div>
+        <!-- ***
+        ***
+        boutton facturation 
+        ***
+        *** -->
+        <br />
+        <div style="margin-bottom: 30px; margin-top: 30px; clear: both">
+          <!-- Bouton Factures -->
+          <button
+            mat-raised-button
+            [ngStyle]="{ 'background-color': '#1565c0', color: '#ffffff' }"
+            (click)="displayInvoices()"
+            style="float: right"
+          >
+            <mat-icon aria-hidden="false" aria-label="Example invoice icon"
+              >receipt</mat-icon
+            >
+            Afficher les factures
+          </button>
+        </div>
         <app-bank-statement-table
           [data]="selectedExtrait.donneeExtraits"
           [formattedDateExtrait]="

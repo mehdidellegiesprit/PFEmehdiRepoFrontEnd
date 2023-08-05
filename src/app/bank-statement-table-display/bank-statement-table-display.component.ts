@@ -31,6 +31,7 @@ import {
   FilterDialogComponent,
 } from '../filter-dialog/filter-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import Swal, { SweetAlertIcon } from 'sweetalert2';
 
 @Component({
   selector: 'app-bank-statement-table-display',
@@ -550,7 +551,7 @@ export class BankStatementTableDisplayComponent
     );
   }
 
-  exportexcel(filters: any): void {
+  exportexcel(filters: any): number {
     console.log(
       'Initial data.length:',
       this.selectedExtrait.donneeExtraits.length
@@ -705,7 +706,11 @@ export class BankStatementTableDisplayComponent
       );
     }
     console.log('dataToExport.length :', dataToExport.length);
-
+    // Check if there's any data to export
+    if (dataToExport.length === 0) {
+      console.log("No data to export. Excel file won't be created.");
+      return 0;
+    }
     // Après avoir appliqué les filtres, mappez les données pour l'exportation
     const mappedData = dataToExport.map((row: DonneeExtrait) => {
       return {
@@ -749,6 +754,7 @@ export class BankStatementTableDisplayComponent
     const filename = `export_${year}-${month}-${day}_${hours}-${minutes}-${seconds}.xlsx`;
 
     XLSX.writeFile(wb, filename);
+    return mappedData.length;
   }
 
   openDialog(): void {
@@ -812,14 +818,38 @@ export class BankStatementTableDisplayComponent
     });
 
     // Abonnement à l'événement personnalisé "apply" du composant de dialogue
-    dialogRef.componentInstance.apply.subscribe((result: DialogData) => {
+    dialogRef.componentInstance.apply.subscribe(async (result: DialogData) => {
       console.log('Appliquer clicked');
-      this.exportexcel(result);
+      const rowCount = this.exportexcel(result);
+
+      let title = 'Information';
+      let text = '';
+      let icon: SweetAlertIcon = 'info';
+
+      if (rowCount > 0) {
+        text = `Fichier Excel généré avec succès, contenant ${rowCount} lignes.`;
+        icon = 'success';
+      } else {
+        text = `Aucun résultat trouvé.`;
+        icon = 'error';
+      }
+
+      await Swal.fire({
+        title: title,
+        text: text,
+        icon: icon,
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'OK',
+      });
     });
 
     // Si vous souhaitez également faire quelque chose lorsque la boîte de dialogue est fermée (par exemple, en cliquant sur un bouton "Annuler")
     dialogRef.afterClosed().subscribe(() => {
       console.log('La fenêtre modale a été fermée');
     });
+  }
+
+  displayInvoices() {
+    console.log('Affichage des factures pour la période sélectionnée...');
   }
 }
