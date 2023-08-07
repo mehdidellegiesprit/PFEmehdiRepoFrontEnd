@@ -34,6 +34,8 @@ import {
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import Swal, { SweetAlertIcon } from 'sweetalert2';
 import { FileService } from '../service/file.service';
+import * as JSZip from 'jszip';
+import { saveAs } from 'file-saver';
 
 @Component({
   selector: 'app-bank-statement-table-display',
@@ -874,16 +876,6 @@ export class BankStatementTableDisplayComponent
 
     let filteredData = this.selectedExtrait.donneeExtraits.filter((donnee) => {
       let donneeDate = new Date(donnee.dateDonneeExtrait);
-      let startDateComponents = [
-        this.startDateInvoice.getUTCFullYear(),
-        this.startDateInvoice.getUTCMonth(),
-        this.startDateInvoice.getUTCDate(),
-      ];
-      let endDateComponents = [
-        this.endDateInvoice.getUTCFullYear(),
-        this.endDateInvoice.getUTCMonth(),
-        this.endDateInvoice.getUTCDate(),
-      ];
 
       let startDate = new Date(
         Date.UTC(
@@ -912,23 +904,43 @@ export class BankStatementTableDisplayComponent
 
     console.log('Filtered data.length:', filteredData.length);
 
+    let downloadPromises: Promise<Blob>[] = [];
+
     filteredData.forEach((donnee) => {
       if (Object.keys(donnee.associationTitreUrl).length > 0) {
-        console.log('Association titre-url pour la donnée filtrée :');
         for (let url of Object.values(donnee.associationTitreUrl)) {
-          console.log(url);
-          console.log(
-            'Date associée:',
-            this.formatDateInvoice(donnee.dateDonneeExtrait)
-          );
-          //console.log('****Date associée****:', donnee.dateDonneeExtrait);
-          // Pour chaque URL
           if (url) {
-            this.downloadPdf(url);
+            console.log(url);
+            console.log(
+              'Date associée:',
+              this.formatDateInvoice(donnee.dateDonneeExtrait)
+            );
+
+            let downloadPromise = this.downloadPdf(url);
+            downloadPromises.push(downloadPromise);
           }
         }
       }
     });
+
+    Promise.all(downloadPromises)
+      .then((blobs) => {
+        let zip = new JSZip();
+
+        for (let i = 0; i < blobs.length; i++) {
+          zip.file(`downloadedFile${i}.pdf`, blobs[i]);
+        }
+
+        zip.generateAsync({ type: 'blob' }).then(function (content) {
+          saveAs(content, 'archive.zip');
+        });
+      })
+      .catch((error) => {
+        console.error(
+          'Une erreur est survenue lors du téléchargement des fichiers:',
+          error
+        );
+      });
 
     // pour fermer la modal de/commenter cette ligne bro !
     // this.dialogRefInvoice.close();
@@ -968,18 +980,17 @@ export class BankStatementTableDisplayComponent
     }
     return '';
   }
-  downloadPdf(url: string): void {
-    this.fileService.downloadFile(url).subscribe((data) => {
-      const blob = new Blob([data], { type: 'application/pdf' });
-
-      const a = document.createElement('a');
-      const objectUrl = URL.createObjectURL(blob);
-
-      a.href = objectUrl;
-      a.download = 'downloadedFile.pdf'; // Vous pouvez aussi extraire un nom de fichier depuis l'URL si nécessaire
-      a.click();
-
-      URL.revokeObjectURL(objectUrl);
+  downloadPdf(url: string): Promise<Blob> {
+    return new Promise((resolve, reject) => {
+      this.fileService.downloadFile(url).subscribe(
+        (data) => {
+          const blob = new Blob([data], { type: 'application/pdf' });
+          resolve(blob);
+        },
+        (error) => {
+          reject(error);
+        }
+      );
     });
   }
 
