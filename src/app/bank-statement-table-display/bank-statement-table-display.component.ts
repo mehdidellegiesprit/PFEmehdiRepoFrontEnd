@@ -904,19 +904,20 @@ export class BankStatementTableDisplayComponent
 
     console.log('Filtered data.length:', filteredData.length);
 
-    let downloadPromises: Promise<{ blob: Blob; filename: string }>[] = [];
+    let downloadPromises: Promise<{
+      blob: Blob;
+      filename: string;
+      folderName: string;
+    }>[] = [];
 
     filteredData.forEach((donnee) => {
       if (Object.keys(donnee.associationTitreUrl).length > 0) {
         for (let url of Object.values(donnee.associationTitreUrl)) {
           if (url) {
-            console.log(url);
-            console.log(
-              'Date associée:',
-              this.formatDateInvoice(donnee.dateDonneeExtrait)
-            );
+            let folderName = this.formatDateInvoice(donnee.dateDonneeExtrait);
+            console.log(url, 'Date associée:', folderName);
 
-            let downloadPromise = this.downloadPdf(url);
+            let downloadPromise = this.downloadPdf(url, folderName);
             downloadPromises.push(downloadPromise);
           }
         }
@@ -924,15 +925,17 @@ export class BankStatementTableDisplayComponent
     });
 
     Promise.all(downloadPromises)
-      .then((data) => {
+      .then((fileObjects) => {
         let zip = new JSZip();
 
-        for (let i = 0; i < data.length; i++) {
-          zip.file(data[i].filename, data[i].blob);
-        }
+        fileObjects.forEach(({ blob, filename, folderName }) => {
+          // Ici, nous spécifions le chemin complet du fichier dans la méthode "file"
+          zip.file(folderName + '/' + filename, blob);
+        });
 
-        zip.generateAsync({ type: 'blob' }).then(function (content) {
-          saveAs(content, 'archive.zip');
+        const timestamp = new Date().toISOString();
+        zip.generateAsync({ type: 'blob' }).then((content) => {
+          saveAs(content, `archive_${timestamp}.zip`);
         });
       })
       .catch((error) => {
@@ -944,6 +947,31 @@ export class BankStatementTableDisplayComponent
 
     // pour fermer la modal de/commenter cette ligne bro !
     // this.dialogRefInvoice.close();
+  }
+
+  downloadPdf(
+    url: string,
+    folderName: string
+  ): Promise<{ blob: Blob; filename: string; folderName: string }> {
+    return this.fileService
+      .downloadFile(url)
+      .toPromise()
+      .then((data) => {
+        if (!data) {
+          throw new Error('No data returned from file download');
+        }
+        const blob = new Blob([data], { type: 'application/pdf' });
+
+        let urlComponents = url.split('/');
+        // Supprimez le segment 'yt' du chemin du fichier
+        urlComponents = urlComponents.filter((segment) => segment !== 'yt');
+
+        // Prenez le dernier segment de l'URL modifiée, qui devrait être le nom du fichier
+        let filename = urlComponents[urlComponents.length - 1].split('?')[0];
+        filename = decodeURIComponent(filename);
+
+        return { blob, filename, folderName };
+      });
   }
 
   cancelInvoiceDateRange(): void {
@@ -979,23 +1007,6 @@ export class BankStatementTableDisplayComponent
       return `${day.toString().padStart(2, '0')}_${monthName}_${year}`;
     }
     return '';
-  }
-  downloadPdf(url: string): Promise<{ blob: Blob; filename: string }> {
-    return this.fileService
-      .downloadFile(url)
-      .toPromise()
-      .then((data) => {
-        if (!data) {
-          throw new Error('No data returned from file download');
-        }
-        const blob = new Blob([data], { type: 'application/pdf' });
-
-        let urlComponents = url.split('/');
-        let filename = urlComponents[urlComponents.length - 1].split('?')[0];
-        filename = decodeURIComponent(filename); // to convert %2F and %20 to / and space respectively
-
-        return { blob, filename };
-      });
   }
 
   // end factures!!
