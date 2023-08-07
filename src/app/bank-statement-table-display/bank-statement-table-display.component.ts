@@ -10,6 +10,7 @@ import {
   QueryList,
   ViewChildren,
   ChangeDetectorRef,
+  TemplateRef,
 } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { NotificationService } from '../service/notification.service';
@@ -30,7 +31,7 @@ import {
   DialogData,
   FilterDialogComponent,
 } from '../filter-dialog/filter-dialog.component';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import Swal, { SweetAlertIcon } from 'sweetalert2';
 
 @Component({
@@ -43,6 +44,11 @@ export class BankStatementTableDisplayComponent
   implements OnInit, OnDestroy, AfterViewInit
 {
   @ViewChild('calendar') calendarComponent: FullCalendarComponent;
+  @ViewChild('invoiceDateRangeDialog') invoiceDateRangeDialog: TemplateRef<any>;
+  dialogRefInvoice: MatDialogRef<any>;
+  startDateInvoice: Date;
+  endDateInvoice: Date;
+
   releves: ReleveBancaire[] = [];
   societes: Societe[] = [];
   private subscriptions: Subscription[] = [];
@@ -848,8 +854,79 @@ export class BankStatementTableDisplayComponent
       console.log('La fenêtre modale a été fermée');
     });
   }
-
+  // deb factures!!
   displayInvoices() {
     console.log('Affichage des factures pour la période sélectionnée...');
   }
+  openInvoiceDateRangeDialog(): void {
+    this.dialogRefInvoice = this.dialog.open(this.invoiceDateRangeDialog);
+  }
+
+  applyInvoiceDateRange() {
+    console.log('Date de début:', this.startDateInvoice);
+    console.log('Date de fin:', this.endDateInvoice);
+    console.log(
+      'Initial data.length:',
+      this.selectedExtrait.donneeExtraits.length
+    );
+
+    let filteredData = this.selectedExtrait.donneeExtraits.filter((donnee) => {
+      let donneeDate = new Date(donnee.dateDonneeExtrait);
+      let startDateComponents = [
+        this.startDateInvoice.getUTCFullYear(),
+        this.startDateInvoice.getUTCMonth(),
+        this.startDateInvoice.getUTCDate(),
+      ];
+      let endDateComponents = [
+        this.endDateInvoice.getUTCFullYear(),
+        this.endDateInvoice.getUTCMonth(),
+        this.endDateInvoice.getUTCDate(),
+      ];
+
+      let startDate = new Date(
+        Date.UTC(
+          this.startDateInvoice.getUTCFullYear(),
+          this.startDateInvoice.getUTCMonth(),
+          this.startDateInvoice.getUTCDate()
+        )
+      );
+
+      let endDate = new Date(
+        Date.UTC(
+          this.endDateInvoice.getUTCFullYear(),
+          this.endDateInvoice.getUTCMonth(),
+          this.endDateInvoice.getUTCDate(),
+          23,
+          59,
+          59,
+          999
+        )
+      );
+
+      endDate.setUTCHours(23, 59, 59, 999);
+
+      return donneeDate >= startDate && donneeDate <= endDate;
+    });
+
+    console.log('Filtered data.length:', filteredData.length);
+
+    filteredData.forEach((donnee) => {
+      if (Object.keys(donnee.associationTitreUrl).length > 0) {
+        console.log('Association titre-url pour la donnée filtrée :');
+        for (let url of Object.values(donnee.associationTitreUrl)) {
+          console.log(url);
+          console.log('Date associée:', donnee.dateDonneeExtrait);
+        }
+      }
+    });
+
+    this.dialogRefInvoice.close();
+  }
+
+  cancelInvoiceDateRange(): void {
+    // Utilisez la référence pour fermer le dialogue.
+    this.dialogRefInvoice.close();
+  }
+
+  // end factures!!
 }

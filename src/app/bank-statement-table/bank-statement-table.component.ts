@@ -116,6 +116,9 @@ export class BankStatementTableComponent implements OnInit, OnChanges {
     this.isIconUp = true;
     this.titleButtonExtrait = 'Click to hide additional details';
     this.setButtonTitle(this.activeButton, this.titleButtonExtrait);
+    console.log('ngOnInit Date 02 ');
+    console.log(this.data);
+    console.log('ngOnInit Date 02 ');
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -168,7 +171,11 @@ export class BankStatementTableComponent implements OnInit, OnChanges {
 
   formatDate(date: any): string {
     if (date) {
-      return this.datePipe.transform(date, 'dd/MM/yyyy') || '';
+      let d = new Date(date);
+      let day = ('0' + d.getUTCDate()).slice(-2);
+      let month = ('0' + (d.getUTCMonth() + 1)).slice(-2);
+      let year = d.getUTCFullYear();
+      return `${day}/${month}/${year}`;
     }
     return '';
   }

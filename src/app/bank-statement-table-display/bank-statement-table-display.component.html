@@ -211,26 +211,73 @@
             Exporter en Excel
           </button>
         </div>
-        <!-- ***
-        ***
-        boutton facturation 
-        ***
-        *** -->
+        <!-- ******debut boutton facturation****** -->
         <br />
         <div style="margin-bottom: 30px; margin-top: 30px; clear: both">
           <!-- Bouton Factures -->
           <button
             mat-raised-button
             [ngStyle]="{ 'background-color': '#1565c0', color: '#ffffff' }"
-            (click)="displayInvoices()"
+            (click)="openInvoiceDateRangeDialog()"
             style="float: right"
           >
             <mat-icon aria-hidden="false" aria-label="Example invoice icon"
               >receipt</mat-icon
             >
-            Afficher les factures
+            Factures
           </button>
         </div>
+
+        <!-- Dialog content -->
+        <ng-template #invoiceDateRangeDialog>
+          <h2>Choisissez une période pour les factures :</h2>
+          <mat-form-field style="margin-bottom: 20px">
+            <input
+              matInput
+              [matDatepicker]="startDatePicker"
+              placeholder="Date de début"
+              [(ngModel)]="startDateInvoice"
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="startDatePicker"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #startDatePicker></mat-datepicker>
+          </mat-form-field>
+          <mat-form-field>
+            <input
+              matInput
+              [matDatepicker]="endDatePicker"
+              placeholder="Date de fin"
+              [(ngModel)]="endDateInvoice"
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="endDatePicker"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #endDatePicker></mat-datepicker>
+          </mat-form-field>
+
+          <div style="text-align: right; margin-top: 20px">
+            <button mat-button (click)="cancelInvoiceDateRange()">
+              Annuler
+            </button>
+            <button
+              mat-raised-button
+              [ngStyle]="{ 'background-color': '#3f51b5', color: '#ffffff' }"
+              (click)="applyInvoiceDateRange()"
+              style="margin-left: 10px"
+            >
+              <mat-icon aria-hidden="false" aria-label="Example zip icon"
+                >archive</mat-icon
+              >
+              Exporter en ZIP
+            </button>
+          </div>
+        </ng-template>
+
+        <!-- ******fin boutton facturation****** -->
+
         <app-bank-statement-table
           [data]="selectedExtrait.donneeExtraits"
           [formattedDateExtrait]="
