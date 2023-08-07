@@ -915,17 +915,52 @@ export class BankStatementTableDisplayComponent
         console.log('Association titre-url pour la donnée filtrée :');
         for (let url of Object.values(donnee.associationTitreUrl)) {
           console.log(url);
-          console.log('Date associée:', donnee.dateDonneeExtrait);
+          console.log(
+            'Date associée:',
+            this.formatDateInvoice(donnee.dateDonneeExtrait)
+          );
+          //console.log('****Date associée****:', donnee.dateDonneeExtrait);
         }
       }
     });
 
-    this.dialogRefInvoice.close();
+    // pour fermer la modal de/commenter cette ligne bro !
+    // this.dialogRefInvoice.close();
   }
 
   cancelInvoiceDateRange(): void {
     // Utilisez la référence pour fermer le dialogue.
     this.dialogRefInvoice.close();
+  }
+  formatDateInvoice(date: any): string {
+    if (date) {
+      const adjustedDate = new Date(date);
+      adjustedDate.setMinutes(
+        adjustedDate.getMinutes() + adjustedDate.getTimezoneOffset()
+      );
+
+      const day = adjustedDate.getDate();
+      const year = adjustedDate.getFullYear();
+
+      const monthNames = [
+        'janvier',
+        'février',
+        'mars',
+        'avril',
+        'mai',
+        'juin',
+        'juillet',
+        'août',
+        'septembre',
+        'octobre',
+        'novembre',
+        'décembre',
+      ];
+      const monthName = monthNames[adjustedDate.getMonth()];
+
+      return `${day.toString().padStart(2, '0')}_${monthName}_${year}`;
+    }
+    return '';
   }
 
   // end factures!!
