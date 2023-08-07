@@ -904,7 +904,7 @@ export class BankStatementTableDisplayComponent
 
     console.log('Filtered data.length:', filteredData.length);
 
-    let downloadPromises: Promise<Blob>[] = [];
+    let downloadPromises: Promise<{ blob: Blob; filename: string }>[] = [];
 
     filteredData.forEach((donnee) => {
       if (Object.keys(donnee.associationTitreUrl).length > 0) {
@@ -924,11 +924,11 @@ export class BankStatementTableDisplayComponent
     });
 
     Promise.all(downloadPromises)
-      .then((blobs) => {
+      .then((data) => {
         let zip = new JSZip();
 
-        for (let i = 0; i < blobs.length; i++) {
-          zip.file(`downloadedFile${i}.pdf`, blobs[i]);
+        for (let i = 0; i < data.length; i++) {
+          zip.file(data[i].filename, data[i].blob);
         }
 
         zip.generateAsync({ type: 'blob' }).then(function (content) {
@@ -980,18 +980,22 @@ export class BankStatementTableDisplayComponent
     }
     return '';
   }
-  downloadPdf(url: string): Promise<Blob> {
-    return new Promise((resolve, reject) => {
-      this.fileService.downloadFile(url).subscribe(
-        (data) => {
-          const blob = new Blob([data], { type: 'application/pdf' });
-          resolve(blob);
-        },
-        (error) => {
-          reject(error);
+  downloadPdf(url: string): Promise<{ blob: Blob; filename: string }> {
+    return this.fileService
+      .downloadFile(url)
+      .toPromise()
+      .then((data) => {
+        if (!data) {
+          throw new Error('No data returned from file download');
         }
-      );
-    });
+        const blob = new Blob([data], { type: 'application/pdf' });
+
+        let urlComponents = url.split('/');
+        let filename = urlComponents[urlComponents.length - 1].split('?')[0];
+        filename = decodeURIComponent(filename); // to convert %2F and %20 to / and space respectively
+
+        return { blob, filename };
+      });
   }
 
   // end factures!!
