@@ -33,6 +33,7 @@ import {
 } from '../filter-dialog/filter-dialog.component';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import Swal, { SweetAlertIcon } from 'sweetalert2';
+import { FileService } from '../service/file.service';
 
 @Component({
   selector: 'app-bank-statement-table-display',
@@ -87,7 +88,8 @@ export class BankStatementTableDisplayComponent
     private renderer: Renderer2,
     private el: ElementRef,
     private changeDetectorRef: ChangeDetectorRef,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private fileService: FileService
   ) {}
 
   getDistinctExtraitYears(): number[] {
@@ -920,6 +922,10 @@ export class BankStatementTableDisplayComponent
             this.formatDateInvoice(donnee.dateDonneeExtrait)
           );
           //console.log('****Date associée****:', donnee.dateDonneeExtrait);
+          // Pour chaque URL
+          if (url) {
+            this.downloadPdf(url);
+          }
         }
       }
     });
@@ -961,6 +967,20 @@ export class BankStatementTableDisplayComponent
       return `${day.toString().padStart(2, '0')}_${monthName}_${year}`;
     }
     return '';
+  }
+  downloadPdf(url: string): void {
+    this.fileService.downloadFile(url).subscribe((data) => {
+      const blob = new Blob([data], { type: 'application/pdf' });
+
+      const a = document.createElement('a');
+      const objectUrl = URL.createObjectURL(blob);
+
+      a.href = objectUrl;
+      a.download = 'downloadedFile.pdf'; // Vous pouvez aussi extraire un nom de fichier depuis l'URL si nécessaire
+      a.click();
+
+      URL.revokeObjectURL(objectUrl);
+    });
   }
 
   // end factures!!
