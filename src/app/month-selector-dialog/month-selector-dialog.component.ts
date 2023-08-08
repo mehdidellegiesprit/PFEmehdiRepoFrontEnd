@@ -8,8 +8,7 @@ import { ReleveBancaire } from '../model/ReleveBancaire';
 })
 export class MonthSelectorDialogComponent {
   months: { name: string; value: number }[] = [];
-  selectedMonth: number;
-
+  selectedMonths: number[] = []; // Utilisation d'un tableau pour contenir les mois sélectionnés
   constructor(
     public dialogRef: MatDialogRef<MonthSelectorDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { releveBancaire: ReleveBancaire }
@@ -51,6 +50,6 @@ export class MonthSelectorDialogComponent {
   }
 
   confirm(): void {
-    this.dialogRef.close(this.selectedMonth);
+    this.dialogRef.close(this.selectedMonths); // Retourne les mois sélectionnés
   }
 }
