@@ -50,6 +50,19 @@ export class MonthSelectorDialogComponent {
   }
 
   confirm(): void {
+    const selectedMonthsDetails = this.months.filter((month) =>
+      this.selectedMonths.includes(month.value)
+    );
+
+    // Log the details of selected months
+    console.log('Selected Months:', selectedMonthsDetails);
+
+    // Or, if you want to log the names and values separately
+    selectedMonthsDetails.forEach((month) => {
+      console.log('Selected Month Name:', month.name);
+      console.log('Selected Month Value:', month.value);
+    });
+
     this.dialogRef.close(this.selectedMonths); // Retourne les mois sélectionnés
   }
 }
