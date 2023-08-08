@@ -67,7 +67,22 @@
       <mat-chip>RIB : {{ selectedReleveBancaire.iban }}</mat-chip>
     </mat-chip-list>
   </div> -->
+  <!-- begin nouveau bouton globale -->
+  <div style="margin-bottom: 30px; margin-top: 30px; margin-right: 15px">
+    <button
+      mat-raised-button
+      [ngStyle]="{ 'background-color': '#217346', color: '#ffffff' }"
+      style="float: right"
+      (click)="InterfaceGlobaleExport()"
+    >
+      <mat-icon aria-hidden="false" aria-label="Exporter par mois"
+        >get_app</mat-icon
+      >
+      Exporter les données par mois
+    </button>
+  </div>
 
+  <!-- fin nouveau bouton globale -->
   <div
     class="calendar-container"
     style="display: flex; flex-direction: column; align-items: left"

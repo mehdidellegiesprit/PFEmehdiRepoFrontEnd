@@ -1,0 +1,15 @@
+<h1 mat-dialog-title>Sélectionnez un mois</h1>
+<div mat-dialog-content>
+  <mat-form-field appearance="fill">
+    <mat-label>Mois</mat-label>
+    <mat-select [(value)]="selectedMonth">
+      <mat-option *ngFor="let month of months" [value]="month.value">
+        {{ month.name }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="cancel()">Annuler</button>
+  <button mat-button (click)="confirm()">Confirmer</button>
+</div>

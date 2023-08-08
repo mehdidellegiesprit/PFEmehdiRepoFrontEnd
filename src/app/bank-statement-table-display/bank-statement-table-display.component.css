@@ -132,3 +132,14 @@ body {
   margin-top: 50px;
   border: none !important; /* Supprimer la bordure */
 }
+.excel-export-button {
+  margin-bottom: 30px;
+  margin-top: 30px;
+  margin-right: 15px;
+}
+
+.export-button {
+  float: right;
+  background-color: #217346;
+  color: #ffffff;
+}
