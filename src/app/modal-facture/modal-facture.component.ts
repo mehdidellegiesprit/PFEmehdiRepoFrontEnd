@@ -335,15 +335,6 @@ export class ModalFactureComponent implements OnInit, OnDestroy {
   selectedFile: File | null = null;
   filePath: string | null = null;
 
-  onFileChange(event: any) {
-    const file = event.target.files[0];
-    if (file) {
-      console.log('file', file);
-      this.filePath = `yt/${file.name}`;
-      this.selectedFile = file;
-    }
-  }
-
   // Créez une autre fonction pour l'envoi à Firebase
   async uploadFile(): Promise<string | null> {
     if (this.selectedFile && this.filePath) {
@@ -372,7 +363,7 @@ export class ModalFactureComponent implements OnInit, OnDestroy {
     if (input.files && input.files.length > 0) {
       const file = input.files[0];
       console.log('file', file);
-      this.filePath = `yt/${file.name}`;
+      this.filePath = file.name; // Suppression du préfixe 'yt/'
       this.selectedFile = file;
 
       let filename =
@@ -392,6 +383,16 @@ export class ModalFactureComponent implements OnInit, OnDestroy {
       }
     }
   }
+
+  onFileChange(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      console.log('file', file);
+      this.filePath = file.name; // Suppression du préfixe 'yt/'
+      this.selectedFile = file;
+    }
+  }
+
   displayPdfInNewTab(key: string) {
     console.log(key);
     const pdfUrl = this.data.associationTitreUrl[key];

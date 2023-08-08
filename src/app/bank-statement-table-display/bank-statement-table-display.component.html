@@ -224,7 +224,7 @@
             <mat-icon aria-hidden="false" aria-label="Example invoice icon"
               >receipt</mat-icon
             >
-            Factures
+            Exporter factures
           </button>
         </div>
 
@@ -237,6 +237,7 @@
               [matDatepicker]="startDatePicker"
               placeholder="Date de début"
               [(ngModel)]="startDateInvoice"
+              [matDatepickerFilter]="dateFilter"
             />
             <mat-datepicker-toggle
               matSuffix
@@ -250,6 +251,7 @@
               [matDatepicker]="endDatePicker"
               placeholder="Date de fin"
               [(ngModel)]="endDateInvoice"
+              [matDatepickerFilter]="dateFilter"
             />
             <mat-datepicker-toggle
               matSuffix

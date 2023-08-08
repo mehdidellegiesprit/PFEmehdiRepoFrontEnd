@@ -36,7 +36,6 @@ import Swal, { SweetAlertIcon } from 'sweetalert2';
 import { FileService } from '../service/file.service';
 import * as JSZip from 'jszip';
 import { saveAs } from 'file-saver';
-
 @Component({
   selector: 'app-bank-statement-table-display',
   templateUrl: './bank-statement-table-display.component.html',
@@ -902,8 +901,6 @@ export class BankStatementTableDisplayComponent
       return donneeDate >= startDate && donneeDate <= endDate;
     });
 
-    console.log('Filtered data.length:', filteredData.length);
-
     let downloadPromises: Promise<{
       blob: Blob;
       filename: string;
@@ -925,17 +922,41 @@ export class BankStatementTableDisplayComponent
     });
 
     Promise.all(downloadPromises)
-      .then((fileObjects) => {
-        let zip = new JSZip();
+      .then(async (fileObjects) => {
+        let title = 'Information';
+        let text = '';
+        let icon: SweetAlertIcon = 'info';
 
-        fileObjects.forEach(({ blob, filename, folderName }) => {
-          // Ici, nous spécifions le chemin complet du fichier dans la méthode "file"
-          zip.file(folderName + '/' + filename, blob);
-        });
+        if (fileObjects.length === 0) {
+          text = `Aucune facture n'a été trouvée dans la période du ${this.formatDateInvoice(
+            this.startDateInvoice
+          ).replace(/_/g, ' ')} au ${this.formatDateInvoice(
+            this.endDateInvoice
+          ).replace(/_/g, ' ')}.`;
+          icon = 'error';
+        } else {
+          let zip = new JSZip();
 
-        const timestamp = new Date().toISOString();
-        zip.generateAsync({ type: 'blob' }).then((content) => {
-          saveAs(content, `archive_${timestamp}.zip`);
+          fileObjects.forEach(({ blob, filename, folderName }) => {
+            console.log('Adding to ZIP:', folderName + '/' + filename);
+            zip.file(folderName + '/' + filename, blob);
+          });
+
+          const timestamp = new Date().toISOString();
+          await zip.generateAsync({ type: 'blob' }).then((content) => {
+            saveAs(content, `archive_${timestamp}.zip`);
+          });
+
+          text = `Les factures ont été téléchargées avec succès. Vérifiez vos téléchargements.`;
+          icon = 'success';
+        }
+
+        await Swal.fire({
+          title: title,
+          text: text,
+          icon: icon,
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'OK',
         });
       })
       .catch((error) => {
@@ -963,12 +984,15 @@ export class BankStatementTableDisplayComponent
         const blob = new Blob([data], { type: 'application/pdf' });
 
         let urlComponents = url.split('/');
-        // Supprimez le segment 'yt' du chemin du fichier
+        // Filtrons le segment 'yt' du chemin du fichier
         urlComponents = urlComponents.filter((segment) => segment !== 'yt');
-
         // Prenez le dernier segment de l'URL modifiée, qui devrait être le nom du fichier
         let filename = urlComponents[urlComponents.length - 1].split('?')[0];
         filename = decodeURIComponent(filename);
+
+        // Log pour le débogage
+        console.log('Filtered URL Components:', urlComponents);
+        console.log('Final Filename:', filename);
 
         return { blob, filename, folderName };
       });
@@ -1008,6 +1032,22 @@ export class BankStatementTableDisplayComponent
     }
     return '';
   }
+  dateFilter = (d: Date | null): boolean => {
+    const date = d || new Date();
+
+    // Conversion de la chaîne de date en objet Date
+    const extractedDate = new Date(this.selectedExtrait.dateExtrait);
+
+    // Extraction de l'année et du mois
+    const allowedYear = extractedDate.getFullYear();
+    const allowedMonth = extractedDate.getMonth();
+
+    console.log('me oh !! extrait !!!!!! ', this.selectedExtrait.dateExtrait);
+
+    return (
+      date.getFullYear() === allowedYear && date.getMonth() === allowedMonth
+    );
+  };
 
   // end factures!!
 }
