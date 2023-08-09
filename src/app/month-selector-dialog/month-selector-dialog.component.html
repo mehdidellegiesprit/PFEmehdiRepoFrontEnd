@@ -1,7 +1,7 @@
 <h1 mat-dialog-title>Sélectionnez les mois à exporter</h1>
 <div mat-dialog-content>
   <mat-form-field appearance="fill">
-    <mat-label>Extraits de relevés / mois</mat-label>
+    <mat-label>Extraits de relevé / mois</mat-label>
     <mat-select [(value)]="selectedMonths" multiple>
       <!-- Ajout de l'attribut "multiple" -->
       <mat-option *ngFor="let month of months" [value]="month.value">

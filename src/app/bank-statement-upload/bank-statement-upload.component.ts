@@ -63,7 +63,7 @@ export class BankStatementUploadComponent implements OnInit, OnDestroy {
         (response: any) => {
           // Sauvegarder le relevé bancaire original avant transformation
           this.originalReleveBancaire = JSON.parse(JSON.stringify(response));
-
+          console.log('mahmoudd', this.originalReleveBancaire);
           this.releveBancaire = response;
           //this.releveBancaire.dataFileContent = 'chaine vide ';
 
@@ -195,7 +195,7 @@ export class BankStatementUploadComponent implements OnInit, OnDestroy {
 
     if (
       message ===
-      "Voulez-vous vraiment confirmer l enregistrement du Relevé bancaire ?"
+      'Voulez-vous vraiment confirmer l enregistrement du Relevé bancaire ?'
     ) {
       title = "Confirmer l'enregistrement";
       text = 'En confirmant, Le Releve Bancaire sera sauvegardées dans la BD !';
