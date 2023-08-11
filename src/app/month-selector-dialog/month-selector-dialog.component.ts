@@ -76,36 +76,43 @@ export class MonthSelectorDialogComponent {
     releveBancaire: ReleveBancaire,
     selectedMonths: number[]
   ): number {
-    // Modifié pour renvoyer le nombre de lignes exportées
     const workbook = XLSX.utils.book_new();
     let totalRows = 0;
+
+    let sheetNamesUsed: { [key: string]: number } = {};
 
     releveBancaire.extraits.forEach((extraitBancaire) => {
       const date = new Date(extraitBancaire.dateExtrait);
       const monthIndex = date.getMonth() + 1;
-      const sheetName = new Intl.DateTimeFormat('fr-FR', {
+      let sheetName = new Intl.DateTimeFormat('fr-FR', {
         month: 'long',
         year: 'numeric',
       }).format(date);
+
+      // Vérifie si le nom de la feuille est déjà utilisé et ajoute un indice si nécessaire
+      if (sheetNamesUsed[sheetName]) {
+        sheetNamesUsed[sheetName]++;
+        sheetName = `${sheetName} (${sheetNamesUsed[sheetName]})`;
+      } else {
+        sheetNamesUsed[sheetName] = 1;
+      }
 
       if (selectedMonths.includes(monthIndex)) {
         const data = extraitBancaire.donneeExtraits.map((donneeExtrait) => {
           return {
             'date extrait': new Date(
               donneeExtrait.dateDonneeExtrait
-            ).toLocaleDateString('fr-FR'), // Ajouté pour le formatage
+            ).toLocaleDateString('fr-FR'),
             'date valeur extrait': new Date(
               donneeExtrait.dateValeurDonneeExtrait
-            ).toLocaleDateString('fr-FR'), // Ajouté pour le formatage
-            opérations: donneeExtrait.operations.replace(/\*\*\*/g, '\n'), // Ajouté pour le formatage
+            ).toLocaleDateString('fr-FR'),
+            opérations: donneeExtrait.operations.replace(/\*\*\*/g, '\n'),
             'débit (€)': donneeExtrait.debit,
             'crédit (€)': donneeExtrait.credit,
           };
         });
 
         const worksheet = XLSX.utils.json_to_sheet(data);
-
-        // Présentation dans Excel
         const wscols = [
           { wch: 20 },
           { wch: 20 },
@@ -120,9 +127,19 @@ export class MonthSelectorDialogComponent {
       }
     });
 
-    const fileName = 'releve-bancaire.xlsx';
+    const currentDateTime = new Date();
+    const formattedDateTime = `${currentDateTime.getFullYear()}-${(
+      '0' +
+      (currentDateTime.getMonth() + 1)
+    ).slice(-2)}-${('0' + currentDateTime.getDate()).slice(-2)}_${(
+      '0' + currentDateTime.getHours()
+    ).slice(-2)}-${('0' + currentDateTime.getMinutes()).slice(-2)}-${(
+      '0' + currentDateTime.getSeconds()
+    ).slice(-2)}`;
+
+    const fileName = `releve-bancaire_${formattedDateTime}.xlsx`;
     XLSX.writeFile(workbook, fileName);
 
-    return totalRows; // Retour du nombre total de lignes exportées
+    return totalRows;
   }
 }
