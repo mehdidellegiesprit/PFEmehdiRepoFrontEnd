@@ -75,38 +75,54 @@ export class MonthSelectorDialogComponent {
   exportSelectedDataToExcel(
     releveBancaire: ReleveBancaire,
     selectedMonths: number[]
-  ): void {
+  ): number {
+    // Modifié pour renvoyer le nombre de lignes exportées
     const workbook = XLSX.utils.book_new();
+    let totalRows = 0;
 
     releveBancaire.extraits.forEach((extraitBancaire) => {
       const date = new Date(extraitBancaire.dateExtrait);
-      const monthIndex = date.getMonth() + 1; // Obtenez le numéro du mois (1-12)
+      const monthIndex = date.getMonth() + 1;
       const sheetName = new Intl.DateTimeFormat('fr-FR', {
         month: 'long',
         year: 'numeric',
       }).format(date);
 
-      // Vérifiez si le mois actuel est dans la liste des mois sélectionnés
       if (selectedMonths.includes(monthIndex)) {
         const data = extraitBancaire.donneeExtraits.map((donneeExtrait) => {
           return {
-            'date extrait': donneeExtrait.dateDonneeExtrait,
-            'date valeur extrait': donneeExtrait.dateValeurDonneeExtrait,
-            opérations: donneeExtrait.operations,
+            'date extrait': new Date(
+              donneeExtrait.dateDonneeExtrait
+            ).toLocaleDateString('fr-FR'), // Ajouté pour le formatage
+            'date valeur extrait': new Date(
+              donneeExtrait.dateValeurDonneeExtrait
+            ).toLocaleDateString('fr-FR'), // Ajouté pour le formatage
+            opérations: donneeExtrait.operations.replace(/\*\*\*/g, '\n'), // Ajouté pour le formatage
             'débit (€)': donneeExtrait.debit,
             'crédit (€)': donneeExtrait.credit,
           };
         });
 
-        // Log the number of rows
-        console.log(`Number of rows for sheet ${sheetName}:`, data.length);
-
         const worksheet = XLSX.utils.json_to_sheet(data);
+
+        // Présentation dans Excel
+        const wscols = [
+          { wch: 20 },
+          { wch: 20 },
+          { wch: 60 },
+          { wch: 20 },
+          { wch: 20 },
+        ];
+        worksheet['!cols'] = wscols;
+
         XLSX.utils.book_append_sheet(workbook, worksheet, sheetName);
+        totalRows += data.length;
       }
     });
 
     const fileName = 'releve-bancaire.xlsx';
     XLSX.writeFile(workbook, fileName);
+
+    return totalRows; // Retour du nombre total de lignes exportées
   }
 }

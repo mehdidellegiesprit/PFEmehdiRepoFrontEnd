@@ -64,6 +64,7 @@ export class BankStatementUploadComponent implements OnInit, OnDestroy {
           // Sauvegarder le relevé bancaire original avant transformation
           this.originalReleveBancaire = JSON.parse(JSON.stringify(response));
           console.log('mahmoudd', this.originalReleveBancaire);
+          console.log('doon', response);
           this.releveBancaire = response;
           //this.releveBancaire.dataFileContent = 'chaine vide ';
 
