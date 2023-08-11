@@ -3,13 +3,13 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ReleveBancaire } from '../model/ReleveBancaire';
 import * as XLSX from 'xlsx';
 import { DonneeExtrait } from '../model/DonneeExtrait';
+import Swal, { SweetAlertIcon } from 'sweetalert2';
 
 @Component({
   selector: 'app-month-selector-dialog',
   templateUrl: './month-selector-dialog.component.html',
 })
 export class MonthSelectorDialogComponent {
-
   public dialogTitle: string = 'Sélectionnez les mois à exporter';
   months: { name: string; value: number }[] = [];
   selectedMonths: number[] = []; // Utilisation d'un tableau pour contenir les mois sélectionnés
@@ -67,11 +67,33 @@ export class MonthSelectorDialogComponent {
       }
     });
 
-    this.exportSelectedDataToExcel(
+    const rowCount = this.exportSelectedDataToExcel(
       this.data.releveBancaire,
       this.selectedMonths
     ); // Appelle la méthode d'exportation
-    this.dialogRef.close(this.selectedMonths); // Retourne les mois sélectionnés
+
+    let title = 'Information';
+    let text = '';
+    let icon: SweetAlertIcon = 'info';
+
+    if (rowCount > 0) {
+      text = `Fichier Excel généré avec succès et contenant des données.`;
+      icon = 'success';
+    } else {
+      text = `Aucun résultat trouvé.`;
+      icon = 'error';
+    }
+
+    Swal.fire({
+      title: title,
+      text: text,
+      icon: icon,
+      confirmButtonColor: '#3085d6',
+      confirmButtonText: 'OK',
+    }).then(() => {
+      // Une fois que l'utilisateur a fermé le pop-up
+      this.dialogRef.close(this.selectedMonths); // Retourne les mois sélectionnés et ferme la boîte de dialogue
+    });
   }
 
   exportSelectedDataToExcel(

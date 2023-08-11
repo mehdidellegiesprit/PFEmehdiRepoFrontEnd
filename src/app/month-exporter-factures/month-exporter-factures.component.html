@@ -12,7 +12,11 @@
 </div>
 <div mat-dialog-actions style="justify-content: flex-end">
   <button mat-button (click)="cancel()">Annuler</button>
-  <button mat-button (click)="downloadInvoicesForSelectedMonths()">
+  <button
+    mat-button
+    (click)="downloadInvoicesForSelectedMonths()"
+    [disabled]="!selectedMonths.length"
+  >
     Confirmer
   </button>
 </div>
