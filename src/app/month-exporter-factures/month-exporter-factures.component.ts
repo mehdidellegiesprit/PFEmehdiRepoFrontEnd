@@ -1,20 +1,20 @@
-import { Component, Inject } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ReleveBancaire } from '../model/ReleveBancaire';
 import * as XLSX from 'xlsx';
 import { DonneeExtrait } from '../model/DonneeExtrait';
-
 @Component({
-  selector: 'app-month-selector-dialog',
-  templateUrl: './month-selector-dialog.component.html',
+  selector: 'app-month-exporter-factures',
+  templateUrl: './month-exporter-factures.component.html',
+  styleUrls: ['./month-exporter-factures.component.css'],
 })
-export class MonthSelectorDialogComponent {
-
+export class MonthExporterFacturesComponent {
   public dialogTitle: string = 'Sélectionnez les mois à exporter';
   months: { name: string; value: number }[] = [];
   selectedMonths: number[] = []; // Utilisation d'un tableau pour contenir les mois sélectionnés
   constructor(
-    public dialogRef: MatDialogRef<MonthSelectorDialogComponent>,
+    public dialogRef: MatDialogRef<MonthExporterFacturesComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { releveBancaire: ReleveBancaire }
   ) {
     console.log('ReleveBancaire Data:', this.data.releveBancaire); // Log the entire ReleveBancaire data
@@ -67,14 +67,14 @@ export class MonthSelectorDialogComponent {
       }
     });
 
-    this.exportSelectedDataToExcel(
+    this.exportSelectedDataFactureToZip(
       this.data.releveBancaire,
       this.selectedMonths
     ); // Appelle la méthode d'exportation
     this.dialogRef.close(this.selectedMonths); // Retourne les mois sélectionnés
   }
 
-  exportSelectedDataToExcel(
+  exportSelectedDataFactureToZip(
     releveBancaire: ReleveBancaire,
     selectedMonths: number[]
   ): number {

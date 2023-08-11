@@ -37,6 +37,7 @@ import { FileService } from '../service/file.service';
 import * as JSZip from 'jszip';
 import { saveAs } from 'file-saver';
 import { MonthSelectorDialogComponent } from '../month-selector-dialog/month-selector-dialog.component';
+import { MonthExporterFacturesComponent } from '../month-exporter-factures/month-exporter-factures.component';
 @Component({
   selector: 'app-bank-statement-table-display',
   templateUrl: './bank-statement-table-display.component.html',
@@ -1056,6 +1057,22 @@ export class BankStatementTableDisplayComponent
     console.log('chouf!!', this._selectedReleveBancaire);
     const dialogRef = this.dialog.open(MonthSelectorDialogComponent, {
       data: { releveBancaire: this._selectedReleveBancaire },
+      width: '450px', // Définissez la largeur souhaitée
+      height: '250px', // Définissez la hauteur souhaitée
+    });
+
+    dialogRef.afterClosed().subscribe((selectedMonth) => {
+      if (selectedMonth) {
+        // Traitement avec le mois sélectionné (ex. exportation)
+      }
+    });
+  }
+  InterfaceGlobaleFacture(): void {
+    console.log('chouf!!', this._selectedReleveBancaire);
+    const dialogRef = this.dialog.open(MonthExporterFacturesComponent, {
+      data: { releveBancaire: this._selectedReleveBancaire },
+      width: '450px', // Définissez la largeur souhaitée
+      height: '250px', // Définissez la hauteur souhaitée
     });
 
     dialogRef.afterClosed().subscribe((selectedMonth) => {

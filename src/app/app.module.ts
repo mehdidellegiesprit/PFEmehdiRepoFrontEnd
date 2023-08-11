@@ -58,6 +58,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { Ng5SliderModule } from 'ng5-slider';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MonthSelectorDialogComponent } from './month-selector-dialog/month-selector-dialog.component';
+import { MonthExporterFacturesComponent } from './month-exporter-factures/month-exporter-factures.component';
 
 registerLocaleData(localeFr, 'fr-FR');
 
@@ -85,6 +86,7 @@ export function MSALInstanceFactory(): IPublicClientApplication {
     ConfirmationDialogComponent,
     FilterDialogComponent,
     MonthSelectorDialogComponent,
+    MonthExporterFacturesComponent,
   ],
   imports: [
     NotificationModule,
